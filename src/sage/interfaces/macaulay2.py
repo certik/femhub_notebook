@@ -986,7 +986,7 @@ class Macaulay2Element(ExpectElement):
                 external_string = self.external_string()
                 order = None
                 if "Degrees" in external_string:
-                    raise ValueError, "cannot convert Macaulay2 polynomial ring with non-default degrees to Sage"
+                    raise ValueError, "cannot convert Macaulay2 polynomial ring with non-default degrees to Femhub"
                 if "MonomialOrder" not in external_string:
                     order = "degrevlex"
                 else:
@@ -994,7 +994,7 @@ class Macaulay2Element(ExpectElement):
                         if order_name in external_string:
                             order = inv_macaulay2_name_mapping[order_name]
                 if len(gens) > 1 and order is None:
-                    raise ValueError, "cannot convert Macaulay2's term order to a Sage term order"
+                    raise ValueError, "cannot convert Macaulay2's term order to a Femhub term order"
             
                 return PolynomialRing(base_ring, order=order, names=gens)
             elif cls_str == "GaloisField":
@@ -1043,7 +1043,7 @@ class Macaulay2Element(ExpectElement):
         try:
             return sage_eval(repr_str)
         except:
-            raise NotImplementedError, "cannot convert %s to a Sage object"%repr_str
+            raise NotImplementedError, "cannot convert %s to a Femhub object"%repr_str
       
 
 class Macaulay2Function(ExpectFunction):

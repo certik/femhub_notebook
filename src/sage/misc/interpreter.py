@@ -484,7 +484,7 @@ def sage_prefilter(self, block, continuation):
 
     except None:
         
-        print "WARNING: An error occured in the Sage parser while"
+        print "WARNING: An error occured in the Femhub parser while"
         print "parsing the following block:"
         print block
         print "Please report this as a bug (include the output of typing '%hist')."

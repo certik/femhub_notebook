@@ -139,7 +139,7 @@ class Notebook(SageObject):
             print "Your old worksheets are all available by clicking the published link"
             print "in the upper right corner."
             print "If you want to save disk space, you could immediately remove"
-            print "the objects and worksheets directories in your Sage notebook, as"
+            print "the objects and worksheets directories in your Femhub notebook, as"
             print "they are no longer used.  Do this now or never."
         
     def delete(self):
@@ -1184,11 +1184,11 @@ class Notebook(SageObject):
         t = W.plain_text(prompts = prompts)
         t = escape(t)
         s = '<head>\n'
-        s += '<title>Sage Worksheet: %s</title>\n'%W.name()
+        s += '<title>Femhub Worksheet: %s</title>\n'%W.name()
         s += '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
         s += '</head>\n'
         s += '<body>\n'
-        s += '<h1><a href=".">Sage Worksheet: %s</a></h1>\n'%W.name()
+        s += '<h1><a href=".">Femhub Worksheet: %s</a></h1>\n'%W.name()
         s += '<pre>' + t + '</pre>'
         s += '</body>\n'
         return s
@@ -1322,7 +1322,7 @@ class Notebook(SageObject):
     def worksheet_html(self, filename, do_print=False):
         W = self.get_worksheet_with_filename(filename)
         s = '<head>\n'
-        s += '<title>Sage Worksheet: %s</title>\n'%W.name()
+        s += '<title>Femhub Worksheet: %s</title>\n'%W.name()
         s += '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
         s += '<script type="text/javascript" src="/javascript_local/jquery/jquery.js"></script>'
         s += '<script type="text/javascript" src="/javascript/main.js"></script>\n'
@@ -1370,7 +1370,7 @@ class Notebook(SageObject):
         entries = []
         
         if self.user_is_guest(user):
-            entries.append(('/', 'Log in', 'Please log in to the Sage notebook'))
+            entries.append(('/', 'Log in', 'Please log in to the Femhub notebook'))
         else:
             entries.append(('/home/%s'%user, 'Home', 'Back to your personal worksheet list'))
             entries.append(('/pub', 'Published', 'Browse the published worksheets'))
@@ -1383,7 +1383,7 @@ class Notebook(SageObject):
             entries.insert(2, ('history_window()', 'Log', 'View a log of recent computations'))
         if not self.user_is_guest(user):
             entries.append(('/settings', 'Settings', 'Change account settings including password'))
-            entries.append(('/logout', 'Sign out', 'Log out of the Sage notebook'))
+            entries.append(('/logout', 'Sign out', 'Log out of the Femhub notebook'))
 
         s += self.html_banner_and_control(user, entries)            
         s += '<hr class="usercontrol">'
@@ -1418,7 +1418,7 @@ class Notebook(SageObject):
         s = """
         <div class="banner">
         <table width="100%%"><tr><td>
-        <a class="banner" href="http://www.sagemath.org"><img align="top" src="/images/sagelogo.png" alt="Sage"> Notebook</a></td><td><span class="ping" id="ping">Searching for Sage server...</span></td>
+        <a class="banner" href="http://www.sagemath.org"><img align="top" src="/images/sagelogo.png" alt="Femhub"> Notebook</a></td><td><span class="ping" id="ping">Searching for Femhub server...</span></td>
         </tr><tr><td style="font-size:xx-small; text-indent:13px; color:black">Version %s</td><td></td></tr></table>
         </div>
         """%ver
@@ -1533,7 +1533,7 @@ class Notebook(SageObject):
             body += "Only the owner of a worksheet is allowed to share it."
             body += 'You can do whatever you want if you <a href="copy">make your own copy</a>.'
         else:
-            body += 'This Sage Worksheet is currently shared with the people listed in the box below.<br>'
+            body += 'This Femhub Worksheet is currently shared with the people listed in the box below.<br>'
             body += 'You may add or remove collaborators (separate user names by commas).<br><br>'
 
             collabs = ', '.join(worksheet.collaborators())
@@ -1544,7 +1544,7 @@ class Notebook(SageObject):
 
             body += '<br>'*2
             body += '<hr class="usercontrol">'
-            body += '<span class="username">Sage Users:</span>'
+            body += '<span class="username">Femhub Users:</span>'
             U = self.users()
             K = [x for x, u in U.iteritems() if not u.is_guest() and not u.username() in [username, 'pub', '_sage_']]
             def mycmp(x,y):
@@ -1727,9 +1727,9 @@ class Notebook(SageObject):
     def _html_head(self, worksheet_filename, username):
         if worksheet_filename is not None:
             worksheet = self.get_worksheet_with_filename(worksheet_filename)
-            head = '\n<title>%s (Sage)</title>'%(worksheet.name())
+            head = '\n<title>%s (Femhub)</title>'%(worksheet.name())
         else:
-            head = '\n<title>Sage Notebook | Welcome</title>'
+            head = '\n<title>Femhub Notebook | Welcome</title>'
 
         head += '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
         # Load the Sage javascript libray.
@@ -1967,11 +1967,11 @@ $.editable.addInputType('mce', {
                        ('/pub', 'Published', 'Browse the published worksheets'),
                        ('history_window()', 'Log', 'View a log of recent computations'),
                        ('/settings', 'Settings', 'Account Settings'), 
-                       ('bugreport()', 'Report a Problem', 'Report a problem or submit a bug to improve Sage'),
+                       ('bugreport()', 'Report a Problem', 'Report a problem or submit a bug to improve Femhub'),
                        ('help()', 'Help', 'Documentation')]
 
             if not self.user_is_guest(username):
-                entries.append(('/logout', 'Sign out', 'Log out of the Sage notebook'))
+                entries.append(('/logout', 'Sign out', 'Log out of the Femhub notebook'))
 
             body += self.html_banner_and_control(username, entries)
             if top_only:
@@ -2254,14 +2254,14 @@ function save_worksheet_and_close() {
         body = """
         <br>
         <div class="docidx">
-        <h1>Sage Documentation</h1>
+        <h1>Femhub Documentation</h1>
         <br>
         <hr class="usercontrol">
         <br><br>
         <font size=+2>
         <a href="/doc/live/">Live Documentation</a><br><br>
         <a href="/doc/static/">Static Documentation</a><br><br>
-        <a href="/help/">Sage Notebook Howto</a><br><br>
+        <a href="/help/">Femhub Notebook Howto</a><br><br>
         <br><br>
         <br>
         <hr class="usercontrol">

@@ -1785,7 +1785,7 @@ class Java(resource.Resource):
 class Logout(resource.Resource):
     def render(self, ctx):
         # TODO -- actually log out.
-        s = message("<br>Thank you for using Sage.<br><br><a href='/'>Please login and use Sage again soon.</a><br>")
+        s = message("<br>Thank you for using Femhub.<br><br><a href='/'>Please login and use Femhub again soon.</a><br>")
         return HTMLResponse(stream=s)
 
 ############################
@@ -2073,7 +2073,7 @@ class RegistrationPage(resource.PostableResource):
     
                 # Send a confirmation message to the user.
                 try:
-                    send_mail(fromaddr, destaddr, "Sage Notebook Registration",body)
+                    send_mail(fromaddr, destaddr, "Femhub Notebook Registration",body)
                     waiting[key] = filled_in['username']
                 except ValueError:
                     pass
@@ -2120,7 +2120,7 @@ class ForgotPassPage(resource.Resource):
             body = build_password_msg(password, request.args[string.strip('username')][0], listenaddr, port, notebook.secure)
             destaddr = user.get_email()
             try:
-                send_mail(fromaddr, destaddr, "Sage Notebook Account Recovery",body)
+                send_mail(fromaddr, destaddr, "Femhub Notebook Account Recovery",body)
             except ValueError:
                 # the email address is invalid
                 user.set_password(oldpass)

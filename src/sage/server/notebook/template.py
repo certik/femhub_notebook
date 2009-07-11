@@ -43,7 +43,7 @@ env.tests['contained_in'] = contained_in
 #A dictionary containing the default context
 #The values in this dictionary will be updated
 #by the 
-default_context = {'sitename': 'Sage Notebook',
+default_context = {'sitename': 'Femhub Notebook',
                    'sage_version': version}
 
 def template(filename, **user_context): 

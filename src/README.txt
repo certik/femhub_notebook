@@ -1,1 +1,1 @@
-This is the Sage lite source install.
+This is the Femhub lite source install.

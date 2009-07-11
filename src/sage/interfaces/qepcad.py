@@ -783,7 +783,7 @@ class Qepcad:
         formula = formula.replace('_', '')
 
         qex = Qepcad_expect(logfile=logfile)
-        qex._send('[ input from Sage ]')
+        qex._send('[ input from Femhub ]')
         qex._send('(' + ','.join(varlist) + ')')
         qex._send(str(free_vars))
         # I hope this prompt is distinctive enough...
@@ -885,7 +885,7 @@ class Qepcad:
             y + x > 0 /\ y^2 + x^2 - 3 = 0
         """
         if kind == 'I':
-            raise ValueError, "Interactive solution construction not handled by Sage interface"
+            raise ValueError, "Interactive solution construction not handled by Femhub interface"
         result = self._eval_line('solution-extension %s'%kind)
         tagline = 'An equivalent quantifier-free formula:'
         loc = result.find(tagline)
@@ -1256,7 +1256,7 @@ class QepcadFunction(ExpectFunction):
                 args[0] = 'y' if args[0] else 'n'
 
         if special == 'interactive':
-            raise ValueError, "Cannot call %s through Sage interface... interactive commands not handled"
+            raise ValueError, "Cannot call %s through Femhub interface... interactive commands not handled"
 
         return self._parent._function_call(self._name, args)
 
