@@ -209,7 +209,7 @@ class Expect(ParentWithBase):
         
         quit.expect_objects.append(weakref.ref(self))
         self._available_vars = []
-        ParentWithBase.__init__(self, self)
+        ParentWithBase.__init__(self)
 
     def _get(self, wait=0.1, alternate_prompt=None):
         if self._expect is None:
