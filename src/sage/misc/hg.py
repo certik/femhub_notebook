@@ -1237,27 +1237,27 @@ if (SAGE_INCOMING_SERVER != DEFAULT_SERVER) or (SAGE_OUTGOING_SERVER != DEFAULT_
 
 
 hg_sage    = HG('%s/devel/sage'%SAGE_ROOT,
-                'Femhub Library Source Code',
+                'FEMhub Library Source Code',
                     pull_url='%s/sage-%s/'%(SAGE_INCOMING_SERVER, temp_in_branch_name),
                     push_url='%s/sage-%s/'%(SAGE_OUTGOING_SERVER, temp_out_branch_name),
                 cloneable=True,
                 obj_name='sage')
 
 hg_scripts = HG('%s/local/bin/'%SAGE_ROOT,
-                'Femhub Scripts',
+                'FEMhub Scripts',
                 pull_url='%s/scripts-main/'%SAGE_INCOMING_SERVER,
                 push_url='%s/scripts-main/'%SAGE_OUTGOING_SERVER,
                 obj_name='scripts')
 
 hg_extcode = HG('%s/data/extcode'%SAGE_ROOT,
-                'Femhub External System Code (e.g., PARI, MAGMA, etc.)',
+                'FEMhub External System Code (e.g., PARI, MAGMA, etc.)',
                 pull_url='%s/extcode-main/'%SAGE_INCOMING_SERVER,
                 push_url='%s/extcode-main/'%SAGE_OUTGOING_SERVER,
                 obj_name='extcode')
 
 
 hg_examples = HG('%s/data/examples'%SAGE_ROOT,
-                 'Femhub Examples',
+                 'FEMhub Examples',
                  pull_url='%s/examples/'%SAGE_INCOMING_SERVER,
                  push_url='%s/examples/'%SAGE_OUTGOING_SERVER,
                  obj_name='examples')

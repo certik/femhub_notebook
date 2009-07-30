@@ -37,7 +37,7 @@ def version(clone = False):
     """
     import os
     branch = os.popen("ls -l $SAGE_ROOT/devel/sage").read().split()[-1][5:]
-    v = 'Femhub Version %s, Release Date: %s'%(sage.version.version, sage.version.date)
+    v = 'FEMhub Version %s, Release Date: %s'%(sage.version.version, sage.version.date)
     if clone:
         return v,"Mercurial clone branch: %s"%branch
     return v
@@ -197,6 +197,6 @@ def require_version(major, minor=0, tiny=0, prerelease=False,
         if print_message:
             print "This code requires at least version",
             print "%g" % (major + 0.1 * minor + 0.01 * tiny,), 
-            print "of Femhub to run correctly."
+            print "of FEMhub to run correctly."
             print "You are running version %s." % sage.version.version
         return False

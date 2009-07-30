@@ -2718,7 +2718,7 @@ $("#insert_last_cell").shiftclick(function(e) {insert_new_text_cell_after(cell_i
             print "WARNING: %s"%msg
         except Exception, msg:
             print msg
-            print "WARNING: Error deleting Femhub object!"
+            print "WARNING: Error deleting FEMhub object!"
             
         try:
             os.kill(pid, 9)
@@ -2937,7 +2937,7 @@ $("#insert_last_cell").shiftclick(function(e) {insert_new_text_cell_after(cell_i
             S._send(cmd)
         except OSError, msg:
             self.restart_sage()
-            C.set_output_text('The Femhub compute process quit (possibly Femhub crashed?).\nPlease retry your calculation.','')
+            C.set_output_text('The FEMhub compute process quit (possibly Femhub crashed?).\nPlease retry your calculation.','')
                 
     def check_comp(self, wait=0.2):
         r"""
@@ -3467,7 +3467,7 @@ $("#insert_last_cell").shiftclick(function(e) {insert_new_text_cell_after(cell_i
         # the python error message for list indices is not good enough.
         # out = out.replace('indices must be integers', 'indices must be of type Python int.\n(Hint: Use int(n) to make n into a Python int.)')
 
-        out = out.replace("NameError: name 'os' is not defined", "NameError: name 'os' is not defined\nTHERE WAS AN ERROR LOADING THE SAGE LIBRARIES.  Try starting Femhub from the command line to see what the error is.")
+        out = out.replace("NameError: name 'os' is not defined", "NameError: name 'os' is not defined\nTHERE WAS AN ERROR LOADING THE SAGE LIBRARIES.  Try starting FEMhub from the command line to see what the error is.")
 
         try:
             tb = 'Traceback (most recent call last):'

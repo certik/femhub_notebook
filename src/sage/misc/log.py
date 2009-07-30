@@ -468,4 +468,4 @@ class log_text(Log):
         return ''
 
     def _title(self):
-        return 'Femhub Log %s' % self._time
+        return 'FEMhub Log %s' % self._time

@@ -772,7 +772,7 @@ class LiEElement(ExpectElement):
         """
         t = self.type()
         if t == 'grp':
-            raise ValueError, "cannot convert Lie groups to native Femhub objects"
+            raise ValueError, "cannot convert Lie groups to native FEMhub objects"
         elif t == 'mat':
             import sage.matrix.constructor         
             return  sage.matrix.constructor.matrix( eval( str(self).replace('\n','').strip())  )

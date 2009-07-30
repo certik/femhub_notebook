@@ -78,11 +78,11 @@ if ' ' in DOT_SAGE:
         DOT_SAGE="/home/.sage"
     else:
         print "Your home directory has a space in it.  This"
-        print "will probably break some functionality of Femhub.  E.g.,"
+        print "will probably break some functionality of FEMhub.  E.g.,"
         print "the GAP interface will not work.  A workaround"
         print "is to set the environment variable HOME to a"
         print "directory with no spaces that you have write"
-        print "permissions to before you start Femhub."
+        print "permissions to before you start FEMhub."
 
 #################################################
 # Now that the variable DOT_SAGE has been set,
@@ -118,7 +118,7 @@ if not os.path.exists(SAGE_TMP):
         os.makedirs(SAGE_TMP)
     except OSError, msg:
         print msg
-        raise OSError, " ** Error trying to create the Femhub tmp directory in your home directory.  A possible cause of this might be that you built or upgraded Femhub after typing 'su'.  You probably need to delete the directory $HOME/.sage."
+        raise OSError, " ** Error trying to create the FEMhub tmp directory in your home directory.  A possible cause of this might be that you built or upgraded Femhub after typing 'su'.  You probably need to delete the directory $HOME/.sage."
 
 SAGE_DATA = '%s/data/'%SAGE_ROOT
 SAGE_EXTCODE = '%s/data/extcode/'%SAGE_ROOT
@@ -1698,7 +1698,7 @@ def branch_current_hg_notice(branch):
         branch = branch[:-1]
     if branch == 'main':
         return ''
-    notice = 'Loading Femhub library. Current Mercurial branch is: '
+    notice = 'Loading FEMhub library. Current Mercurial branch is: '
     return notice + branch
 
 

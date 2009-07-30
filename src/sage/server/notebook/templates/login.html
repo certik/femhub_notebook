@@ -4,33 +4,33 @@
 
 {% block body %}
         <span class="banner">
-        <a class="banner" href="http://www.sagemath.org"><img align="top" src="/images/sagelogo.png" alt="Femhub"> Source Python Distribution</a>: Welcome!
+        <a class="banner" href="http://www.sagemath.org"><img align="top" src="/images/sagelogo.png" alt="FEMhub"> Source Python Distribution</a>: Welcome!
         </span>
         
 <br><br>
 <table>
 <tr><td width=50%>
 {% if welcome %}
-<h2>Congratulations {{ welcome }}! You can now sign into the Femhub Notebook.</h2>
+<h2>Congratulations {{ welcome }}! You can now sign into the FEMhub Notebook.</h2>
 {% endif %}
 
 <span class="addtext">
-<b>Femhub</b> is a Source Python Distribution.<br><br>
+<b>FEMhub</b> is a Source Python Distribution.<br><br>
 
-<b>The Femhub Notebook</b><br>
-With the Femhub Notebook anyone can create, collaborate on, and publish
+<b>The FEMhub Notebook</b><br>
+With the FEMhub Notebook anyone can create, collaborate on, and publish
 interactive worksheets. In a worksheet, one can write code using Python, and
-other software included in Femhub.
+other software included in FEMhub.
 <br><br>
 
-<b>The Femhub Project</b><br>
-<a href="http://code.google.com/p/spdproject/">Femhub</a> is a Python distribution and many optional (mainly scientific)
+<b>The FEMhub Project</b><br>
+<a href="http://code.google.com/p/spdproject/">FEMhub</a> is a Python distribution and many optional (mainly scientific)
 packages. Everything fully builds from source on any platform (any Linux, Mac
 OS X, clusters and soon windows). It is based on <a href="http://sagemath.org/">Sage</a>.
 </span>
 </td>
 <td bgcolor="#efefff" align=center>
-<span class="addtext">Sign into the Femhub Notebook<br><br>
+<span class="addtext">Sign into the FEMhub Notebook<br><br>
 <form method="POST" action="/login">
 <table>
 <tr><td align=right>Username:</td><td><input type="text" name="email" value="{{ default_user }}" size="15"></td></tr>
@@ -46,10 +46,10 @@ OS X, clusters and soon windows). It is based on <a href="http://sagemath.org/">
 </table>
 <br><br><br>
 {% if accounts %}
-<a href='/register'><b>Sign up for a new Femhub Notebook account</b></a>
+<a href='/register'><b>Sign up for a new FEMhub Notebook account</b></a>
 {% endif %}
 <br><br><br>
-<a href='/pub'><b>Browse published Femhub worksheets<br>(no login required)</b></a><br /><br/><br/>
+<a href='/pub'><b>Browse published FEMhub worksheets<br>(no login required)</b></a><br /><br/><br/>
 {% if recovery %}
 <a href='/forgotpass'><b>Forgot password</b></a>
 {% endif %}

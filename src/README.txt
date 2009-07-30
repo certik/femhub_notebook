@@ -1,1 +1,1 @@
-This is the Femhub lite source install.
+This is the FEMhub lite source install.
