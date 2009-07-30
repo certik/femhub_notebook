@@ -445,7 +445,7 @@ If this all works, you can then make calls like:
             
         try:
             if self.__remote_cleaner and self._server:
-                c = 'sage-native-execute  ssh %s "nohup spd -cleaner"  &'%self._server
+                c = 'sage-native-execute  ssh %s "nohup femhub -cleaner"  &'%self._server
                 os.system(c)
             self._expect = pexpect.spawn(cmd, logfile=self.__logfile)
             if self._do_cleaner():

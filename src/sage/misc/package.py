@@ -115,7 +115,7 @@ def install_package(package=None, force=False):
     if package is None:
         if __installed_packages is None:
             from sage.misc.misc import SAGE_ROOT
-            X = os.popen(SAGE_ROOT + '/spd -f').read().split('\n')
+            X = os.popen(SAGE_ROOT + '/femhub -f').read().split('\n')
             i = X.index('Currently installed packages:')
             X = [Y for Y in X[i+1:] if Y != '']
             X.sort()
