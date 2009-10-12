@@ -12,6 +12,3 @@ fi
 
 cd src
 python setup.py install
-TEMPLATES=$SAGE_ROOT/devel/sage/sage/server/notebook/templates
-mkdir -p $TEMPLATES
-cp sage/server/notebook/templates/* $TEMPLATES
