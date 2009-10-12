@@ -1,41 +1,42 @@
-###############################################################################
-#   Sage: Open Source Mathematical Software
-#           Copyright (C) 2009 William Stein <wstein@gmail.com>
-#  The full text of the GPL is available at:
-#                  http://www.gnu.org/licenses/
-###############################################################################
+##########################################################
+# The setup.py for the Sage Notebook
+##########################################################
 
-import os
-try:
-    SAGE_VERSION = os.environ['SAGE_VERSION']
-except:
-    a = os.path.abspath('.')
-    i = a.rfind('-')
-    SAGE_VERSION = a[i:]
-    print "Using SAGE_VERSION=%s"%SAGE_VERSION
-
+import os, sys, time
 from distutils.core import setup
-from distutils.extension import Extension
 
-ext_modules = []
-include_dirs = []
+def all_files(dir, lstrip):
+    """
+    Return list of all filenames in the given directory, with lstrip
+    stripped from the left of the filenames.
+    """
+    X = []
+    for F in os.listdir(dir):
+        ab = dir+'/'+F
+        if os.path.isfile(ab):
+            X.append((ab).lstrip(lstrip))
+        elif os.path.isdir(ab):
+            X.extend(all_files(ab, lstrip))
+    return X
+    
 
-code = setup(name = 'sagelite',
-      description = 'Sagelite: Lowcal Open Source Mathematics Software',
-      version     = SAGE_VERSION,
-      license     = 'GNU Public License (GPL)',
+code = setup(name = 'sagenb',
+      version     = '0.2.6',   # the spkg-dist script assumes single quotes here
+      description = 'The Sage Notebook',
+      license     = 'GNU Public License (GPL) v2+',
       author      = 'William Stein et al.',
       author_email= 'http://groups.google.com/group/sage-support',
-      url         = 'http://lite.sagemath.org',
-      packages    = [
-                     'sage',
-                     'sage.interfaces',
-                     'sage.misc',
-                     'sage.server',
-                     'sage.server.simple',
-                     'sage.server.notebook',
-                     'sage.server.notebook.compress',
-                     'sage.structure',
+      url         = 'http://www.sagemath.org',
+      packages    = ['sagenb',
+                     'sagenb.interfaces',
+                     'sagenb.misc',                                          
+                     'sagenb.notebook',
+                     'sagenb.notebook.compress',
+                     'sagenb.simple',
+                     'sagenb.storage'
                      ],
-      ext_modules = ext_modules,
-      include_dirs = include_dirs)
+      package_data = {'sagenb':all_files('sagenb/data', 'sagenb/')}
+      )
+
+
+
