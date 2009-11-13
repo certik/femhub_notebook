@@ -1,21 +1,20 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 r"""
 Process docstrings with Sphinx
 
 Processes docstrings with Sphinx. Can also be used as a commandline script:
 
-$ python sphinxify.py <text>
+``python sphinxify.py <text>``
 
 AUTHORS:
 
 - Tim Joseph Dumol (2009-09-29): initial version
-
+"""
 #**************************************************
 # Copyright (C) 2009 Tim Dumol <tim@timdumol.com>
 #
 # Distributed under the terms of the BSD License
 #**************************************************
-"""
 import os, hashlib, re, shutil
 from tempfile import mkdtemp
 
@@ -35,7 +34,7 @@ def is_sphinx_markup(docstring):
     return ("`" in docstring or "::" in docstring)
 
 def sphinxify(docstring):
-    """
+    r"""
     Runs Sphinx on a docstring, and outputs the processed documentation.
 
     INPUT:
@@ -49,10 +48,10 @@ def sphinxify(docstring):
     EXAMPLES::
 
         sage: from sagenb.misc.sphinxify import sphinxify
-        sage: sphinxify('Foobar')
-        '\n<div class="docstring">\n    \n  \n  <p>Foobar</p>\n\n\n</div>'
+        sage: sphinxify('A test')
+        '<div class="docstring">\n    \n  <p>A test</p>\n\n\n</div>'
         sage: sphinxify('**Testing**\n`monospace`')
-        '\n<div class="docstring"...<strong>Testing</strong>\n<img..." alt="monospace" /></p>\n\n\n</div>'
+        '<div class="docstring"...<strong>Testing</strong>\n<span class="math"...</p>\n\n\n</div>'
     """
     tmpdir = mkdtemp()
     docstring_hash = hashlib.md5(docstring).hexdigest()
@@ -70,12 +69,15 @@ def sphinxify(docstring):
     # confdir, outdir, doctreedir, buildername,
     # confoverrides, status, warning, freshenv)
     srcdir = tmpdir
+
+    temp_confdir = False
     if SAGE_DOC and os.path.exists(os.path.join(SAGE_DOC, 'en', 'introspect')):
         confdir = os.path.join(SAGE_DOC, 'en', 'introspect')
     else:
         # This may be inefficient.
         # TODO: Find a faster way to do this
         confdir = mkdtemp()
+        temp_confdir = True
         generate_configuration(confdir)
         
     doctreedir = os.path.join(srcdir, docstring_hash)
@@ -102,13 +104,14 @@ def sphinxify(docstring):
          print "BUG -- error constructing html"
          new_html = '<pre class="introspection">%s</pre>' % docstring
 
-    shutil.rmtree(confdir, ignore_errors=True)
+    if temp_confdir:
+        shutil.rmtree(confdir, ignore_errors=True)
     shutil.rmtree(tmpdir, ignore_errors=True)
 
     return new_html
 
 def generate_configuration(directory):
-    """
+    r"""
     Generates Sphinx configuration at ``directory``.
 
     EXAMPLES::
@@ -118,7 +121,7 @@ def generate_configuration(directory):
         sage: tmpdir = tempfile.mkdtemp()
         sage: generate_configuration(tmpdir)
         sage: open(os.path.join(tmpdir, 'conf.py')).read()
-        '\nextensions =...templates_path...NestedClass\n    '
+        '\n...extensions =...templates_path...source = False\n...'
     """
     conf = r'''
 ###########################################################

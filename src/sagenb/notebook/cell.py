@@ -81,6 +81,40 @@ class Cell_generic:
         """
         raise NotImplementedError
 
+    def html_new_cell_before(self):
+        """
+        Returns the HTML code for inserting a new cell before self.
+        
+        EXAMPLES::
+        
+            sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', None)
+            sage: print C.html_new_cell_before()
+            <div class="insert_new_cell" id="insert_new_cell_before0">...
+        """
+        return """<div class="insert_new_cell" id="insert_new_cell_before%(id)s">
+                 </div>
+<script type="text/javascript">
+$("#insert_new_cell_before%(id)s").plainclick(function(e) {insert_new_cell_before(%(id)s);});
+$("#insert_new_cell_before%(id)s").shiftclick(function(e) {insert_new_text_cell_before(%(id)s);});
+</script>"""%{'id': self.id()}
+
+    def html_new_cell_after(self):
+        """
+        Returns the HTML code for inserting a new cell after self.
+        
+        EXAMPLES::
+        
+            sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', None)
+            sage: print C.html_new_cell_after()
+            <div class="insert_new_cell" id="insert_new_cell_after0">...
+        """
+        return """<div class="insert_new_cell" id="insert_new_cell_after%(id)s">
+                 </div>
+<script type="text/javascript">
+$("#insert_new_cell_after%(id)s").plainclick(function(e) {insert_new_cell_after(%(id)s);});
+$("#insert_new_cell_after%(id)s").shiftclick(function(e) {insert_new_text_cell_after(%(id)s);});
+</script>"""%{'id': self.id()}
+
 
 class TextCell(Cell_generic):
     def __init__(self, id, text, worksheet):
@@ -137,7 +171,7 @@ class TextCell(Cell_generic):
             TextCell 0: 3+2
         """
         self.__text = input_text
-
+        
     def set_worksheet(self, worksheet, id=None):
         """
         Sets the worksheet object of self to be worksheet and optionally
@@ -189,10 +223,16 @@ class TextCell(Cell_generic):
             sage: C.html(do_math_parse=True)
             '<div class="text_cell" id="cell_text_0"><span class="math">2+3</span>...'
         """
+        s = '<span id="cell_outer_%s">'%self.__id
 
-        s = """<div class="text_cell" id="cell_text_%s">%s</div>"""%(self.__id,self.html_inner(ncols=ncols, do_print=do_print, do_math_parse=do_math_parse, editing=editing))
+        if not do_print:
+            s += self.html_new_cell_before()
 
-        if JEDITABLE_TINYMCE and hasattr(self.worksheet(),'is_published') and not self.worksheet().is_published() and not self.worksheet().docbrowser():
+        s += """<div class="text_cell" id="cell_text_%s">%s</div>"""%(
+            self.__id, 
+            self.html_inner(ncols=ncols, do_print=do_print, do_math_parse=do_math_parse, editing=editing))
+
+        if JEDITABLE_TINYMCE and hasattr(self.worksheet(),'is_published') and not self.worksheet().is_published() and not self.worksheet().docbrowser() and not do_print:
 
             try:
                 z = ((self.__text).decode('utf-8')).encode('ascii', 'xmlcharrefreplace')
@@ -220,9 +260,10 @@ return(value);
 </script>"""%(self.__id,self.__id, z)
 
 
-        if editing:
+        if editing and not do_print:
             s += """<script>$("#cell_text_%s").trigger('dblclick');</script>"""%self.__id
-            
+
+        s += '</span>'
         return s
 
     def html_inner(self,ncols=0, do_print=False, do_math_parse=True, editing=False):
@@ -255,7 +296,6 @@ return(value);
                 # server process (which is doing this work).
                 pass
         s = """%s"""%t
-
         return s
         
 
@@ -360,7 +400,7 @@ class Cell(Cell_generic):
         self.__asap = False
         self.__version = -1
         self.set_input_text(str(input).replace('\r',''))
-
+        
     def set_asap(self, asap):
         """
         Set whether this cell is evaluated as soon as possible.
@@ -1168,18 +1208,20 @@ class Cell(Cell_generic):
         
         """
         self._system = None
-        text = self.input_text().split('\n')
+        text = self.input_text().splitlines()
         directives = []
+        i = 0
         for i, line in enumerate(text):
+            line = line.strip()
             if not line.startswith('%'):
                 #Handle the #auto case here for now
                 if line == "#auto":
                     pass
                 else:
                     break
-            elif line in ['%auto', '%hide', '%hideall', '%save_server', "%time", "%timeit"]:
-                #We do not consider any of the above percent
-                #directives as specifying a system.
+            elif line in ['%auto', '%hide', '%hideall', '%save_server', '%time', '%timeit']:
+                # We do not consider any of the above percent
+                # directives as specifying a system.
                 pass
             else:
                 self._system = line[1:]
@@ -1839,7 +1881,7 @@ class Cell(Cell_generic):
 
         INPUT:
 
-        - ``wrap`` - a boolean stating whether to wrap lines. Defaults to
+        - ``wrap`` - None or an integer stating column position to wrap lines. Defaults to
           configuration if not given.
 
         - ``div_wrap`` - a boolean stating whether to wrap ``div``.
@@ -1929,39 +1971,6 @@ class Cell(Cell_generic):
         t = escape(t)+" "
         
         return s
-
-    def html_new_cell_before(self):
-        """
-        Returns the HTML code for inserting a new cell before self.
-        
-        EXAMPLES::
-        
-            sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', None)
-            sage: print C.html_new_cell_before()
-            <div class="insert_new_cell" id="insert_new_cell_0">...
-        """
-        return """<div class="insert_new_cell" id="insert_new_cell_%(id)s">
-                 </div>
-<script type="text/javascript">
-$("#insert_new_cell_%(id)s").plainclick(function(e) {insert_new_cell_before(%(id)s);});
-$("#insert_new_cell_%(id)s").shiftclick(function(e) {insert_new_text_cell_before(%(id)s);});
-</script>"""%{'id': self.id()}
-    def html_new_cell_after(self):
-        """
-        Returns the HTML code for inserting a new cell after self.
-        
-        EXAMPLES::
-        
-            sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', None)
-            sage: print C.html_new_cell_after()
-            <div class="insert_new_cell" id="insert_new_cell_0">...
-        """
-        return """<div class="insert_new_cell" id="insert_new_cell_%(id)s">
-                 </div>
-<script type="text/javascript">
-$("#insert_new_cell_%(id)s").plainclick(function(e) {insert_new_cell_after(%(id)s);});
-$("#insert_new_cell_%(id)s").shiftclick(function(e) {insert_new_text_cell_after(%(id)s);});
-</script>"""%{'id': self.id()}
 
 
     def url_to_self(self):
@@ -2178,13 +2187,18 @@ $("#insert_new_cell_%(id)s").shiftclick(function(e) {insert_new_text_cell_after(
             prnt = ""
 
         out_wrap   = '<div class="cell_output_%s%s" id="cell_output_%s">%s</div>'%(
-            prnt, typ,self.__id, out_wrap)
-        out_nowrap = '<div class="cell_output_%snowrap_%s" id="cell_output_nowrap_%s">%s</div>'%(
-            prnt, typ, self.__id, out_nowrap)
+            prnt, typ, self.__id, out_wrap)
+        if not do_print:
+            out_nowrap = '<div class="cell_output_%snowrap_%s" id="cell_output_nowrap_%s">%s</div>'%(
+                prnt, typ, self.__id, out_nowrap)
         out_html   = '<div class="cell_output_html_%s" id="cell_output_html_%s">%s </div>'%(
             typ, self.__id, out_html)
 
-        out = "%s%s%s"%(out_wrap, out_nowrap, out_html)
+        if do_print:
+            out = out_wrap + out_html
+        else:
+            out = out_wrap + out_nowrap + out_html
+            
         s = top + out + '</div>'
 
         r = ''
@@ -2192,11 +2206,13 @@ $("#insert_new_cell_%(id)s").shiftclick(function(e) {insert_new_text_cell_after(
         tbl = """
                <div class="cell_output_div">
                <table class="cell_output_box"><tr>
-               <td class="cell_number" id="cell_number_%s" onClick="cycle_cell_output_type(%s);">
+               <td class="cell_number" id="cell_number_%s" %s>
                  %s
                </td>
                <td class="output_cell">%s</td></tr></table></div>"""%(
-                   self.__id, self.__id, r, s)
+                   self.__id,
+                   '' if do_print else 'onClick="cycle_cell_output_type(%s);"'%self.__id,
+                   r, s)
 
         return tbl
     

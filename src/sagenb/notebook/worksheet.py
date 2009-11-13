@@ -190,7 +190,7 @@ class Worksheet(object):
             # A fresh worksheet
             self.clear()
             return
-        
+
         # Record the basic properties of the worksheet
         self.__system   = system
         self.__pretty_print = pretty_print
@@ -200,6 +200,9 @@ class Worksheet(object):
         self.__docbrowser = docbrowser
         self.__autopublish = auto_publish
 
+        # state sequence number, used for sync
+        self.__state_number = 0
+        
         # Initialize the cell id counter.
         self.__next_id = 0
 
@@ -215,6 +218,20 @@ class Worksheet(object):
         if create_directories:
             self.create_directories()
         self.clear()
+
+    def increase_state_number(self):
+        try:
+            self.__state_number += 1
+        except AttributeError:
+            self.__state_number = 0
+
+    def state_number(self):
+        if self.is_published(): return 0
+        try:
+            return self.__state_number
+        except AttributeError:
+            self.__state_number = 0
+            return 0
 
     def create_directories(self):
         if not os.path.exists(self.__dir):
@@ -1086,7 +1103,9 @@ class Worksheet(object):
         """
         try:
             return self.notebook().get_worksheet_with_filename('%s/%s'%self.__worksheet_came_from)
-        except AttributeError:
+        except Exception:  # things can go wrong (especially with old migrated
+                           # Sage notebook servers!), but we don't want such
+                           # problems to crash the notebook server.  
             return self
 
     def publisher(self):
@@ -2299,6 +2318,41 @@ class Worksheet(object):
     ##########################################################
     # HTML rendering of the whole worksheet
     ##########################################################
+    def html_cell_list(self, do_print=False):
+        """
+        INPUT:
+        
+            - do_print - a boolean
+
+        OUTPUT:
+        
+            - string -- the HTML for the list of cells
+        """
+        ncols = self.notebook().conf()['word_wrap_cols']
+        cells_html = ""
+        if self.is_published():
+            try:
+                return self.__html
+            except AttributeError:
+                for cell in self.cell_list():
+                    cells_html += cell.html(ncols, do_print=True) + '\n'
+                s = template(os.path.join('html', 'worksheet', 'published_worksheet.html'),
+                             ncols = ncols, cells_html = cells_html)
+                self.__html = s
+                return s
+        for cell in self.cell_list():
+            try:
+                cells_html += cell.html(ncols, do_print=do_print) + '\n'
+            except Exception, msg:
+                # catch any exception, since this exception is raised sometimes, at least
+                # for some worksheets:
+                # exceptions.UnicodeDecodeError: 'ascii' codec can't decode byte
+                #         0xc2 in position 825: ordinal not in range(128)
+                # and this causes the entire worksheet to fail to save/render, which is
+                # obviously *not* good (much worse than a weird issue with one cell).
+                print msg
+        return cells_html
+                       
     def html(self, include_title=True, do_print=False,
              confirm_before_leave=False, read_only=False):
         r"""
@@ -2319,26 +2373,12 @@ class Worksheet(object):
             sage: W.html()
             '\n\n\n<div class="cell_input_active" id="cell_resizer"></div>\n\n<div class="worksheet_cell_list" id...'
         """
-        ncols = self.notebook().conf()['word_wrap_cols']
-        cells_html = ""
-        if self.is_published():
-            try:
-                return self.__html
-            except AttributeError:
-                for cell in self.cell_list():
-                    cells_html += cell.html(ncols, do_print=True) + '\n'
-                s = template(os.path.join('worksheet', 'published_worksheet.html'),
-                             ncols = ncols, cells_html = cells_html)
-                self.__html = s
-                return s
-        for cell in self.cell_list():
-            cells_html += cell.html(ncols, do_print=do_print) + '\n'
-            
-        return template(os.path.join("worksheet", "worksheet.html"),
+        return template(os.path.join("html", "worksheet", "worksheet.html"),
                         published = self.is_published(),
                         do_print = do_print, confirm_before_leave = confirm_before_leave,
-                        cells_html = cells_html,
-                        cell_id_list = self.compute_cell_id_list())
+                        cells_html = self.html_cell_list(do_print=do_print),
+                        cell_id_list = self.cell_id_list(),
+                        state_number = self.state_number())
 
     def truncated_name(self, max=30):
         name = self.name()
@@ -2351,7 +2391,7 @@ class Worksheet(object):
         name = self.truncated_name()
         warn = self.warn_about_other_person_editing(username, WARN_THRESHOLD)
         
-        return template(os.path.join("worksheet","title.html"),
+        return template(os.path.join("html", "worksheet", "title.html"),
                         worksheet = self,
                         name = cgi.escape(self.truncated_name()),
                         warn = warn, doc_worksheet = self.is_doc_worksheet(),
@@ -2379,7 +2419,7 @@ class Worksheet(object):
             sage: W.html_save_discard_buttons()
             '\n\n<button name="button_save" title="Save changes" onClick="save_worksheet();">Save<...'
         """
-        return template(os.path.join("worksheet","save_discard_buttons.html"),
+        return template(os.path.join("html", "worksheet", "save_discard_buttons.html"),
                         doc_worksheet = self.is_doc_worksheet())
         
     def html_share_publish_buttons(self, select=None, backwards=False):
@@ -2401,7 +2441,7 @@ class Worksheet(object):
             sage: W.html_share_publish_buttons()
             '\n\n\n\n\n<a title="Print this worksheet" class="usercontrol" onClick="print_worksheet()">...'
         """
-        return template(os.path.join("worksheet","share_publish_buttons.html"),
+        return template(os.path.join("html", "worksheet", "share_publish_buttons.html"),
                         worksheet = self, select = select, backwards = backwards)
         
     def html_menu(self):
@@ -2417,7 +2457,7 @@ class Worksheet(object):
             sage: W.html_menu()
             '\n&nbsp;&nbsp;&nbsp;<select class="worksheet"  onchange="go_option(this);">\n    ...'
         """
-        return template(os.path.join("worksheet","menu.html"),
+        return template(os.path.join("html", "worksheet", "menu.html"),
                         name = _notebook.clean_name(self.name()),
                         filename_ = self.filename(), data = sorted(self.attached_data_files()),
                         systems_enumerated = enumerate(self.notebook().systems()),
@@ -2451,7 +2491,7 @@ class Worksheet(object):
         for cell in self.cell_list():
             cells_html += cell.html(ncols, do_print=do_print) + '\n'
         
-        return template(os.path.join("worksheet","worksheet_body.html"),
+        return template(os.path.join("html", "worksheet", "worksheet_body.html"),
                         cells_html = cells_html,
                         published = published,
                         do_print = do_print)
@@ -2570,12 +2610,12 @@ class Worksheet(object):
     def html_time_since_last_edited(self):
         t = self.time_since_last_edited()
         tm = convert_seconds_to_meaningful_time_span(t)
-        return template(os.path.join("worksheet","time_since_last_edited.html"),
+        return template(os.path.join("html", "worksheet", "time_since_last_edited.html"),
                         last_editor = self.last_to_edit(),
                         time = tm)
 
     def html_time_last_edited(self):
-        return template(os.path.join("worksheet","time_last_edited.html"),
+        return template(os.path.join("html", "worksheet", "time_last_edited.html"),
                         time = convert_time_to_string(self.last_edited()),
                         last_editor = self.last_to_edit())
 
@@ -2607,6 +2647,9 @@ class Worksheet(object):
         return [C.id() for C in self.cell_list()]
 
     def compute_cell_id_list(self):
+        """
+        Return list of id's of all cells.
+        """
         return [C.id() for C in self.cell_list() if isinstance(C, Cell)]
 
     def cell_list(self):
@@ -2876,12 +2919,12 @@ class Worksheet(object):
     def initialize_sage(self):
         S = self.__sage
         try:
-            dirs = 'DATA="%s";'%os.path.abspath(self.data_directory())
+            dirs = 'DATA="%s%s";'%(os.path.abspath(self.data_directory()), os.path.sep)
             dirs += '_support_.init(None, globals()); '
             cmd = """
 import base64
 import sagenb.misc.support as _support_
-import sagenb.notebook.interact  # for setting current cell id
+import sagenb.notebook.interact as _interact_ # for setting current cell id
 from sagenb.notebook.interact import interact
 
 %s
@@ -2992,7 +3035,7 @@ from sagenb.notebook.all import *
 
         # This is useful mainly for interact -- it allows
         # a cell to know it's ID.
-        input += 'sagenb.notebook.interact.SAGE_CELL_ID=%s\n'%(C.id()) 
+        input += '_interact_.SAGE_CELL_ID=%s\n'%(C.id()) 
         
         if C.time():
             input += '__SAGE_t__=cputime()\n__SAGE_w__=walltime()\n'
@@ -3117,7 +3160,10 @@ from sagenb.notebook.all import *
                     return
                 if before_prompt[-1] != '?':
                     # completions
-                    c = self.best_completion(out, C._word_being_completed)
+                    if hasattr(C, '_word_being_completed'):
+                        c = self.best_completion(out, C._word_being_completed)
+                    else:
+                        c = ''
                     C.set_changed_input_text(before_prompt + c + after_prompt)
                     out = self.completions_html(C.id(), out)
                     C.set_introspect_html(out, completing=True)
@@ -3471,7 +3517,7 @@ from sagenb.notebook.all import *
                     cell = completions[r + l*c]
                     row.append(cell)
                 except:
-                    pass
+                    row.append('')
             rows.append(row)
         return format_completions_as_html(id, rows)
 
@@ -3889,7 +3935,7 @@ from sagenb.notebook.all import *
     # List of attached files.
     ##########################################################
     def attached_html(self):
-        return template(os.path.join("worksheet","attached.html"),
+        return template(os.path.join("html", "worksheet", "attached.html"),
                         attached_files = self.attached_files())
 
     ##########################################################
@@ -4139,7 +4185,7 @@ def format_completions_as_html(cell_id, completions):
     if len(completions) == 0:
         return ''
 
-    return template(os.path.join("worksheet","completions.html"),
+    return template(os.path.join("html", "worksheet", "completions.html"),
                     cell_id = cell_id,
                     # Transpose and enumerate completions to column-major
                     completions_enumerated = enumerate(map(list, zip(*completions))))

@@ -251,7 +251,7 @@ def html_slider(id, values, callback, steps, default=0, margin=0):
         <html>...</html>
     """
     s = """<table><tr><td>
-        <div id='%s' class='ui-slider ui-slider-3' style='margin:%spx;'><span class='ui-slider-handle'></span></div>
+        <div id='%s' style='margin:%spx; margin-left: 1.0em; margin-right: 1.0em; width: 15.0em;'></div>
         </td>"""%(id,int(margin))
     if values != "null":
         s += "<td><font color='black' id='%s-lbl'></font></td>"%id
@@ -262,7 +262,7 @@ def html_slider(id, values, callback, steps, default=0, margin=0):
     # below which gets passed an anonymous function.
     s += """<script>(function(){ var values = %(values)s; setTimeout(function() {
     $('#%(id)s').slider({
-        stepping: 1, min: 0, max: %(maxvalue)s, startValue: %(startvalue)s,
+        step: 1, min: 0, max: %(maxvalue)s, value: %(startvalue)s,
         change: function (e,ui) { var position = ui.value; if(values!=null) $('#%(id)s-lbl').text(values[position]); %(callback)s; },
         slide: function(e,ui) { if(values!=null) $('#%(id)s-lbl').text(values[ui.value]); }
     });
@@ -314,10 +314,9 @@ def html_rangeslider(id, values, callback, steps, default_l=0, default_r=1, marg
         sage: html(html_rangeslider('slider-007', 'null', 'alert(pos[0]+", "+pos[1])', steps=5, default_l=2, default_r=3, margin=5))
         <html>...</html>
     """
-    s = """<table>
-    <tr><td><div id='%s' class='ui-slider ui-slider-3' style='margin:%spx;'>
-    <span class='ui-slider-handle'></span><span class='ui-slider-handle'></span>
-    </div></td></tr>"""%(id,int(margin))
+    s = """<table><tr><td>
+        <div id='%s' style='margin:%spx; margin-left: 1.0em; margin-right: 1.0em; width: 20.0em;'></div>
+        </td></tr>"""%(id,int(margin))
     if values != "null":
         s += "<tr><td><font color='black' id='%s-lbl'></font></td></tr>"%id
     s += "</table>"
@@ -332,8 +331,8 @@ def html_rangeslider(id, values, callback, steps, default_l=0, default_r=1, marg
         var sel = '#%s';
         var updatePos = function()
         {
-            pos[0]=$(sel).slider('value', 0);
-            pos[1]=$(sel).slider('value', 1);
+            pos[0]=$(sel).slider('values', 0);
+            pos[1]=$(sel).slider('values', 1);
             if(values!=null) $(sel+'-lbl').text("("+values[pos[0]]+", "+values[pos[1]]+")");
         };
         setTimeout(function()
@@ -341,10 +340,10 @@ def html_rangeslider(id, values, callback, steps, default_l=0, default_r=1, marg
             $(sel).slider(
             {
                 range: true,
-                stepping: 1,                    
+                step: 1,
                 min: 0,
                 max: %s,
-                handles: [{start: %s},{start:%s}],
+                values: [%s, %s],
                 change: function(e,ui){ updatePos(); %s; },
                 slide: updatePos
             });
@@ -661,7 +660,7 @@ class InteractControl(InteractElement):
         EXAMPLES::
 
             sage: sagenb.notebook.interact.InteractControl('x', 1).interact()
-            'interact(..., "sagenb.notebook.interact.update(..., \\"x\\", ..., sagenb.notebook.interact.standard_b64decode(\\""+encode64(NULL)+"\\"), globals());sagenb.notebook.interact.recompute(0)")'
+            'interact(..., "_interact_.update(..., \\"x\\", ..., _interact_.standard_b64decode(\\""+encode64(NULL)+"\\"), globals());_interact_.recompute(0)")'
         """
         #We have to do a try/except block here since the
         #control may not have a canvas associated with it.
@@ -673,11 +672,11 @@ class InteractControl(InteractElement):
         # The following is a crazy line to read because of all the backslashes and try/except.
         # All it does is run the interact function once after setting exactly one
         # dynamic variable.    If setting the dynamic variable fails, due to a KeyError
-        python_string = 'sagenb.notebook.interact.update(%s, \\"%s\\", %s, sagenb.notebook.interact.standard_b64decode(\\""+encode64(%s)+"\\"), globals())'%(
+        python_string = '_interact_.update(%s, \\"%s\\", %s, _interact_.standard_b64decode(\\""+encode64(%s)+"\\"), globals())'%(
             self.cell_id(), self.var(), self.adapt_number(), self.value_js(*args))
 
         if auto_update:
-            python_string += ';sagenb.notebook.interact.recompute(%s)'%self.cell_id()
+            python_string += ';_interact_.recompute(%s)'%self.cell_id()
         
         s = 'interact(%s, "%s")'%(self.cell_id(), python_string)
         return s
@@ -806,7 +805,7 @@ class InputBox(InteractControl):
         EXAMPLES::
 
             sage: sagenb.notebook.interact.InputBox('theta', 1).render()
-            '<input type=\'text\' value="1" size=80 onchange=\'interact(0, "sagenb.notebook.interact.update(0, \\"theta\\", ..., sagenb.notebook.interact.standard_b64decode(\\""+encode64(this.value)+"\\"), globals());sagenb.notebook.interact.recompute(0)")\'></input>'
+            '<input type=\'text\' value="1" size=80 onchange=\'interact(0, "_interact_.update(0, \\"theta\\", ..., _interact_.standard_b64decode(\\""+encode64(this.value)+"\\"), globals());_interact_.recompute(0)")\'></input>'
         """
         if self.__type is bool:
             return """<input type='checkbox' %s width=200px onchange='%s'></input>"""%(
@@ -1903,10 +1902,10 @@ class UpdateButton(JavascriptCodeButton):
 
             sage: b = sagenb.notebook.interact.UpdateButton(0)
             sage: b.render()
-            '<input type="button" value="Update" onclick=\'interact(0, "sagenb.notebook.interact.recompute(0)")\'>\n'
+            '<input type="button" value="Update" onclick=\'interact(0, "_interact_.recompute(0)")\'>\n'
 
         """
-        s = 'interact(%s, "sagenb.notebook.interact.recompute(%s)")'%(cell_id, cell_id)
+        s = 'interact(%s, "_interact_.recompute(%s)")'%(cell_id, cell_id)
         JavascriptCodeButton.__init__(self, "Update", s)                                     
         
 def interact(f):
@@ -2212,7 +2211,7 @@ def interact(f):
 
         sage: v = []
         sage: html('<h2>Quadratic Root Etch-a-sketch</h2>')
-        <html><font color='black'><h2>Quadratic Root Etch-a-sketch</h2></font></html>
+        <html><h2>Quadratic Root Etch-a-sketch</h2></html>
         sage: @interact
         ... def _(a=[-10..10], b=[-10..10], c=[-10..10]):
         ...       f = a*x^2 + b*x + c == 0; show(f)

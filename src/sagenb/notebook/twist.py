@@ -42,7 +42,7 @@ from twisted.web2 import static, http_headers, responsecode
 from twisted.web2.filter import gzip
 import zipfile
 
-import css, js, keyboards
+import css, js, keyboards, challenge
 
 import notebook as _notebook
 
@@ -53,10 +53,11 @@ HISTORY_NCOLS = 90
 
 from sagenb.misc.misc import SAGE_DOC, walltime, tmp_filename, tmp_dir, DATA, SAGE_VERSION
 
-css_path        = os.path.join(DATA, "css")
-image_path      = os.path.join(DATA, "images")
-javascript_path = os.path.join(DATA, "javascript")
-java_path       = os.path.join(DATA, "java")
+css_path             = os.path.join(DATA, "sage", "css")
+image_path           = os.path.join(DATA, "sage", "images")
+javascript_path      = os.path.join(DATA)
+sage_javascript_path = os.path.join(DATA, 'sage', 'js')
+java_path            = os.path.join(DATA)
 
 # the list of users waiting to register
 waiting = {}
@@ -128,7 +129,8 @@ def gzip_handler(request):
 ############################
 def message(msg, cont=None):
     template_dict = {'msg': msg, 'cont': cont}
-    return template('error_message.html', **template_dict)
+    return template(os.path.join('html', 'error_message.html'),
+                    **template_dict)
 
 def HTMLResponse(*args, **kwds):
     """
@@ -360,7 +362,7 @@ class Source(resource.Resource):
             else:
                 src = open(filename).read()
             src = escape(src)
-            return HTMLResponse(stream = template('source_code.html', src_filename=self.path, src=src, username=self.username))
+            return HTMLResponse(stream = template(os.path.join('html', 'source_code.html'), src_filename=self.path, src=src, username=self.username))
         else:
             return static.File(filename)
 
@@ -392,7 +394,7 @@ class Upload(resource.Resource):
         self.username = username
 
     def render(self, ctx):
-        return HTMLResponse(stream = template('upload.html', username=self.username))
+        return HTMLResponse(stream = template(os.path.join('html', 'upload.html'), username=self.username))
 
 class UploadWorksheet(resource.PostableResource):
     def __init__(self, username):
@@ -660,9 +662,7 @@ class Worksheet_cells(WorksheetResource, resource.Resource):
 
 class Worksheet_alive(WorksheetResource, resource.Resource):
     def render(self, ctx):
-        #self.worksheet.ping(self.username)
-        self.worksheet.ping(username=None)  # None so doesn't save a revision
-        return HTMLResponse(stream = '')
+        return HTMLResponse(stream = str(self.worksheet.state_number()))
 
 ########################################################
 # Worksheet configuration.
@@ -909,71 +909,8 @@ class Worksheet_revisions(WorksheetResource, resource.PostableResource):
 
 
 ########################################################
-# Worksheet/User/Notebooks settings and configuration
+# User Settings and Notebook Configuration
 ########################################################
-
-class Worksheet_input_settings(WorksheetResource, resource.PostableResource):
-    def render(self, ctx):
-        if ctx.args.has_key('button_cancel'):
-            return http.RedirectResponse('/home/'+self.worksheet.filename())
-        if user_type(self.username) == 'admin' or \
-               self.worksheet.owner() == self.username \
-               or self.worksheet.user_is_collaborator(self.username):
-            system = ctx.args['system'][0].strip().lower()
-            self.worksheet.set_system(system)
-            if system != 'sage':
-                post = ' (%s)'%system
-                n = self.worksheet.name()
-                i = n.rfind('(')
-                if i != -1:
-                    j = n.rfind(')')
-                    if j != -1:
-                        n = n[:i]
-                n = n.strip() + post
-                self.worksheet.set_name(n)
-            return http.RedirectResponse('/home/'+ self.worksheet.filename())
-        else:
-            s = 'You must be the owner of this worksheet to configure it.'
-            return HTMLResponse(stream = message(s))
-
-class Worksheet_settings(WorksheetResource, resource.Resource):
-    def render(self, ctx):
-        if self.worksheet.owner() != self.username:
-            s = message('You must be the owner of this worksheet to configure it.')
-        else:
-            s = notebook.html_worksheet_settings(self.worksheet, self.username)
-        return HTMLResponse(stream = s)
-
-class ProcessUserSettings(resource.PostableResource):
-    def render(self, ctx):
-        pass
-
-#class UserSettings(resource.Resource):
-#    child_process = ProcessUserSettings()
-#
-#    def __init__(self, username):
-#        self.username = username
-#
-#    def render(self, ctx):
-#        s = notebook.html_user_settings(self.username)
-#        return HTMLResponse(stream = s)
-
-class ProcessNotebookSettings(resource.PostableResource):
-    def render(self, ctx):
-        pass
-
-class NotebookSettings(resource.Resource):
-    child_process = ProcessNotebookSettings()
-
-    def __init__(self, username):
-        self.username = username
-
-    def render(self, ctx):
-        if user_type(self.username) != 'admin':
-            s = message('You must an admin to configure the notebook.')
-        else:
-            s = notebook.html_notebook_settings()
-        return HTMLResponse(stream = s)
 
 class SettingsPage(resource.PostableResource):
     def __init__(self, username):
@@ -1024,7 +961,38 @@ class SettingsPage(resource.PostableResource):
             template_dict['email_address'] = 'None' if not notebook.user(self.username)._User__email else notebook.user(self.username)._User__email
             template_dict['email_confirmed'] = 'Not confirmed' if not notebook.user(self.username).is_email_confirmed() else 'Confirmed'
         template_dict['admin'] = user_type(self.username) == 'admin'
-        return HTMLResponse(stream=template('account_settings.html', **template_dict))
+        return HTMLResponse(stream=template(os.path.join('html', 'account_settings.html'), **template_dict))
+
+
+class NotebookSettingsPage(resource.PostableResource):
+    def __init__(self, username):
+        self.username = username
+
+    def render(self, request):
+        updated = {}
+        if 'form' in request.args:
+            updated = notebook.conf().update_from_form(request.args)
+
+        template_dict = {}
+        template_dict['auto_table'] = notebook.conf().html_table(updated)
+        s = template(os.path.join('html', 'notebook_settings.html'),
+                     **template_dict)
+        return http.Response(stream = s)
+
+
+########################################################
+# Used in refreshing the cell list
+########################################################
+class Worksheet_cell_list(WorksheetResource, resource.PostableResource):
+    """
+    Return the state number and the HTML for the main body of the
+    worksheet, which consists of a list of cells.
+    """
+    def render(self, ctx):
+        W = self.worksheet
+        v = encode_list([W.state_number(), W.html_cell_list()])
+        return HTMLResponse(stream=v)
+
 
 ########################################################
 # Set output type of a cell
@@ -1058,6 +1026,7 @@ class Worksheet_new_cell_before(WorksheetResource, resource.PostableResource):
             input = ctx.args['input'][0]
 
         cell = self.worksheet.new_cell_before(id, input=input)
+        self.worksheet.increase_state_number()
         s = encode_list([cell.id(), cell.html(div_wrap=False), id])
         return HTMLResponse(stream = s)
 
@@ -1205,6 +1174,7 @@ class Worksheet_eval(WorksheetResource, resource.PostableResource):
             input_text = input_text.replace('\r\n', '\n')   # DOS
 
         W = self.worksheet
+        W.increase_state_number()
         owner = W.owner()
         if owner != '_sage_':
             if W.owner() != self.username and not (self.username in W.collaborators()):
@@ -1519,7 +1489,7 @@ def render_worksheet_list(args, pub, username):
 
     accounts = notebook.get_accounts()
 
-    return template('worksheet_listing.html', **locals())
+    return template(os.path.join('html', 'worksheet_listing.html'), **locals())
 
 
 class WorksheetsByUser(resource.Resource):
@@ -1709,16 +1679,6 @@ class WorksheetsAdmin(Worksheets):
     def childFactory(self, request, name):
         return WorksheetsByUserAdmin(name, username=self.username)
 
-############################
-# Notebook configuration
-############################
-
-class NotebookConf(Worksheets):
-    def render(self, ctx):
-        s = '<html>' + notebook.conf().html_conf_form('submit') + '</html>'
-        return HTMLResponse(stream = s)
-
-
 
 ############################
 # Adding a new worksheet
@@ -1741,7 +1701,9 @@ class Help(resource.Resource):
 
     def render(self, ctx):
         from tutorial import notebook_help
-        return HTMLResponse(stream=template('docs.html', username=self.username, notebook_help=notebook_help))
+        return HTMLResponse(stream=template(os.path.join('html', 'docs.html'),
+                                            username=self.username,
+                                            notebook_help=notebook_help))
 
 
 ############################
@@ -1753,7 +1715,8 @@ class History(resource.Resource):
         self.username = username
 
     def render(self, ctx):
-        t = template('history.html', username=self.username,
+        t = template(os.path.join('html', 'history.html'),
+                     username=self.username,
                      text = notebook.user_history_text(self.username),
                      actions=False)
         return HTMLResponse(stream=t)
@@ -1779,7 +1742,7 @@ class Main_css(resource.Resource):
 
 class Reset_css(resource.Resource):
     def render(self, ctx):
-        s = template('css/reset.css')
+        s = template(os.path.join('css', 'reset.css'))
         gzip_handler(ctx)
         return http.Response(stream=s)
 
@@ -1809,7 +1772,6 @@ class Main_js(resource.Resource):
         s = js.javascript()
         return http.Response(stream=s)
 
-
 class Keyboard_js_specific(resource.Resource):
     def __init__(self, browser_os):
         self.s = keyboards.get_keyboard(browser_os)
@@ -1818,26 +1780,37 @@ class Keyboard_js_specific(resource.Resource):
         gzip_handler(ctx)
         return http.Response(stream = self.s)
 
-
 class Keyboard_js(resource.Resource):
     def childFactory(self, request, browser_os):
         gzip_handler(request)
         return Keyboard_js_specific(browser_os)
 
-class Javascript(resource.Resource):
+class SageJavascript(resource.Resource):
     addSlash = True
     child_keyboard = Keyboard_js()
+
+    def render(self, ctx):
+        return static.File(sage_javascript_path)
+
+    def childFactory(self, request, name):
+        gzip_handler(request)
+        path = os.path.join(sage_javascript_path, name)
+        return static.File(path)
+
+setattr(SageJavascript, 'child_main.js', Main_js())
+
+class Javascript(resource.Resource):
+    addSlash = True
 
     def render(self, ctx):
         return static.File(javascript_path)
 
     def childFactory(self, request, name):
         gzip_handler(request)
+        if name == 'sage':
+            return SageJavascript()
         path = os.path.join(javascript_path, name)
         return static.File(path)
-
-setattr(Javascript, 'child_main.js', Main_js())
-
 
 
 ############################
@@ -2044,88 +2017,143 @@ class RegistrationPage(resource.PostableResource):
         self.userdb = userdb
 
     def render(self, request):
-        input_boxes = ['username', 'password', 'retype_password']
-        if notebook.conf()['email']:
-            input_boxes.append('email')
-        is_valid_dict = {'username': is_valid_username, 'password': is_valid_password,
-                         'retype_password': do_passwords_match, 'email': is_valid_email}
+        # VALIDATORS: is_valid_username, is_valid_password,
+        # do_passwords_match, is_valid_email,
+        # challenge.is_valid_response
+        # INPUT NAMES: username, password, retype_password, email +
+        # challenge fields
 
-        missing = [False] * len(input_boxes)
-        filled_in = {}
+        # TEMPLATE VARIABLES: error, username, username_missing,
+        # username_taken, username_invalid, password_missing,
+        # password_invalid, passwords_dont_match,
+        # retype_password_missing, email, email_missing,
+        # email_invalid, email_address, challenge, challenge_html,
+        # challenge_missing, challenge_invalid
+
+        # PRE-VALIDATION setup and hooks.
+        required = set(['username', 'password'])
+        empty = set()
+        validated = set()
+
+        # Template variables.  We use empty_form_dict for empty forms.
+        empty_form_dict = {}
         template_dict = {}
 
-        def errors_found():
-            for key, value in filled_in.iteritems():
-                template_dict[key] = value
-            minus = 1 if 'email' in template_dict else 0
-            size = len(template_dict) - minus
-            count = 0
-            boxes = []
-            if size == 1:
-                return ('',)
-            for i in template_dict:
-                if '_' in i:
-                    count += 1
-            plural = True if count > 1 else False
-            template_dict['error'] = 'Es ' if plural else 'E '
-
         if notebook.conf()['email']:
-            template_dict['email'] = True
+            required.add('email')
+            empty_form_dict['email'] = True
 
-        if set(input_boxes) <= set(request.args):
-            for i, box in enumerate(input_boxes):
-                filled_in[box] = request.args[box][0]
-                if box == 'retype_password':
-                    if not is_valid_dict[box](filled_in[box], filled_in['password']):
-                        template_dict['passwords_dont_match'] = True
-                elif box == 'password':
-                    if 'username' in filled_in:
-                        u = filled_in['username']
-                    else:
-                        u = None
-                    if not is_valid_dict[box](filled_in[box], u):
-                        template_dict['password_invalid'] = True
-                else:
-                    if not is_valid_dict[box](filled_in[box]):
-                        template_dict[box + '_invalid'] = True
-        else:
-            for i, box in enumerate(input_boxes):
-                if not box in request.args:
-                    missing[i] = True
+        if notebook.conf()['challenge']:
+            required.add('challenge')
+            empty_form_dict['challenge'] = True
+            chal = challenge.challenge(notebook.conf(),
+                                       is_secure = notebook.secure,
+                                       remote_ip = request.remoteAddr.host)
+            empty_form_dict['challenge_html'] = chal.html()
 
-            if set(missing) == set([True]):
-                return HTMLResponse(stream=template('registration.html', **template_dict))
-            elif set(missing) == set([False]):
-                for i, box in enumerate(input_boxes):
-                    filled_in[box] = request.args[box][0]
-                    if box == 'retype_password':
-                        if not is_valid_dict[box](filled_in[box], filled_in['password']):
-                            template_dict['passwords_dont_match'] = True
-                    elif box == 'password':
-                        if 'username' in filled_in:
-                            u = filled_in['username']
-                        else:
-                            u = None
-                        if not is_valid_dict[box](filled_in[box], u):
-                            template_dict['password_invalid'] = True
-                    else:
-                        if not is_valid_dict[box](filled_in[box]):
-                            template_dict[box + '_invalid'] = True
+        template_dict.update(empty_form_dict)
+
+        # VALIDATE FIELDS.
+
+        # Username.  Later, we check if a user with this username
+        # already exists.
+        username = request.args.get('username', [None])[0]
+        if username:
+            if not is_valid_username(username):
+                template_dict['username_invalid'] = True
             else:
-                for i, value in enumerate(missing):
-                    if value:
-                        template_dict[input_boxes[i] + '_missing'] = True
-                    elif not value:
-                        filled_in[input_boxes[i]] = request.args[input_boxes[i]][0]
-
-        if template_dict and set(template_dict) != set(['email']):
-            errors_found()
-            return HTMLResponse(stream=template('registration.html', **template_dict))
+                template_dict['username'] = username
+                validated.add('username')
         else:
+            template_dict['username_missing'] = True
+            empty.add('username')
+
+        # Password.
+        password = request.args.get('password', [None])[0]
+        retype_password = request.args.get('retype_password', [None])[0]
+        if password:
+            if not is_valid_password(password, username):
+                template_dict['password_invalid'] = True
+            elif not do_passwords_match(password, retype_password):
+                template_dict['passwords_dont_match'] = True
+            else:
+                validated.add('password')
+        else:
+            template_dict['password_missing'] = True
+            empty.add('password')
+
+        # Email address.
+        email_address = ''
+        if notebook.conf()['email']:
+            email_address = request.args.get('email', [None])[0]
+            if email_address:
+                if not is_valid_email(email_address):
+                    template_dict['email_invalid'] = True
+                else:
+                    template_dict['email_address'] = email_address
+                    validated.add('email')
+            else:
+                template_dict['email_missing'] = True
+                empty.add('email')
+
+        # Challenge (e.g., reCAPTCHA).
+        if notebook.conf()['challenge']:
+            status = chal.is_valid_response(req_args = request.args)
+            if status.is_valid is True:
+                validated.add('challenge')
+            elif status.is_valid is False:
+                err_code = status.error_code
+                if err_code:
+                    template_dict['challenge_html'] = chal.html(error_code = err_code)
+                else:
+                    template_dict['challenge_invalid'] = True
+            else:
+                template_dict['challenge_missing'] = True
+                empty.add('challenge')
+
+        # VALIDATE OVERALL.
+        if empty == required:
+            # All required fields are empty.  Not really an error.
+            form = template(os.path.join('html', 'registration.html'),
+                            **empty_form_dict)
+            return HTMLResponse(stream = form)
+        elif validated != required:
+            # Error(s)!
+            errors = len(required) - len(validated)
+            template_dict['error'] = 'E ' if errors == 1 else 'Es '
+
+            form = template(os.path.join('html', 'registration.html'),
+                            **template_dict)
+            return HTMLResponse(stream = form)
+
+        # Create an account, if username is unique.
+        try:
+            self.userdb.add_user(username, password, email_address)
+        except ValueError:
+            template_dict['username_taken'] = True
+            template_dict['error'] = 'E '
+
+            form = template(os.path.join('html', 'registration.html'),
+                            **template_dict)
+            return HTMLResponse(stream = form)
+
+        # POST-VALIDATION hooks.  All required fields should be valid.
+        if notebook.conf()['email']:
+            from sagenb.notebook.smtpsend import send_mail
+            from sagenb.notebook.register import make_key, build_msg
+
+            # TODO: make this come from the server settings
+            key = make_key()
+            listenaddr = notebook.address
+            port = notebook.port
+            fromaddr = 'no-reply@%s' % listenaddr
+            body = build_msg(key, username, listenaddr, port, notebook.secure)
+
+            # Send a confirmation message to the user.
             try:
-                e = filled_in['email'] if notebook.conf()['email'] else ''
-                self.userdb.add_user(filled_in['username'], request.args['password'][0],
-                                     e)
+                send_mail(fromaddr, email_address,
+                          "FEMhub Notebook Registration", body)
+                waiting[key] = username
             except ValueError:
                 template_dict['username_taken'] = True
                 errors_found()
@@ -2145,17 +2173,11 @@ class RegistrationPage(resource.PostableResource):
 
                 # Send a confirmation message to the user.
                 try:
-                    send_mail(fromaddr, destaddr, "Sage Notebook Registration",body)
+                    send_mail(fromaddr, destaddr, "FEMhub Notebook Registration",body)
                     waiting[key] = filled_in['username']
                 except ValueError:
                     pass
 
-            template_dict = {'accounts': notebook.get_accounts(),
-                             'default_user': notebook.default_user(),
-                             'welcome': filled_in['username'],
-                             'recovery': notebook.conf()['email'],
-                             'sage_version':SAGE_VERSION}
-            return HTMLResponse(stream=template('login.html', **template_dict))
 
 class ForgotPassPage(resource.Resource):
 
@@ -2201,7 +2223,7 @@ class ForgotPassPage(resource.Resource):
 
             return HTMLResponse(stream=message("A new password has been sent to your e-mail address.", '/'))
         else:
-            s = template('account_recovery.html')
+            s = template(os.path.join('html', 'account_recovery.html'))
         return HTMLResponse(stream=s)
 
 class ListOfUsers(resource.Resource):
@@ -2238,7 +2260,7 @@ class ListOfUsers(resource.Resource):
         users = sorted(notebook.valid_login_names())
         del users[users.index('admin')]
         template_dict['users'] = [notebook.user(i) for i in users]
-        return HTMLResponse(stream = template('user_management.html', **template_dict))
+        return HTMLResponse(stream = template(os.path.join('html', 'user_management.html'), **template_dict))
 
 class AdminAddUser(resource.PostableResource):
     def __init__(self, userdb):
@@ -2249,18 +2271,18 @@ class AdminAddUser(resource.PostableResource):
         if 'username' in request.args:
             username = request.args['username'][0]
             if not is_valid_username(username):
-                return HTMLResponse(stream=template('admin_add_user.html', error='username_invalid', username=username))
+                return HTMLResponse(stream=template(os.path.join('html', 'admin_add_user.html'), error='username_invalid', username=username))
 
             from random import choice
             import string
             chara = string.letters + string.digits
             password = ''.join([choice(chara) for i in range(8)])
             if username in notebook.usernames():
-                return HTMLResponse(stream=template('admin_add_user.html', error='username_taken', username=username))
+                return HTMLResponse(stream=template(os.path.join('html', 'admin_add_user.html'), error='username_taken', username=username))
             notebook.add_user(username, password, '', force=True)
             return HTMLResponse(stream=message('The temporary password for the new user <em>%s</em> is <em>%s</em>' % (username, password), '/adduser'))
         else:
-            return HTMLResponse(stream=template('admin_add_user.html'))
+            return HTMLResponse(stream=template(os.path.join('html', 'admin_add_user.html')))
 
 class InvalidPage(resource.Resource):
     addSlash = True
@@ -2303,7 +2325,7 @@ class Toplevel(resource.PostableResource):
                          'default_user': notebook.default_user(),
                          'recovery': notebook.conf()['email'],
                          'sage_version':SAGE_VERSION}
-        return HTMLResponse(stream=template('login.html', **template_dict))
+        return HTMLResponse(stream=template(os.path.join('html', 'login.html'), **template_dict))
 
     def userchildFactory(self, request, name):
         return InvalidPage(msg = "unauthorized request", username = self.username)
@@ -2319,7 +2341,7 @@ class LoginResourceClass(resource.Resource):
                          'default_user': notebook.default_user(),
                          'recovery': notebook.conf()['email'],
                          'sage_version':SAGE_VERSION}                         
-        return HTMLResponse(stream=template('login.html', **template_dict))
+        return HTMLResponse(stream=template(os.path.join('html', 'login.html'), **template_dict))
 
     def childFactory(self, request, name):
         return LoginResource
@@ -2357,7 +2379,7 @@ class AnonymousToplevel(Toplevel):
                          'default_user': notebook.default_user(),
                          'recovery': notebook.conf()['email'],
                          'sage_version':SAGE_VERSION}
-        response = HTMLResponse(stream=template('login.html', **template_dict))
+        response = HTMLResponse(stream=template(os.path.join('html', 'login.html'), **template_dict))
         response.headers.setHeader("set-cookie", [http_headers.Cookie('cookie_test', 'cookie_test')])
         return response
 
@@ -2376,15 +2398,15 @@ class FailedToplevel(Toplevel):
                              'default_user': notebook.default_user(),
                              'username_error': True,
                              'recovery': notebook.conf()['email'],
-                             'sage_version':SAGE_VERSION}                             
-            return HTMLResponse(stream=template('login.html', **template_dict))
+                             'sage_version':SAGE_VERSION}
+            return HTMLResponse(stream=template(os.path.join('html', 'login.html'), **template_dict))
         elif self.problem == 'password':
             template_dict = {'accounts': notebook.get_accounts(),
                              'default_user': self.username,
                              'password_error': True,
                              'recovery': notebook.conf()['email'],
                              'sage_version':SAGE_VERSION}                             
-            return HTMLResponse(stream=template('login.html', **template_dict))
+            return HTMLResponse(stream=template(os.path.join('html', 'login.html'), **template_dict))
         elif self.problem == 'suspended':
             return HTMLResponse(stream = message("Your account is currently suspended."))
         else:
@@ -2427,7 +2449,6 @@ class UserToplevel(Toplevel):
     userchild_home = Worksheets
     userchild_live_history = LiveHistory
     userchild_new_worksheet = NewWorksheet
-    userchild_notebook_settings = NotebookSettings
     userchild_settings = SettingsPage
     userchild_pub = PublicWorksheets
     userchild_upload = Upload
@@ -2464,6 +2485,7 @@ class AdminToplevel(UserToplevel):
     userchild_home = WorksheetsAdmin
     child_users = ListOfUsers
     child_adduser = AdminAddUser
+    child_notebooksettings = NotebookSettingsPage
 
 def user_type(username):
     # one of admin, guest, user
