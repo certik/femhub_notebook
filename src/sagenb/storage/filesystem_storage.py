@@ -34,11 +34,12 @@ Sage notebook server::
              
 """
 
-import copy, cPickle, shutil, tarfile
+import copy, cPickle, shutil, tarfile, tempfile
 
 import os
 
 from abstract_storage import Datastore
+from sagenb.misc.misc import set_restrictive_permissions
 
 def is_safe(a):
     """
@@ -85,7 +86,10 @@ class FilesystemDatastore(Datastore):
         return path
 
     def _user_path(self, username):
-        return self._makepath(os.path.join(self._home_path, username))
+        # There are weird cases, e.g., old notebook server migration
+        # where username is None, and if we don't string it here,
+        # saving can be broken (at a bad moment!).
+        return self._makepath(os.path.join(self._home_path, str(username)))
 
     def _worksheet_pathname(self, username, id_number):
         return os.path.join(self._user_path(username), str(id_number))
@@ -126,15 +130,15 @@ class FilesystemDatastore(Datastore):
     ##################################################################################
     def _load(self, filename):
         return cPickle.load(open(self._abspath(filename)))
-        #return json.load(open(self._abspath(filename)))
-        #return yaml.load(open(self._abspath(filename)))
 
-    def _save(self, obj, filename):
+    def _save(self, obj, filename, ):
         s = cPickle.dumps(obj)
         open(self._abspath(filename), 'w').write(s)
-        #s = yaml.dump(obj)
-        #s = json.dumps(obj, indent=4)
-        #json.dump(obj, open(self._abspath(filename),'w'), indent=4)
+
+    def _permissions(self, filename):
+        f = self._abspath(filename)
+        if os.path.exists(f):
+            set_restrictive_permissions(f, allow_execute=False)
 
     ##################################################################################
     # Conversions to and from basic Python database (so that json storage will work).
@@ -183,6 +187,7 @@ class FilesystemDatastore(Datastore):
         """
         basic = self._server_conf_to_basic(server_conf)
         self._save(basic, 'conf.pickle')
+        self._permissions('conf.pickle')
 
     def load_users(self):
         """
@@ -223,7 +228,8 @@ class FilesystemDatastore(Datastore):
         
         """
         self._save(self._users_to_basic(users), 'users.pickle')
-
+        self._permissions('users.pickle')
+        
     def load_user_history(self, username):
         """
         Return the history log for the given user.
@@ -251,7 +257,9 @@ class FilesystemDatastore(Datastore):
 
             - ``history`` -- list of strings
         """
-        self._save(history, self._history_filename(username))
+        filename = self._history_filename(username)
+        self._save(history, filename)
+        self._permissions(filename)
         
     def save_worksheet(self, worksheet, conf_only=False):
         """
@@ -339,13 +347,24 @@ class FilesystemDatastore(Datastore):
         tmp = self._abspath(self._worksheet_conf_filename(username, id_number) + '2')
         T.add(tmp, os.path.join('sage_worksheet','worksheet_conf.pickle'))
         os.unlink(tmp)
-        
-        T.add(self._abspath(self._worksheet_html_filename(username, id_number)),
-              os.path.join('sage_worksheet','worksheet.html'))
 
-        path = self._abspath(self._worksheet_pathname(username, id_number))
+        worksheet_html = self._abspath(self._worksheet_html_filename(username, id_number))
+        T.add(worksheet_html, os.path.join('sage_worksheet','worksheet.html'))
+
+        # The following is purely for backwards compatibility with old notebook servers
+        # prior to sage-4.1.2.
+        fd, worksheet_txt =  tempfile.mkstemp()
+        old_heading = "%s\nsystem:%s\n"%(basic['name'], basic['system'])
+        open(worksheet_txt,'w').write(old_heading + open(worksheet_html).read())
+        T.add(worksheet_txt,
+              os.path.join('sage_worksheet','worksheet.txt'))
+        os.unlink(worksheet_txt)
+        os.fdopen(fd,'w').close()  # important, so we don't leave an open file handle!
+        # end backwards compat block.
+
 
         # Add the contents of the DATA directory
+        path = self._abspath(self._worksheet_pathname(username, id_number))
         data = os.path.join(path, 'data')
         if os.path.exists(data):
             for X in os.listdir(data):
@@ -361,6 +380,7 @@ class FilesystemDatastore(Datastore):
         # frequently *complain* about Sage exporting a record of their
         # mistakes anyways.
         T.close()
+
 
     def _import_old_worksheet(self, username, id_number, filename):
         """

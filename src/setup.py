@@ -21,7 +21,7 @@ def all_files(dir, lstrip):
     
 
 code = setup(name = 'sagenb',
-      version     = '0.2.7',   # the spkg-dist script assumes single quotes here
+      version     = '0.4.3',    # the spkg-dist script assumes single quotes here
       description = 'The Sage Notebook',
       license     = 'GNU Public License (GPL) v2+',
       author      = 'William Stein et al.',
@@ -29,14 +29,19 @@ code = setup(name = 'sagenb',
       url         = 'http://www.sagemath.org',
       packages    = ['sagenb',
                      'sagenb.interfaces',
-                     'sagenb.misc',                                          
+                     'sagenb.misc',                                 
                      'sagenb.notebook',
                      'sagenb.notebook.compress',
                      'sagenb.simple',
-                     'sagenb.storage'
+                     'sagenb.storage',
+                     'sagenb.testing',
+                     'sagenb.testing.tests',
+                     'sagenb.testing.selenium'
                      ],
-      package_data = {'sagenb':all_files('sagenb/data', 'sagenb/')}
+      scripts      = ['sagenb/data/jmol/jmol',
+                      'sagenb/data/sage3d/sage3d',
+                     ],
+      package_data = {'sagenb':
+                          all_files('sagenb/data', 'sagenb/')
+                      }
       )
-
-
-
