@@ -143,8 +143,8 @@ late_import_done = False
 def late_import():
     global SEP, notebook_twist, late_import_done
     if not late_import_done:
-        from sage.server.notebook.twist import SEP
-        import sage.server.notebook.twist as notebook_twist
+        from sagenb.notebook.twist import SEP
+        import sagenb.notebook.twist as notebook_twist
         late_import_done = True
 
 def simple_jsonize(data):
