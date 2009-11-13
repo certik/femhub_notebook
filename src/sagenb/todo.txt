@@ -70,9 +70,9 @@ faster.  This is a top optimization priority.
 [ ] "untitled renaming".  Make it an option in the user confs, which
 is on by default, by you can turn it off.
 
-[ ] add message to the top of each *old* sage notebook .py file
+[ ] add message to the top of each *old* FEMhub notebook .py file
  stating that one should work on sagenb instead.  This is a patch to
- the core Sage library.
+ the core FEMhub library.
 
 [ ] fix all doctests in sagenb code and make a patch against core
 sage library that imports enough of sagenb by default so I can 
@@ -109,13 +109,13 @@ message.  This would limit (though not prevent) damages.
 
 [ ] Jonathan Gutow -- redo how jmol works
 
-[ ] Get peter.jipsen's "canvas3d_lib.js + Pre3d does shaded surfaces" into Sage
+[ ] Get peter.jipsen's "canvas3d_lib.js + Pre3d does shaded surfaces" into FEMhub
 
 [ ] notebook docs -- something in "doc/en/sagenb"
 
 [ ] implement base_url
 
-[ ] get rid of list of 'Sage Users' when publishing worksheets --
+[ ] get rid of list of 'FEMhub Users' when publishing worksheets --
 that's not appropriate given how sage has grown.
 
 [ ] notebook(default_mode="python") way to make the notebook default
@@ -153,7 +153,7 @@ would be good enough to do the switch."
 
 [ ] make it so uploading a worksheet does not lock the server like it does now.
 
-[ ] secure mode outside of sage -- fix it to work with openssl, etc.
+[ ] secure mode outside of FEMhub -- fix it to work with openssl, etc.
 
 [ ] more stress testing, etc., using mechanize: http://wwwsearch.sourceforge.net/mechanize/
 
@@ -162,16 +162,24 @@ parts (e.e., images, DATA, etc.) with checkboxes.
 
 [ ] change api for notebook command; in particular enable capability
 <<<<<<< HEAD:src/sagenb/todo.txt
+<<<<<<< HEAD:src/sagenb/todo.txt
     to have different sage commadn on remote machine
 =======
     to have different sage command on remote machine
 
 >>>>>>> e98b9cd... updated to hg 182:54f41fd841a3:src/sagenb/todo.txt
+=======
+    to have different FEMhub commadn on remote machine
+>>>>>>> ff49d99... changed Sage->FEMhub; edited help file, login page and other changes:src/sagenb/todo.txt
 [ ] worksheet processes using named pipes
 
 [ ] code to benchmark notebook externally
 <<<<<<< HEAD:src/sagenb/todo.txt
+<<<<<<< HEAD:src/sagenb/todo.txt
 [ ] implement %cython mode outside sage (and as a full mode?)
+=======
+[ ] implement %cython mode outside FEMhub (and as a full mode?)
+>>>>>>> ff49d99... changed Sage->FEMhub; edited help file, login page and other changes:src/sagenb/todo.txt
 [ ] fix doctests
 [ ] worksheet processes use fork
 [ ] worksheet process use multiprocessing 
@@ -190,12 +198,16 @@ parts (e.e., images, DATA, etc.) with checkboxes.
 
 [ ] @interact: make it so docstring of function is somehow nicely typeset and accessible
 <<<<<<< HEAD:src/sagenb/todo.txt
+<<<<<<< HEAD:src/sagenb/todo.txt
 [ ] @interact's that can be included with sage
 =======
 
 [ ] @interact's that can be included with sage
 
 >>>>>>> e98b9cd... updated to hg 182:54f41fd841a3:src/sagenb/todo.txt
+=======
+[ ] @interact's that can be included with FEMhub
+>>>>>>> ff49d99... changed Sage->FEMhub; edited help file, login page and other changes:src/sagenb/todo.txt
 [ ] "browse your computer" field of upload is not editable.  fix that.
 
 [ ] improve tracebacks of % modes, e.g., %python then 1/0 is ugly.
@@ -205,7 +217,11 @@ parts (e.e., images, DATA, etc.) with checkboxes.
 what has happened recently. login IPs, type and time. you can also
 invalidate all other sessions on other PCs where cookies are stored.
 <<<<<<< HEAD:src/sagenb/todo.txt
+<<<<<<< HEAD:src/sagenb/todo.txt
 [ ] somehow connect http://qwebirc.org with Sage?
+=======
+[ ] somehow connect http://qwebirc.org with FEMhub?
+>>>>>>> ff49d99... changed Sage->FEMhub; edited help file, login page and other changes:src/sagenb/todo.txt
 [ ] statistics of notebooks, e.g., how many per user, names of all users, how many users?
 [ ] If a worksheet is still named "untitled" then perhaps the system
 should not just blindly save it with that pseudo-title when you click
@@ -250,20 +266,20 @@ DONE:
 [x] control-c to stop notebook
 [x] write pexpect based worksheet process system using the filesystem as before.
 [x] reference should have restart reset state
-[x] one user running another user's sage install on OS X -- Abort!
+[x] one user running another user's FEMhub install on OS X -- Abort!
 [x] implement ulimit/ssh/etc options like before
-[x] good error message on crash of the sage process...
+[x] good error message on crash of the FEMhub process...
 [x] max_walltime -- doesnt' work
 [x] push my hg repo somewhere
 [x] start public demo server using ssh
 [x] simple notebook stress test
-[x] trim list of alternative notebooks sessions when not run as part of sage.
-[x] secure mode with sage present -- fix it
+[x] trim list of alternative notebooks sessions when not run as part of FEMhub.
+[x] secure mode with FEMhub present -- fix it
 [x] uploading: "rbeezer -- williamstein: I tried one URL, one on disk,
 both came back "internal server error" - I can try a few more.  Do you
 want bugs in Trac or Google group"
 [x] open(DATA+'/foo.txt','w')
-DATA directory permissions issue -- the whole design of the "DATA" directory needs to be redone, since I vastly improved the security model of how the two-user notebook works (now all computations are done by a user that does *not* have permission to view or change *anything* in the server's sage_notebook directory -- everything happens in /tmp -- this is a VAST improvement, but means that DATA directory just doesn't work anymore as implemented). 
+DATA directory permissions issue -- the whole design of the "DATA" directory needs to be redone, since I vastly improved the security model of how the two-user notebook works (now all computations are done by a user that does *not* have permission to view or change *anything* in the server's FEMhub_notebook directory -- everything happens in /tmp -- this is a VAST improvement, but means that DATA directory just doesn't work anymore as implemented). 
 [x] "Upload or create data file attached to the worksheet '%s'"
 [x] pure python mode now broken with expect implementation -- every input crashes worksheet
 [x] notebook(...) command should *not* remember options from last run. that's just obnoxious.
@@ -274,10 +290,10 @@ DATA directory permissions issue -- the whole design of the "DATA" directory nee
 [x] "download" from published doesn't work right.
 [x] (invalid) permissions of .sagenb directory:
 drwxr-xr-x    5 wstein     staff    170 Sep 26 15:28 .sagenb
-this is a problem unless we just switch back to using .sage directory in official release (which we will do!)
+this is a problem unless we just switch back to using .femhub directory in official release (which we will do!)
 [x] notebook server should take ownership of all files it gets back
 [x] Uploading file (button at bottom of page is misleading).
-[x] (invalid) make patch to remove notebook from sage itself.
+[x] (invalid) make patch to remove notebook from FEMhub itself.
     We *can't* do this, because if we do, then old notebooks can't be migrated.  Ouch.
 [x] make sure that the old notebook directory "just works" with the
 new notebook: problem -- old notebooks unpickle into the old notebook
@@ -291,12 +307,12 @@ Stein wrote! ouch)
 [x] make an official spkg for inclusion in sage-4.1.2.
 [x] show(plot(sin)); show(plot(cos))  only shows one plot
 [x] reimplement sphinx introspection. 
-    * confdir in cell.py won't work without a trivial Sphinx directory, when not in Sage. make it.
+    * confdir in cell.py won't work without a trivial Sphinx directory, when not in FEMhub. make it.
 [x] sphinx: crazy insane whitespace -- see screenshot here:
       http://sage.math.washington.edu/home/wstein/patches/whitespace.png
     got from E = EllipticCurve([0,-39409298,0,5554231502,0]); 
     E.Lambda(<tab>
-[x] "Sign into the Sage Notebook v" <-- missing version number
+[x] "Sign into the FEMhub Notebook v" <-- missing version number
 [x] version not listed in upper left corner of worksheet either
 
 [x] sphinx: get math macros working on sphinx mode, e.g., if you do "ZZ?" you
@@ -365,7 +381,7 @@ inspection. It is possible that files are created outside of path,
 e.g. members that have absolute filenames starting with "/" or
 filenames with two dots "..".
 
-Incidentally, this implies somebody could hack the Sage notebook
+Incidentally, this implies somebody could hack the FEMhub notebook
 server by uploading a foo.sws that overwrites key information, e.g.,
 nb.sobj or worksheet source code (!)
 
@@ -401,7 +417,7 @@ clarify to me how to improve a lot of other things.
 [x] force choice of title
 [x] make it so new notebooks work
 
-[x] Starting w/o an existing .sage, I get exceptions.KeyError: "No key
+[x] Starting w/o an existing .femhub, I get exceptions.KeyError: "No key
  'email' and no default for this key" with the latest
   sagenb, if I click on "Settings" as admin.
   Actually, simply clicking "Sign out" triggers the 'email' KeyError, 

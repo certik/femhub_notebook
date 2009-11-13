@@ -17,7 +17,7 @@ from sagenb.notebook.template import template
 
 def css(color='default'):
     r"""
-    Return the CSS header used by the Sage Notebook.
+    Return the CSS header used by the FEMhub Notebook.
     
     INPUT:
     

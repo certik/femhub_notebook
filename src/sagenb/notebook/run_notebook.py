@@ -1,5 +1,5 @@
 """nodoctest
-Server the Sage Notebook.
+Server the FEMhub Notebook.
 """
 
 #############################################################################
@@ -10,12 +10,12 @@ Server the Sage Notebook.
 #############################################################################
 
 try:
-    # If Sage is installed, then we have gnutls, etc., and GPL'd code,
+    # If FEMhub is installed, then we have gnutls, etc., and GPL'd code,
     # so we prefer GNUtls.
     import sage.misc.misc
     protocol = 'tls'
 except ImportError:
-    # We are not in the presence of Sage, so we probably have SSL,
+    # We are not in the presence of FEMhub, so we probably have SSL,
     # which is better anyways.
     protocol = 'ssl'
 
@@ -121,7 +121,7 @@ def notebook_twisted(self,
             print "*"*70
             print "\n"
             if secure:
-                print "Login to the Sage notebook as admin with the password you specified above."
+                print "Login to the FEMhub notebook as admin with the password you specified above."
         #nb.del_user('root')  
             
     nb.set_server_pool(server_pool)
@@ -286,10 +286,10 @@ reactor.addSystemEventTrigger('before', 'shutdown', save_notebook)
 
 def get_admin_passwd():
     print "\n"*2
-    print "Please choose a new password for the Sage Notebook 'admin' user."
+    print "Please choose a new password for the FEMhub Notebook 'admin' user."
     print "Do _not_ choose a stupid password, since anybody who could guess your password"
     print "and connect to your machine could access or delete your files."
-    print "NOTE: Only the md5 hash of the password you type is stored by Sage."
+    print "NOTE: Only the md5 hash of the password you type is stored by FEMhub."
     print "You can change your password by typing notebook(reset=True)."
     print "\n"*2
     while True:

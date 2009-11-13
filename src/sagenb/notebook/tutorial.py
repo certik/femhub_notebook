@@ -9,7 +9,7 @@
 #############################################################################
 
 r"""
-Sage Notebook Interface
+FEMhub Notebook Interface
 
 AUTHORS:
     -- William Stein (2006-05-06): initial version
@@ -20,8 +20,8 @@ AUTHORS:
     -- Yi Qiang
     -- Bobby Moretti  
 
-The Sage graphical user interface is unusual in that it operates via
-your web browser.  It provides you with Sage worksheets that you can
+The FEMhub graphical user interface is unusual in that it operates via
+your web browser.  It provides you with FEMhub worksheets that you can
 edit and evaluate, which contain scalable typeset mathematics and
 beautiful antialised images.  To try it out immediately, do this:
 
@@ -30,7 +30,7 @@ beautiful antialised images.  To try it out immediately, do this:
 
 \subsection{Supported Browsers}
 
-The Sage notebook should fully work with Firefox (and Mozilla).  It
+The FEMhub notebook should fully work with Firefox (and Mozilla).  It
 may work to some extent with Safari and Opera.  Internet Explorer is
 not supported.
 
@@ -39,7 +39,7 @@ Here are some things to try in the the notebook to get a feeling
 for it.
  
 Type "2+2" in the blank box and press "shift-enter".
-The line below"2+2" will turn a different color for a moment while a Sage kernel
+The line below"2+2" will turn a different color for a moment while a FEMhub kernel
 fires up and computes the answer.
  
 Your cursor should now be in the next box down.   Type \code{a = 2\^1000}
@@ -61,7 +61,7 @@ function, e.g.,
 \end{verbatim}
 Click on the left side of the figure (twice) to make it disappear.
  
-One important feature of the Sage notebook is that you can
+One important feature of the FEMhub notebook is that you can
 "queue up" a bunch of calculations in a row, *while* still editing the
 notebook!  As an example, consider computing factorials, which takes a
 while (but not forever).  First, enter the following in a blank box and
@@ -80,7 +80,7 @@ While f(6) is computing (if it finishes first, restart it by
 just hitting shift-enter in the box where "f(6)" is), try typing
 "f(4)" in the next box.  You're allowed to give input, but the
 result doesn't get computed immediately.  You can enter several more
-lines as well, etc.; when the f(6) finally finishes, Sage goes on
+lines as well, etc.; when the f(6) finally finishes, FEMhub goes on
 to compute "f(4)".   You can queue up dozens of calculations.  For
 example, if you hit the "Evaluate" link in the upper right, the
 whole worksheet is queued up for computation.  Try it.   When the
@@ -135,13 +135,13 @@ In this way you can make a single session that has input blocks
 that work with a range of different systems.
 
 (Note -- there is currently no support for
-pulling in objects and evaluating code in Sage by typing
+pulling in objects and evaluating code in FEMhub by typing
 "sage(...)" inside the input block.  This is planned.)
 
 \subsubsection{Typesetting Mathematics}
 SAGE \emph{includes} jsMath, which is an implementation of the TeX
 math layout engine in javascript.  If you use the show or view
-commands, they display a given Sage object typeset using jsmath.
+commands, they display a given FEMhub object typeset using jsmath.
 Moreover, if you put \code{\%jsmath} at the beginning of an input
 cell, the whole cell will be typeset using jsmath.  Also, you can type
 \code{jsmath(obj)} to typeset a given object obj using jsmath.
@@ -221,7 +221,7 @@ examples by starting the block with ">>>" or including an example.
  
 \subsubsection{Saving and Loading Notebooks and Worksheets}
  
-The Sage notebook is very persistent.  Every time you submit
+The FEMhub notebook is very persistent.  Every time you submit
 a cell for computation, the state of the notebook is saved (a
 few kb's file).  If you quit the notebook and reload, it will
 have everything you typed from the previous session, along
@@ -236,7 +236,7 @@ variables using the \code{load_session} command.
  
 \subsubsection{Architecture}
  
-The Sage Notebook is an ``AJAX application'' that can run either
+The FEMhub Notebook is an ``AJAX application'' that can run either
 entirely locally on your desktop machine, or partly on
 a server and via a web browser that could be located somewhere
 else.
@@ -245,7 +245,7 @@ address when starting the notebook), you should also set
 the username and password, so not just anybody can access
 the notebook.
 
-Anywhere, here are the components of the Sage Notebook:
+Anywhere, here are the components of the FEMhub Notebook:
 
 \begin{enumerate}
 \item Web Server: A Python process that uses the
@@ -254,12 +254,12 @@ Anywhere, here are the components of the Sage Notebook:
      process also handles all requests from the web browser,
      e.g., organizing computation of cells, etc.  It
      only imports a small
-     subset of the Sage library.  In particular, if you do
+     subset of the FEMhub library.  In particular, if you do
      "sage -notebook" at the command line, only some of 
-     Sage is imported.  
+     FEMhub is imported.  
  
- \item Sage Server:
-     A Python process with all the Sage libraries loaded; this
+ \item FEMhub Server:
+     A Python process with all the FEMhub libraries loaded; this
      is started by (1) when a web browser first requests that
      a cell be evaluated.  There's (up to) one of these
      for each worksheet.
@@ -267,22 +267,22 @@ Anywhere, here are the components of the Sage Notebook:
  \item WEB Browser: The web browser runs a 1000-line javascript (plus
      800 lines of css) program that Alex, Tom and I wrote from
      scratch, which implements much of the browser-side part of the
-     Sage notebook functionality.
+     FEMhub notebook functionality.
      
 \end{enumerate}
  
-When you use the Sage Notebook, you are mainly interacting with a
+When you use the FEMhub Notebook, you are mainly interacting with a
 javascript program.  When you do something serious, e.g., request
 computation of some input, create a new cell, etc., a request is made
 from your web browser to the web server telling it what is going on.
-If it's a calculation, the web server tells the Sage server to get
+If it's a calculation, the web server tells the FEMhub server to get
 started on the calculation, and tells the web browser to check several
 times a second whether there is anything new with the calculation.
 When something new appears it fills that in.  This continues until all
 calculations are done. During this time, you can edit cells, create
 new cells, submit more computations, etc.  Note that output is
 updated as the computation proceeds, so you can verbosely watch
-a computation progress.  For example, try the following from the Sage
+a computation progress.  For example, try the following from the FEMhub
 Notebook:
 
 \begin{verbatim}
@@ -294,21 +294,21 @@ for i in range(10):
  
 You get to watch as the integers from 1 to 10 are "computed".
 Actually, getting this output to be reported as the computation
-proceeds is, I think, \emph{crucial} to making a really usable Sage
+proceeds is, I think, \emph{crucial} to making a really usable FEMhub
 GUI--users (i.e., me) want to run huge computations and watch the
 output progress.
  
 The architecture is also good from the point of view of being able to
 interrupt running computations.  What happens when you request an
 interrupt is that the web browser sends a message to the web server,
-which in turn tells the Sage server to stop computing by sending it
+which in turn tells the FEMhub server to stop computing by sending it
 many interrupt signals (for several seconds) until it either stops, or
 if it's really frozen (due to a bug, or calling into a C function that
 isn't properly wrapped in signal handling, or maybe you run an
-interactive program, e.g., via "os.system('...')"), it'll just kill that Sage server
+interactive program, e.g., via "os.system('...')"), it'll just kill that FEMhub server
 and start a new one.  The result is that the
 user doesn't get a frozen web browser or browser interface at any point,
-and even if the whole Sage process went down and froze, at least all
+and even if the whole FEMhub process went down and froze, at least all
 your input and output from your session is still there in your
 browser.  The only thing you've lost is the definition of all your
 variables.  Hit "shift-enter" a few times or "evaluate all" and you're
@@ -348,7 +348,7 @@ the "save" command), and get back to where you were quickly.
 
 notebook_help = [
     ('Find Help and Documentation',
-     [('Get Started with Sage', '<a href="/doc/live/tutorial/index.html">Work through the tutorial</a> (if you have trouble with it, view the <a href="/doc/static/tutorial/index.html">static version</a>).'),
+     [('<b>Get Started with FEMhub Web Notebook</b>', 'The best way is to try out simple worksheets that explain elementary methods of numerical analysis.<br><br><b>Step 1:</b> Go to <a href="http://nb.femhub.org/"><http://nb.femhub.org/</a> and create an account. This is automatic and fast. Report any problems to femhub@googlegroups.com.<br><br><b>Step 2:</b> Log into the web notebook. Click on "published worksheets". Then click on any link starting with "Num Methods", the simplest one being "Num Methods: Taylor Polynomial".<br><br><b>Step 3:</b> Click on "Edit a Copy" in the upper left corner and wait for the browser response. Scroll down below the first input window and click "Evaluate". This will load the program. Then there are two input windows with two different ways to plot a Taylor polynomial that are self-explanatory.<br><br><b>Step 4:</b> There are multiple other worksheets whose title begins with "Num Methods:". Try them out and give us your feedback!<br><br><b>Step 5:</b> You can try out worksheets starting with "Hermes2D:" that allow you to solve finite element problems via the internet. Feel free to adjust the existing worksheets to fit your own needs. We are working on expanding the possibilities.'),
       ('Help About',
        'Type ? immediately after the object or function and press tab.'),
       ('Source Code',

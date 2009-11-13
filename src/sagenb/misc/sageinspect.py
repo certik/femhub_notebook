@@ -1,5 +1,5 @@
 r"""
-Inspect Python, Sage, and Cython objects.
+Inspect Python, FEMhub, and Cython objects.
 
 This module extends parts of Python's inspect module to Cython objects.
 
@@ -58,7 +58,7 @@ Python classes::
     '.../attach.py'
 
     sage: sage_getdoc(sage.misc.attach.Attach).lstrip()
-    "Attach a file to a running instance of Sage..."
+    "Attach a file to a running instance of FEMhub..."
 
     sage: sage_getsource(sage.misc.attach.Attach)
     'class Attach:...'
@@ -283,7 +283,7 @@ def sage_getfile(obj):
     r"""
     Get the full file name associated to ``obj`` as a string.
 
-    INPUT: ``obj``, a Sage object, module, etc.
+    INPUT: ``obj``, a FEMhub object, module, etc.
 
     EXAMPLES::
 
@@ -338,7 +338,7 @@ def sage_getargspec(obj):
     AUTHORS:
     
     - William Stein: a modified version of inspect.getargspec from the
-      Python Standard Library, which was taken from IPython for use in Sage.
+      Python Standard Library, which was taken from IPython for use in FEMhub.
     - Extensions by Nick Alexander
     """
     if not callable(obj):

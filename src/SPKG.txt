@@ -1,8 +1,8 @@
-= Sage Notebook =
+= FEMhub Notebook =
 
 == Description ==
 
-The Sage Notebook is a web-based graphical user interface for
+The FEMhub Notebook is a web-based graphical user interface for
 mathematical software.
 
 == Website ==

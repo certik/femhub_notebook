@@ -1,12 +1,12 @@
 r"""
 A Worksheet.
 
-A worksheet is embedded in a web page that is served by the Sage
+A worksheet is embedded in a web page that is served by the FEMhub
 server. It is a linearly-ordered collections of numbered cells,
 where a cell is a single input/output block.
 
 The worksheet module is responsible for running calculations in a
-worksheet, spawning Sage processes that do all of the actual work
+worksheet, spawning FEMhub processes that do all of the actual work
 and are controlled via pexpect, and reporting on results of
 calculations. The state of the cells in a worksheet is stored on
 the file system (not in the notebook pickle sobj).
@@ -446,7 +446,7 @@ class Worksheet(object):
             sage: W = nb.create_new_worksheet('test1', 'admin')
             sage: W.__repr__()
             'admin/0: [Cell 0; in=, out=]'
-            sage: W.edit_save('Sage\n{{{\n2+3\n///\n5\n}}}\n{{{id=10|\n2+8\n///\n10\n}}}')
+            sage: W.edit_save('FEMhub\n{{{\n2+3\n///\n5\n}}}\n{{{id=10|\n2+8\n///\n10\n}}}')
             sage: W.__repr__()
             'admin/0: [Cell 0; in=2+3, out=\n5, Cell 10; in=2+8, out=\n10]'
         """
@@ -463,7 +463,7 @@ class Worksheet(object):
             sage: W = nb.create_new_worksheet('test1', 'admin')
             sage: len(W)
             1
-            sage: W.edit_save('Sage\n{{{\n2+3\n///\n5\n}}}\n{{{id=10|\n2+8\n///\n10\n}}}')
+            sage: W.edit_save('FEMhub\n{{{\n2+3\n///\n5\n}}}\n{{{id=10|\n2+8\n///\n10\n}}}')
             sage: len(W)
             2
         """
@@ -940,8 +940,8 @@ class Worksheet(object):
         list of systems.  If the current system isn't in the list,
         then change to the default system.  This can happen if, e.g.,
         the list changes, e.g., when changing from a notebook with
-        Sage installed to running a server from the same directory
-        without Sage installed.   We might as well support this.
+        FEMhub installed to running a server from the same directory
+        without FEMhub installed.   We might as well support this.
 
         OUTPUT:
 
@@ -1742,7 +1742,7 @@ class Worksheet(object):
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir())
             sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
-            sage: W.edit_save('Sage\n{{{\n3^20\n}}}')
+            sage: W.edit_save('FEMhub\n{{{\n3^20\n}}}')
             sage: sorted(os.listdir(W.directory()))
             ['cells', 'snapshots']
             sage: W.cell_list()[0].evaluate()
@@ -1856,7 +1856,7 @@ class Worksheet(object):
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir())
             sage: nb.add_user('wstein','sage','wstein@sagemath.org',force=True)
             sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
-            sage: W = nb.new_worksheet_with_title_from_text('Sage', owner='sage')
+            sage: W = nb.new_worksheet_with_title_from_text('FEMhub', owner='sage')
             sage: W.add_viewer('wstein')
             sage: W.owner()
             'sage'
@@ -2233,7 +2233,7 @@ class Worksheet(object):
             5, Cell 1; in=2+8, out=
             10]
             sage: W.name()
-            'Sage'
+            'FEMhub'
         """
         # Clear any caching.
         try:
@@ -2640,7 +2640,7 @@ class Worksheet(object):
         
         ::
         
-            sage: W.edit_save('Sage\n{{{\n2+3\n///\n5\n}}}\n{{{id=10|\n2+8\n///\n10\n}}}')
+            sage: W.edit_save('FEMhub\n{{{\n2+3\n///\n5\n}}}\n{{{id=10|\n2+8\n///\n10\n}}}')
             sage: W.cell_id_list()
             [0, 10]
         """
@@ -2672,7 +2672,7 @@ class Worksheet(object):
         
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir())
             sage: W = nb.create_new_worksheet('Test Edit Save', 'admin')
-            sage: W.edit_save('Sage\n{{{\n2+3\n///\n5\n}}}\n{{{\n2+8\n///\n10\n}}}')
+            sage: W.edit_save('FEMhub\n{{{\n2+3\n///\n5\n}}}\n{{{\n2+8\n///\n10\n}}}')
             sage: v = W.cell_list(); v
             [Cell 0; in=2+3, out=
             5, Cell 1; in=2+8, out=
@@ -2858,7 +2858,7 @@ class Worksheet(object):
     def computing(self):
         """
         Return whether or not a cell is currently being run in the
-        worksheet Sage process.
+        worksheet FEMhub process.
         """
         try:
             return self.__comp_is_running
@@ -2882,7 +2882,7 @@ class Worksheet(object):
             print "WARNING: %s"%msg
         except Exception, msg:
             print msg
-            print "WARNING: Error deleting Sage object!"
+            print "WARNING: Error deleting FEMhub object!"
             
         try:
             os.kill(pid, 9)
@@ -2891,7 +2891,7 @@ class Worksheet(object):
 
         del self.__sage
 
-        # We do this to avoid getting a stale Sage that uses old code.
+        # We do this to avoid getting a stale FEMhub that uses old code.
         self.save()
         self.clear_queue()
         del self.__cells
@@ -2929,7 +2929,7 @@ from sagenb.notebook.interact import interact
 
 %s
 
-# The following is Sage-specific -- this immediately bombs out if sage isn't installed.
+# The following is FEMhub-specific -- this immediately bombs out if sage isn't installed.
 from sage.all_notebook import *
 sage.plot.plot.EMBEDDED_MODE=True
 sage.misc.latex.EMBEDDED_MODE=True
@@ -2954,12 +2954,12 @@ from sagenb.notebook.all import *
 
     def sage(self):
         """
-        Return a started up copy of Sage initialized for computations.
+        Return a started up copy of FEMhub initialized for computations.
         
         If this is a published worksheet, just return None, since published
         worksheets must not have any compute functionality.
         
-        OUTPUT: a Sage interface
+        OUTPUT: a FEMhub interface
         """
         if self.is_published():
             return None
@@ -3104,7 +3104,7 @@ from sagenb.notebook.all import *
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir())
             sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
-            sage: W.edit_save('Sage\n{{{\n3^20\n}}}')
+            sage: W.edit_save('FEMhub\n{{{\n3^20\n}}}')
             sage: W.cell_list()[0].evaluate()
             sage: W.check_comp()     # random output -- depends on computer speed
             ('d', Cell 0; in=3^20, out=
@@ -3222,7 +3222,7 @@ from sagenb.notebook.all import *
         
         
         -  ``bool`` - return True if no problems interrupting
-           calculation return False if the Sage interpreter had to be
+           calculation return False if the FEMhub interpreter had to be
            restarted.
         
         
@@ -3232,7 +3232,7 @@ from sagenb.notebook.all import *
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir())
             sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
-            sage: W.edit_save('Sage\n{{{\nfactor(2^997-1)\n}}}')
+            sage: W.edit_save('FEMhub\n{{{\nfactor(2^997-1)\n}}}')
             sage: W.cell_list()[0].evaluate()
         
         It's running still
@@ -3265,7 +3265,7 @@ from sagenb.notebook.all import *
         if len(self.__queue) == 0:
             # nothing to do
             return True
-        # stop the current computation in the running Sage
+        # stop the current computation in the running FEMhub
         S = self.__sage
         S.interrupt()
         return True
@@ -3279,7 +3279,7 @@ from sagenb.notebook.all import *
 
     def restart_sage(self):
         """
-        Restart Sage kernel.
+        Restart FEMhub kernel.
         """
         self.quit()
         self.sage()
@@ -3564,7 +3564,7 @@ from sagenb.notebook.all import *
         
     def preparse_nonswitched_input(self, input):
         """
-        Preparse the input to a Sage Notebook cell.
+        Preparse the input to a FEMhub Notebook cell.
 
         INPUT:
 
@@ -3599,7 +3599,7 @@ from sagenb.notebook.all import *
         if C.introspect():
             return out
 
-        out = out.replace("NameError: name 'os' is not defined", "NameError: name 'os' is not defined\nTHERE WAS AN ERROR LOADING THE SAGE LIBRARIES.  Try starting Sage from the command line to see what the error is.")
+        out = out.replace("NameError: name 'os' is not defined", "NameError: name 'os' is not defined\nTHERE WAS AN ERROR LOADING THE SAGE LIBRARIES.  Try starting FEMhub from the command line to see what the error is.")
 
         # Todo: what does this do?  document this
         try:
@@ -3873,7 +3873,7 @@ from sagenb.notebook.all import *
             sage: W = nb.create_new_worksheet('Test', 'sage')
         
         We first test running a native command in 'sage' mode and then a
-        GAP cell within Sage mode.
+        GAP cell within FEMhub mode.
         
         ::
         
@@ -4209,7 +4209,7 @@ def extract_name(text):
     return name.strip(), n
                 
 def extract_system(text):
-    # If the first line is "system: ..." , then it is the system.  Otherwise the system is Sage.
+    # If the first line is "system: ..." , then it is the system.  Otherwise the system is FEMhub.
     i = non_whitespace.search(text)
     if i is None:
         return 'sage', 0

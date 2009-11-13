@@ -1,14 +1,14 @@
 """
-A Filesystem-based Sage Notebook Datastore
+A Filesystem-based FEMhub Notebook Datastore
 
 Here is the filesystem layout for this datastore.  Note that the all
 of the pickles are pickles of basic Python objects, so can be
-unpickled in any version of Python with or without Sage or the Sage
+unpickled in any version of Python with or without FEMhub or the FEMhub
 notebook installed.  They are also not compressed, so are reasonably
 easy to read ASCII.
 
 The filesystem layout is as follows.  It mirrors the URL's used by the
-Sage notebook server::
+FEMhub notebook server::
 
     sage_notebook.sagenb
          conf.pickle
@@ -43,7 +43,7 @@ from sagenb.misc.misc import set_restrictive_permissions
 
 def is_safe(a):
     """
-    Used when importing contents of various directories from Sage
+    Used when importing contents of various directories from FEMhub
     worksheet files.  We define this function to avoid the possibility
     of a user crafting fake sws file such that extracting it creates
     files outside where we want, e.g., by including .. or / in the
@@ -75,7 +75,7 @@ class FilesystemDatastore(Datastore):
         self._users_filename = 'users.pickle'
 
     def __repr__(self):
-        return "Filesystem Sage Notebook Datastore at %s"%self._path
+        return "Filesystem FEMhub Notebook Datastore at %s"%self._path
 
     ##################################################################################
     # Paths
@@ -265,7 +265,7 @@ class FilesystemDatastore(Datastore):
         """
         INPUT:
 
-            - ``worksheet`` -- a Sage worksheet
+            - ``worksheet`` -- a FEMhub worksheet
 
             - ``conf_only`` -- default: False; if True, only save
               the config file, not the actual body of the worksheet      
@@ -377,14 +377,14 @@ class FilesystemDatastore(Datastore):
                 T.add(os.path.join(cells, X), os.path.join('sage_worksheet','cells',X))
 
         # NOTE: We do not export the snapshot/undo data.  People
-        # frequently *complain* about Sage exporting a record of their
+        # frequently *complain* about FEMhub exporting a record of their
         # mistakes anyways.
         T.close()
 
 
     def _import_old_worksheet(self, username, id_number, filename):
         """
-        Import a worksheet from an old version of Sage. 
+        Import a worksheet from an old version of FEMhub. 
         """
         T = tarfile.open(filename, 'r:bz2')
         members = [a for a in T.getmembers() if 'worksheet.txt' in a.name and is_safe(a.name)]
@@ -436,7 +436,7 @@ class FilesystemDatastore(Datastore):
                 T.extractfile(os.path.join('sage_worksheet','worksheet_conf.pickle')).read())
         except KeyError:
             # Not a valid worksheet.  This might mean it is an old
-            # worksheet from a previous version of Sage.
+            # worksheet from a previous version of FEMhub.
             return self._import_old_worksheet(username, id_number, filename)
             
         open(self._abspath(self._worksheet_html_filename(username, id_number)),'w').write(

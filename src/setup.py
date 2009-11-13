@@ -1,5 +1,5 @@
 ##########################################################
-# The setup.py for the Sage Notebook
+# The setup.py for the FEMhub Notebook
 ##########################################################
 
 import os, sys, time

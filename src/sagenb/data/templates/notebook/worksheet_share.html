@@ -10,7 +10,7 @@ INPUT:
     - JSMATH - a boolean stating whether to include jsMath
     - JSMATH_IMAGE_FONTS - a boolean stating whether to include jsMath iamage fonts
     - JEDITABLE_TINYMCE - a boolean stating whether to include jEditable and TinyMCE
-    - sage_jsmath_macros - an array containing strings of Javascript of Sage macros for jsMath
+    - sage_jsmath_macros - an array containing strings of Javascript of FEMhub macros for jsMath
 #}
 
 {% set title = "Share this document" %}
@@ -20,7 +20,7 @@ INPUT:
 {% if not (user_is_admin or username == worksheet.owner()) %}
     Only the owner of a worksheet is allowed to share it. You can do whatever you want if you <a href="copy">make your own copy</a>.
 {% else %}
-<p>This Sage Worksheet is currently shared with the people listed in the box below.</p>
+<p>This FEMhub Worksheet is currently shared with the people listed in the box below.</p>
 <p style="margin-bottom:1em">You may add or remove collaborators (separate user names by commas).</p>
 
 <form width=70% method="post" action="invite_collab" style="margin-bottom:1em">
@@ -29,7 +29,7 @@ INPUT:
 </form>
 
 <hr class="usercontrol" />
-<span class="username">Sage Users:</span>
+<span class="username">FEMhub Users:</span>
 <span class="users">
     {{ other_users|join(', ') }}
 </span>

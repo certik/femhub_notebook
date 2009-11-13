@@ -34,7 +34,7 @@ import keyboards
 _cache_javascript = None
 def javascript():
     """
-    Return javascript library for the Sage Notebook.  This is done by
+    Return javascript library for the FEMhub Notebook.  This is done by
     reading the template ``notebook_lib.js`` where all of the
     javascript code is contained and replacing a few of the values
     specific to the running session.

@@ -48,7 +48,7 @@ global_names_at_init = None
 
 def init(object_directory=None, globs={}):
     r"""
-    Initialize Sage for use with the web notebook interface.
+    Initialize FEMhub for use with the web notebook interface.
     """
     global sage_globals, globals_at_init, global_names_at_init
     global EMBEDDED_MODE
@@ -65,8 +65,8 @@ def init(object_directory=None, globs={}):
     setup_systems(globs)
     session_init(globs)
 
-    # Ugly cruft.  Initialize the embedded mode of the old Sage
-    # notebook, which is going to be included in old copies of Sage
+    # Ugly cruft.  Initialize the embedded mode of the old FEMhub
+    # notebook, which is going to be included in old copies of FEMhub
     # forever.
     try:
         import sage.server.support
@@ -203,7 +203,7 @@ def completions(s, globs, format=False, width=90, system="None"):
 
 def docstring(obj_name, globs, system='sage'):
     r"""
-    Format an object's docstring to process and display in the Sage
+    Format an object's docstring to process and display in the FEMhub
     notebook.
     
     INPUT:
@@ -223,7 +223,7 @@ def docstring(obj_name, globs, system='sage'):
 
     AUTHORS:
 
-    - William Stein: partly taken from IPython for use in Sage
+    - William Stein: partly taken from IPython for use in FEMhub
 
     - Nick Alexander: extensions
     """
@@ -284,7 +284,7 @@ def html_markup(s):
 def source_code(s, globs, system='sage'):
     r"""
     Format an object's source code to process and display in the
-    Sage notebook.
+    FEMhub notebook.
     
     INPUT:
 
@@ -303,7 +303,7 @@ def source_code(s, globs, system='sage'):
 
     AUTHORS:
 
-    - William Stein: partly taken from IPython for use in Sage
+    - William Stein: partly taken from IPython for use in FEMhub
 
     - Nick Alexander: extensions
     """

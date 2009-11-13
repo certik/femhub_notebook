@@ -17,7 +17,7 @@
 
 AUTHOR:
     -- Jurgen Hermann: Moin Moin version
-    -- William Stein: adoption for Sage
+    -- William Stein: adoption for FEMhub
 """
 
 import os, re

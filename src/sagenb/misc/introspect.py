@@ -1,5 +1,5 @@
 """
-Sage Notebook Introspection
+FEMhub Notebook Introspection
 
 TODO: - add support for grabbing source code from Pyrex functions
 (even if not perfect is better than nothing). - PNG or MathML
@@ -21,8 +21,8 @@ def introspect(S, query, format='html'):
     INPUT:
     
     
-    -  ``S`` - a Sage0 object, i.e., an interface to a
-       running instance of Python with the Sage libraries loaded
+    -  ``S`` - a FEMhub0 object, i.e., an interface to a
+       running instance of Python with the FEMhub libraries loaded
     
     -  ``query`` - a string: - if has no '?' then return
        completion list - if begins or ends in one '?' return docstring -

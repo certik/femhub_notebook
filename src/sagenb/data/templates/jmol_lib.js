@@ -21,8 +21,8 @@ function jmol_image(jmol_count) {
 function jmol_popup(url) {
     win = window.open ("", "jmol viewer", "width=600,height=600,resizable=1,statusbar=0");
     win.document.body.innerHTML = "";
-    win.document.title = "Sage 3d Viewer";
-    win.document.writeln("<h1 align=center>Sage 3d Viewer</h1>");
+    win.document.title = "FEMhub 3d Viewer";
+    win.document.writeln("<h1 align=center>FEMhub 3d Viewer</h1>");
     jmolSetDocument(win.document);
     jmolApplet("100%", "script" + url, jmol_count);
     win.focus();

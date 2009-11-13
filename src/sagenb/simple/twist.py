@@ -1,7 +1,7 @@
 r"""
-Simple Sage Server API
+Simple FEMhub Server API
 
-This module provides a very simple API for interacting with a Sage session
+This module provides a very simple API for interacting with a FEMhub session
 over HTTP. It runs as part of the notebook server. 
 
 .. note::
@@ -149,7 +149,7 @@ def late_import():
 
 def simple_jsonize(data):
     """
-    This will be replaced by a JSON spkg when Python 2.6 gets into Sage.
+    This will be replaced by a JSON spkg when Python 2.6 gets into FEMhub.
     
     EXAMPLES::
 

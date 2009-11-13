@@ -1,9 +1,9 @@
 """
-The Sage Notebook
+The FEMhub Notebook
 
 AUTHORS:
-
   - William Stein
+  - hp-FEM Group, University of Nevada, Reno
 """
 
 #############################################################################
@@ -30,11 +30,11 @@ import cPickle
 from cgi import escape
 
 
-# Sage libraries
+# FEMhub libraries
 from   sagenb.misc.misc   import (pad_zeros, is_package_installed,
                              sage_jsmath_macros, cputime, tmp_dir, load, save)
 
-# Sage Notebook
+# FEMhub Notebook
 import css          # style
 import js           # javascript
 import worksheet    # individual worksheets (which make up a notebook)
@@ -406,7 +406,7 @@ class Notebook(object):
     def default_user(self):
         r"""
         Return a default login name that the user will see when
-        confronted with the Sage notebook login page.  Currently, this
+        confronted with the FEMhub notebook login page.  Currently, this
         returns 'admin' if that is the *only* user.  Otherwise it
         returns an empty string ('').
         
@@ -765,7 +765,7 @@ class Notebook(object):
         
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir())
             sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
-            sage: W = nb.new_worksheet_with_title_from_text('Sage', owner='sage')
+            sage: W = nb.new_worksheet_with_title_from_text('FEMhub', owner='sage')
             sage: W.move_to_trash('sage')
             sage: nb.worksheet_names()
             ['sage/0']
@@ -795,7 +795,7 @@ class Notebook(object):
         
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir())
             sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
-            sage: W = nb.new_worksheet_with_title_from_text('Sage', owner='sage')
+            sage: W = nb.new_worksheet_with_title_from_text('FEMhub', owner='sage')
             sage: nb.add_user('wstein','sage','wstein@sagemath.org',force=True)
             sage: W2 = nb.new_worksheet_with_title_from_text('Elliptic Curves', owner='wstein')
             sage: nb.worksheet_names()
@@ -1413,7 +1413,7 @@ class Notebook(object):
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir())
             sage: W = nb.create_new_worksheet('Test', 'admin')
             sage: nb.html_share(W, 'admin')
-            '\n<!D...span class="username">Sage Users:</span>\n<span class="users">\n    \n</span>\n\n\n\n    </body>\n</html>'
+            '\n<!D...span class="username">FEMhub Users:</span>\n<span class="users">\n    \n</span>\n\n\n\n    </body>\n</html>'
         """
         U = self.users()
         other_users = [x for x, u in U.iteritems() if not u.is_guest() and not u.username() in [username, 'pub', '_sage_']]
@@ -1823,7 +1823,7 @@ class Notebook(object):
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir())
             sage: W = nb.create_new_worksheet('Test', 'admin')
             sage: nb.html_doc('admin')
-            '\n<!D...c Documentation</a><br /><br />\n        <a href="/help/">Sage Notebook Howto...   </body>\n</html>'
+            '\n<!D...c Documentation</a><br /><br />\n        <a href="/help/">FEMhub Notebook Howto...   </body>\n</html>'
         """
         return template(os.path.join("html", "notebook", "doc.html"),
                         username = username, JSMATH = JSMATH,
@@ -1891,7 +1891,7 @@ def migrate_old_notebook_v1(dir):
     print ""
     print "*"*80
     print "*"    
-    print "* The Sage notebook at"
+    print "* The FEMhub notebook at"
     print "*"    
     print "*      '%s'"%os.path.abspath(dir)
     print "*"    

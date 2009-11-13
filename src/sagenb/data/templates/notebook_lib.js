@@ -1203,7 +1203,7 @@ function close_callback(status, response_text) {
 function save_worksheet_and_close() {
     /*
     Send message back to the server saving the current
-    worksheet and quitting the Sage process, then
+    worksheet and quitting the FEMhub process, then
     close the current window returning to the home screen.
     */
     async_request(worksheet_command('save_and_quit'), close_callback);
@@ -1212,7 +1212,7 @@ function save_worksheet_and_close() {
 function worksheet_discard() {
     /*
     Discard the current worksheet and quit the currently
-    running Sage process, then close the current window and
+    running FEMhub process, then close the current window and
     replace it by the home screen .
     */
     async_request(worksheet_command('discard_and_quit'), close_callback);
@@ -1236,7 +1236,7 @@ function rename_worksheet() {
     }
     T.innerHTML = set_name;
     worksheet_name = new_worksheet_name;
-    original_title = worksheet_name + ' (Sage)';
+    original_title = worksheet_name + ' (FEMhub)';
     document.title = original_title;
     async_request(worksheet_command('rename'), null,
                   {name: new_worksheet_name});
@@ -1273,7 +1273,7 @@ function search_worksheets(typ) {
 
 function go_system_select(theform, original_system) {
     /*
-    Switch the current input system from one system to another (e.g., form Sage to Pari or Python).
+    Switch the current input system from one system to another (e.g., form FEMhub to Pari or Python).
     A confirmation box is displayed.
 
     INPUT:
@@ -3654,12 +3654,12 @@ function set_all_cells_to_be_not_evaluated() {
 
 function restart_sage() {
     /*
-    Restart the running Sage process that supports calculations in this
+    Restart the running FEMhub process that supports calculations in this
     worksheet.
 
     This function immediately changes the DOM so it looks like no cells
     are running and none have been evaluated, then it sends a message
-    back to the server requesting that the worksheet Sage process
+    back to the server requesting that the worksheet FEMhub process
     actually be stopped.
     */
     halt_active_cells();
@@ -3727,7 +3727,7 @@ function bugreport() {
     /*
     Popup the bug report window.
     */
-    log = window.open ("http://spreadsheets.google.com/viewform?key=pCwvGVwSMxTzT6E2xNdo5fA","",
+    log = window.open ("http://groups.google.com/group/femhub","",
     "menubar=1,location=1,scrollbars=1,width=800,height=650,toolbar=1,  resizable=1");
 }
 

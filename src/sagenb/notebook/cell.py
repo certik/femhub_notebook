@@ -472,7 +472,7 @@ class Cell(Cell_generic):
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir())
             sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
-            sage: W.edit_save('Sage\n{{{\n2+3\n///\n20\n}}}')
+            sage: W.edit_save('FEMhub\n{{{\n2+3\n///\n20\n}}}')
             sage: C = W.cell_list()[0]
             sage: C
             Cell 0; in=2+3, out=
@@ -1777,7 +1777,7 @@ class Cell(Cell_generic):
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir())
             sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
-            sage: W.edit_save('Sage\n{{{\n3^5\n}}}')
+            sage: W.edit_save('FEMhub\n{{{\n3^5\n}}}')
             sage: C = W.cell_list()[0]; C
             Cell 0; in=3^5, out=
             sage: C.evaluate(username='sage')

@@ -8,12 +8,12 @@
 r"""
 Interact Functions in the Notebook
 
-This module implements an :func:`interact` function decorator for the Sage
+This module implements an :func:`interact` function decorator for the FEMhub
 notebook.
 
 AUTHORS:
 
-- William Stein (2008-03-02): version 1.0 at Sage/Enthought Days
+- William Stein (2008-03-02): version 1.0 at FEMhub/Enthought Days
   8 in Texas
 
 - Jason Grout (2008-03): discussion and first few prototypes
@@ -146,7 +146,7 @@ import inspect
 import math
 import types
 
-# Sage libraries
+# FEMhub libraries
 from sagenb.misc.misc import srange, sage_eval, Color, is_Matrix
 
 # SAGE_CELL_ID is a module scope variable that is always set equal to
@@ -1910,7 +1910,7 @@ class UpdateButton(JavascriptCodeButton):
         
 def interact(f):
     r"""
-    Use interact as a decorator to create interactive Sage notebook
+    Use interact as a decorator to create interactive FEMhub notebook
     cells with sliders, text boxes, radio buttons, check boxes, and
     color selectors.  Simply put ``@interact`` on the line before a
     function definition in a cell by itself, and choose appropriate

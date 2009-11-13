@@ -1,9 +1,9 @@
 """
 Send an Email
 
-Sage supports very easily sending an email from Sage to notify
+FEMhub supports very easily sending an email from FEMhub to notify
 yourself when some event occurs.  This does not require configuring an
-email server or anything else, since Sage already includes by default
+email server or anything else, since FEMhub already includes by default
 a sophisticated email server (which is part of Twisted).
 
 EXAMPLES::
@@ -72,7 +72,7 @@ def email(to, subject, body = '', from_address = None, verbose = True, block = F
         Child process ... is sending email to xxxsageuser@gmail.com
 
     NOTE: This function does not require configuring an email server
-          or anything else at all, since Sage already includes by
+          or anything else at all, since FEMhub already includes by
           default a sophisticated email server (which is part of
           Twisted).
     """
@@ -99,7 +99,7 @@ def email(to, subject, body = '', from_address = None, verbose = True, block = F
     
     if pid: # We're the parent process
         if kill_on_exit:
-            # Tell the Sage cleaner about this subprocess, just in case somehow it fails
+            # Tell the FEMhub cleaner about this subprocess, just in case somehow it fails
             # to properly quit (e.g., smtp is taking a long time), so it will get killed
             # no matter what when sage exits.  Zombies are bad bad bad, no matter what!
             from sagenb.misc.misc import register_with_cleaner

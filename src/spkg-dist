@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os, shutil, sys, tarfile
 
-# Create an spkg of the Separated Sage notebook for inclusion in Sage.
+# Create an spkg of the Separated FEMhub notebook for inclusion in FEMhub.
 
 # Get the version from setup.py
 version_line = [f for f in open('setup.py').readlines() if 'version' in f][0]

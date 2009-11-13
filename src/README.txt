@@ -1,4 +1,4 @@
-This is the first release of the standalone Sage Notebook.
+This is the first release of the standalone FEMhub Notebook.
 
 INSTALLATION:
 
@@ -8,7 +8,7 @@ sage -hg pull http://sage.math.washington.edu:8100
 sage -hg update
 sage -python setup.py install
 
-QUICK: Install Sage, then type "sage -python setup.py install" in the
+QUICK: Install FEMhub, then type "sage -python setup.py install" in the
 current directory.   This is safe and won't mess anything up.  Then run
 the notebook by typing:
 
@@ -32,7 +32,7 @@ MORE DETAILS:
 
    Note that pexpect is not required.  Note that twisted.web2 is.  The
    only easy way to get the above is probably just to start with a
-   Sage install.
+   FEMhub install.
 
    2. In the current directory, type:
   
@@ -40,7 +40,7 @@ MORE DETAILS:
 
    to install the sagenb package.  This will install into the
    site-packages/sagenb directory of your Python install.  It is
-   completely separate from Sage, and will run even if you don't have
-   the Sage library installed.  
+   completely separate from FEMhub, and will run even if you don't have
+   the FEMhub library installed.  
 
 

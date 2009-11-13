@@ -22,7 +22,7 @@ class PubStressTest:
         """
         INPUT:
 
-            - ``url`` -- url of the Sage notebook server
+            - ``url`` -- url of the FEMhub notebook server
 
             - ``verbose`` -- bool; whether to print info about what is
               being tested as it is tested
@@ -92,7 +92,7 @@ class PubStressTest:
         
     def test_login_screen(self):
         """
-        Download the main login screen for the Sage notebook server.
+        Download the main login screen for the FEMhub notebook server.
         """
         if self._verbose: print "testing login screen..."
         return self._timeit(self._geturlcode(self.url_login_screen()))
@@ -118,7 +118,7 @@ class PubStressTest:
     def test_allpub(self):
         """
         View every single one of the published worksheets on the
-        Sage notebook server.
+        FEMhub notebook server.
         """
         if self._verbose: print "testing download of all published worksheets..."
         tm = walltime()
