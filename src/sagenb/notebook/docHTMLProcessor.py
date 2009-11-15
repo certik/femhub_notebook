@@ -17,7 +17,7 @@ Author:
 
 - Dorian Raymer (2006): first version
 
-- William Stein (2007-06-10): rewrite to work with twisted Sage notebook
+- William Stein (2007-06-10): rewrite to work with twisted FEMhub notebook
 
 - Mike Hansen (2008-09-27): Rewrite to work with Sphinx HTML documentation
 """

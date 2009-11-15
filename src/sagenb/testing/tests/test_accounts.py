@@ -48,7 +48,7 @@ class TestAccounts(NotebookTestCase):
 
     def test_4088(self):
         """
-        Check to see that the 'Welcome to Sage!' message is not visible on the
+        Check to see that the 'Welcome to FEMhub!' message is not visible on the
         published worksheets screen when there are no worksheets.
         """
         sel = self.selenium
@@ -57,7 +57,7 @@ class TestAccounts(NotebookTestCase):
         sel.click("link=Published")
         sel.wait_for_page_to_load("30000")
 
-        self.assert_(not sel.is_text_present('Welcome to Sage!'), 'welcome message is still present')
+        self.assert_(not sel.is_text_present('Welcome to FEMhub!'), 'welcome message is still present')
 
 
     def test_4050(self):
@@ -89,7 +89,7 @@ class TestAccounts(NotebookTestCase):
 
 
         self.assertEqual(sel.get_location(), 'http://localhost:%d/home/chris/1/' % self.sagenb_port)
-        self.assertEqual(sel.get_title(), 'Copy of Shared Worksheet (Sage)')
+        self.assertEqual(sel.get_title(), 'Copy of Shared Worksheet (FEMhub)')
         self.assert_(sel.is_text_present('by chris'), 'chris does not own the worksheet')
         self.assertEqual(self.get_cell_output(1), '4')
         

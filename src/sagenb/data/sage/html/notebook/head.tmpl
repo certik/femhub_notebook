@@ -6,19 +6,19 @@ INPUT:
 - JSMATH - a boolean stating whether to include jsMath
 - JSMATH_IMAGE_FONTS - a boolean stating whether to include jsMath iamage fonts
 - JEDITABLE_TINYMCE - a boolean stating whether to include jEditable and TinyMCE
-- sage_jsmath_macros - an array containing strings of Javascript of Sage macros for jsMath
+- sage_jsmath_macros - an array containing strings of Javascript of FEMhub macros for jsMath
   #}
 {% macro common_title(worksheet_filename, worksheet) %}
     {% if worksheet_filename %}
-        {{ worksheet.name() }} (Sage)
+        {{ worksheet.name() }} (FEMhub)
     {% else %}
-        Sage Notebook | Welcome
+        FEMhub Notebook | Welcome
     {% endif %}
 {% endmacro %}
 
 
 {% macro common_css %}
-<!-- Sage notebook stylesheet -->
+<!-- FEMhub notebook stylesheet -->
 <link rel=stylesheet href="/css/main.css" type="text/css" />
 {% endmacro %}
 
@@ -37,7 +37,7 @@ INPUT:
 <script type="text/javascript" src="/javascript/jquery/plugins/form/jquery.form.min.js"></script>
 <script type="text/javascript" src="/javascript/jquery/plugins/jquery.bgiframe.min.js"></script>
 
-<!-- Sage Notebook library -->
+<!-- FEMhub Notebook library -->
 <script type="text/javascript" src="/javascript/sage/main.js"></script>
   
 {% if JSMATH %}

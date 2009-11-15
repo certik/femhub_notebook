@@ -931,8 +931,8 @@ class Worksheet(object):
         try:
             return self.__system
         except AttributeError:
-            self.__system = 'sage'
-            return 'sage'
+            self.__system = 'python'
+            return 'python'
 
     def system_index(self):
         """
@@ -952,11 +952,11 @@ class Worksheet(object):
         if S not in names:
             S = names[0]
             self.set_system(S)
-            return 0
+            return 0 
         else:
             return names.index(S)
 
-    def set_system(self, system='sage'):
+    def set_system(self, system='python'):
         """
         Set the math software system in which input is evaluated by
         default.
@@ -1104,7 +1104,7 @@ class Worksheet(object):
         try:
             return self.notebook().get_worksheet_with_filename('%s/%s'%self.__worksheet_came_from)
         except Exception:  # things can go wrong (especially with old migrated
-                           # Sage notebook servers!), but we don't want such
+                           # FEMhub notebook servers!), but we don't want such
                            # problems to crash the notebook server.  
             return self
 

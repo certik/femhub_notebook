@@ -25,8 +25,8 @@ your web browser.  It provides you with FEMhub worksheets that you can
 edit and evaluate, which contain scalable typeset mathematics and
 beautiful antialised images.  To try it out immediately, do this:
 
-    sage: notebook(open_viewer=True)          # not tested
-    the sage notebook starts...
+    femhub: notebook(open_viewer=True)          # not tested
+    the FEMhub notebook starts...
 
 \subsection{Supported Browsers}
 
@@ -108,8 +108,8 @@ view(A)
 Try typing this into a new box:
 \begin{verbatim}
 %latex
-Consider the matrix $$A = \sage{A},$$
-which has square $$A^2 = \sage{A^2}.$$
+Consider the matrix $$A = \femhub{A},$$
+which has square $$A^2 = \femhub{A^2}.$$
 \end{verbatim}
 If you would like to typeset a slide (suitable for presentation),
 use \%slide instead.
@@ -118,12 +118,12 @@ Here is another example:
 %latex
 The first ten squares are
 $$
-\sage{', '.join([str(sq(i)) for i in range(1,11)])}
+\femhub{', '.join([str(sq(i)) for i in range(1,11)])}
 $$
 
 The primes up to 100 are
 $$
-\sage{', '.join(str(p) for p in prime_range(100))}
+\femhub{', '.join(str(p) for p in prime_range(100))}
 $$
 \end{verbatim}
 
@@ -136,10 +136,10 @@ that work with a range of different systems.
 
 (Note -- there is currently no support for
 pulling in objects and evaluating code in FEMhub by typing
-"sage(...)" inside the input block.  This is planned.)
+"femhub(...)" inside the input block.  This is planned.)
 
 \subsubsection{Typesetting Mathematics}
-SAGE \emph{includes} jsMath, which is an implementation of the TeX
+FEMHUB \emph{includes} jsMath, which is an implementation of the TeX
 math layout engine in javascript.  If you use the show or view
 commands, they display a given FEMhub object typeset using jsmath.
 Moreover, if you put \code{\%jsmath} at the beginning of an input
@@ -211,7 +211,7 @@ the objects subdirectory.)
 \subsubsection{Pasting in Examples}
 Code is evaluated by exec'ing (after preparsing). Only the output
 of the last line of the cell is implicitly printed. If any line
-starts with "sage:" or ">>>" the \emph{entire block} is assumed to
+starts with "femhub:" or ">>>" the \emph{entire block} is assumed to
 contain text and examples, and only lines that begin with a
 prompt are executed. Thus you can paste in *complete examples*
 from the docs without any editing, and you can write input
@@ -255,7 +255,7 @@ Anywhere, here are the components of the FEMhub Notebook:
      e.g., organizing computation of cells, etc.  It
      only imports a small
      subset of the FEMhub library.  In particular, if you do
-     "sage -notebook" at the command line, only some of 
+     "femhub -notebook" at the command line, only some of 
      FEMhub is imported.  
  
  \item FEMhub Server:
@@ -325,7 +325,7 @@ the "save" command), and get back to where you were quickly.
 ## \subsubsection{Typesetting with Latex}
 ## If you have latex, gv, and the imagemagick programs (e.g., convert)
 ## installed on your system, you can do nice latex typesetting from
-## within SAGE.
+## within FEMHUB.
 ## \begin{enumerate}
 ## \item As usual the command \code{latex(obj)} outputs latex code
 ## to typeset obj.
@@ -348,15 +348,15 @@ the "save" command), and get back to where you were quickly.
 
 notebook_help = [
     ('Find Help and Documentation',
-     [('<b>Get Started with FEMhub Web Notebook</b>', 'The best way is to try out simple worksheets that explain elementary methods of numerical analysis.<br><br><b>Step 1:</b> Go to <a href="http://nb.femhub.org/"><http://nb.femhub.org/</a> and create an account. This is automatic and fast. Report any problems to femhub@googlegroups.com.<br><br><b>Step 2:</b> Log into the web notebook. Click on "published worksheets". Then click on any link starting with "Num Methods", the simplest one being "Num Methods: Taylor Polynomial".<br><br><b>Step 3:</b> Click on "Edit a Copy" in the upper left corner and wait for the browser response. Scroll down below the first input window and click "Evaluate". This will load the program. Then there are two input windows with two different ways to plot a Taylor polynomial that are self-explanatory.<br><br><b>Step 4:</b> There are multiple other worksheets whose title begins with "Num Methods:". Try them out and give us your feedback!<br><br><b>Step 5:</b> You can try out worksheets starting with "Hermes2D:" that allow you to solve finite element problems via the internet. Feel free to adjust the existing worksheets to fit your own needs. We are working on expanding the possibilities.'),
+     [('<b>Get Started with FEMhub Web Notebook</b>', 'The best way is to try out simple worksheets that explain elementary methods of numerical analysis.<br><br><b>Step 1:</b> Go to <a href="http://nb.femhub.org/">http://nb.femhub.org/</a> and create an account. This is automatic and fast. Report any problems to femhub@googlegroups.com.<br><br><b>Step 2:</b> Log into the web notebook. Click on "published worksheets". Then click on any link starting with "Num Methods", the simplest one being "Num Methods: Taylor Polynomial".<br><br><b>Step 3:</b> Click on "Edit a Copy" in the upper left corner and wait for the browser response. Scroll down below the first input window and click "Evaluate". This will load the program. Then there are two input windows with two different ways to plot a Taylor polynomial that are self-explanatory.<br><br><b>Step 4:</b> There are multiple other worksheets whose title begins with "Num Methods:". Try them out and give us your feedback!<br><br><b>Step 5:</b> You can try out worksheets starting with "Hermes2D:" that allow you to solve finite element problems via the internet. Feel free to adjust the existing worksheets to fit your own needs. We are working on expanding the possibilities.'),
       ('Help About',
        'Type ? immediately after the object or function and press tab.'),
       ('Source Code',
        'Put ?? after the object and press tab.'),
       ('Full Text Search of Docs and Source',
-       'Search the SAGE documentation by typing <pre>search_doc("my query")</pre> in an input cell and press shift-enter.  Search the source code of SAGE by typing <pre>search_src("my query")</pre> and pressing shift-enter.  Arbitrary regular expressions are allowed as queries.'),
+       'Search the FEMHUB documentation by typing <pre>search_doc("my query")</pre> in an input cell and press shift-enter.  Search the source code of FEMHUB by typing <pre>search_src("my query")</pre> and pressing shift-enter.  Arbitrary regular expressions are allowed as queries.'),
       # ('More Help',
-      #  'Type "help(sagenb.notebook.notebook)" for a detailed discussion of the architecture of the SAGE notebook and a tutorial (or see the SAGE reference manual).'),
+      #  'Type "help(sagenb.notebook.notebook)" for a detailed discussion of the architecture of the FEMHUB notebook and a tutorial (or see the FEMHUB reference manual).'),
       ]),
     ('Key and Mouse Bindings',
      [('Evaluate Input',
@@ -383,9 +383,9 @@ notebook_help = [
     ]),
     ('Interrupt and Restart Sessions',
      [('Interrupt Running Calculations',
-       'Click <u>Interrupt</u> or press escape in any input cell. This will (attempt) to interrupt SAGE by sending many interrupt signals.'),
+       'Click <u>Interrupt</u> or press escape in any input cell. This will (attempt) to interrupt FEMHUB by sending many interrupt signals.'),
       ('Restart',
-       'Type "restart" to restart the SAGE interpreter for a given worksheet.  (You have to interrupt first.)'),
+       'Type "restart" to restart the FEMHUB interpreter for a given worksheet.  (You have to interrupt first.)'),
     ]),
     ('Special Cell Blocks',
      [('Evaluate Cell using GAP, Singular, etc.',
@@ -401,7 +401,7 @@ notebook_help = [
           ]),
     ('Useful Tips',
      [('Input Rules',
-       "Code is evaluated by exec'ing (after preparsing).  Only the output of the last line of the cell is implicitly printed.  If any line starts with \"sage:\" or \">>>\" the entire block is assumed to contain text and examples, so only lines that begin with a prompt are executed.   Thus you can paste in complete examples from the docs without any editing, and you can write input cells that contains non-evaluated plain text mixed with examples by starting the block with \">>>\" or including an example."),
+       "Code is evaluated by exec'ing (after preparsing).  Only the output of the last line of the cell is implicitly printed.  If any line starts with \"femhub:\" or \">>>\" the entire block is assumed to contain text and examples, so only lines that begin with a prompt are executed.   Thus you can paste in complete examples from the docs without any editing, and you can write input cells that contains non-evaluated plain text mixed with examples by starting the block with \">>>\" or including an example."),
       ('History',
        'Click <a href="/history">log</a> commands you have entered in any worksheet of this notebook.'),
       ('Typesetting All Output',
@@ -410,14 +410,14 @@ notebook_help = [
       #  'Type ?debug at the end of a worksheet url to enable the javascript debugger.  A pair of textareas will appear at the top of the worksheet -- the upper of which is for output, the lower is a direct interface to the page\'s javascript environment.  Type any eval()-able javascript into the input box and press shift+enter to execute it.  Type debug_append(str) to print to, and debug_clear() to clear the debug output window.'),
     ]),
     ('Files and Scripts',
-     [('Loading SAGE/Python Scripts',
-       'Use "load filename.sage" and "load filename.py".  Load is relative to the path you started the notebook in.  The .sage files are preparsed and .py files are not.   You may omit the .sage or .py extension.  Files may load other files.'),
+     [('Loading FEMHUB/Python Scripts',
+       'Use "load filename.femhub" and "load filename.py".  Load is relative to the path you started the notebook in.  The .femhub files are preparsed and .py files are not.   You may omit the .femhub or .py extension.  Files may load other files.'),
       ('Attaching Scripts',
-       'Use "attach filename.sage" or "attach filename.py".  Attached files are automatically reloaded when the file changes.  The file $HOME/.sage/init.sage is attached on startup if it exists.'),
+       'Use "attach filename.femhub" or "attach filename.py".  Attached files are automatically reloaded when the file changes.  The file $HOME/.femhub/init.femhub is attached on startup if it exists.'),
       ('Working Directory',
        'Each block of code is run from its own directory.  If any images are created as a side effect, they will automatically be displayed.'),
       ('DIR Variable',
-       'The variable DIR contains the directory from which you started the SAGE notebook.  For example, to open a file in that directory, do "open(DIR+\'filename\')".'),
+       'The variable DIR contains the directory from which you started the FEMHUB notebook.  For example, to open a file in that directory, do "open(DIR+\'filename\')".'),
       ('DATA Variable',
        'The variable DATA contains the directory with data files that you upload into the worksheet.  For example, to open a file in that directory, do "open(DATA+\'filename\')".'),
       ('Loading and Saving Objects',

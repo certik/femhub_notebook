@@ -16,7 +16,7 @@ TODO:
 
 - Add extra functionality to this script
 
-- Include a proxy to this script in the Sage scripts repo.
+- Include a proxy to this script in the FEMhub scripts repo.
 """
 # Developer note:
 # The Selenium server cannot be included in the package because

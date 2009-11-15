@@ -24,7 +24,7 @@ does after restarting the server.
 [ ] make communication between twist.py and notebook_lib.js use JSON
 instead of encode_list and response_text.split.
 
-[ ] Get peter.jipsen's "canvas3d_lib.js + Pre3d does shaded surfaces" into Sage
+[ ] Get peter.jipsen's "canvas3d_lib.js + Pre3d does shaded surfaces" into FEMhub
 
 [ ] codenode's engine/interpreter.py has a function with this comment:
         """input_string could contain multiple lines, multiple commands, or
@@ -45,7 +45,7 @@ print a*b
 -2
 35
 }}}
-which is more natural, since it mimics the command line.   We should change Sage
+which is more natural, since it mimics the command line.   We should change FEMhub
 so it does the same.  I think this would simply involving changing the
 interfaces/* stuff a little.  This is probably easy, and is now high priority since
 it is something that has bugged me for a long time. 
@@ -170,7 +170,7 @@ parts (e.e., images, DATA, etc.) with checkboxes.
 >>>>>>> e98b9cd... updated to hg 182:54f41fd841a3:src/sagenb/todo.txt
 =======
     to have different FEMhub commadn on remote machine
->>>>>>> ff49d99... changed Sage->FEMhub; edited help file, login page and other changes:src/sagenb/todo.txt
+>>>>>>> ff49d99... changed FEMhub->FEMhub; edited help file, login page and other changes:src/sagenb/todo.txt
 [ ] worksheet processes using named pipes
 
 [ ] code to benchmark notebook externally
@@ -179,7 +179,7 @@ parts (e.e., images, DATA, etc.) with checkboxes.
 [ ] implement %cython mode outside sage (and as a full mode?)
 =======
 [ ] implement %cython mode outside FEMhub (and as a full mode?)
->>>>>>> ff49d99... changed Sage->FEMhub; edited help file, login page and other changes:src/sagenb/todo.txt
+>>>>>>> ff49d99... changed FEMhub->FEMhub; edited help file, login page and other changes:src/sagenb/todo.txt
 [ ] fix doctests
 [ ] worksheet processes use fork
 [ ] worksheet process use multiprocessing 
@@ -207,7 +207,7 @@ parts (e.e., images, DATA, etc.) with checkboxes.
 >>>>>>> e98b9cd... updated to hg 182:54f41fd841a3:src/sagenb/todo.txt
 =======
 [ ] @interact's that can be included with FEMhub
->>>>>>> ff49d99... changed Sage->FEMhub; edited help file, login page and other changes:src/sagenb/todo.txt
+>>>>>>> ff49d99... changed FEMhub->FEMhub; edited help file, login page and other changes:src/sagenb/todo.txt
 [ ] "browse your computer" field of upload is not editable.  fix that.
 
 [ ] improve tracebacks of % modes, e.g., %python then 1/0 is ugly.
@@ -218,10 +218,10 @@ what has happened recently. login IPs, type and time. you can also
 invalidate all other sessions on other PCs where cookies are stored.
 <<<<<<< HEAD:src/sagenb/todo.txt
 <<<<<<< HEAD:src/sagenb/todo.txt
-[ ] somehow connect http://qwebirc.org with Sage?
+[ ] somehow connect http://qwebirc.org with FEMhub?
 =======
 [ ] somehow connect http://qwebirc.org with FEMhub?
->>>>>>> ff49d99... changed Sage->FEMhub; edited help file, login page and other changes:src/sagenb/todo.txt
+>>>>>>> ff49d99... changed FEMhub->FEMhub; edited help file, login page and other changes:src/sagenb/todo.txt
 [ ] statistics of notebooks, e.g., how many per user, names of all users, how many users?
 [ ] If a worksheet is still named "untitled" then perhaps the system
 should not just blindly save it with that pseudo-title when you click
@@ -229,7 +229,7 @@ should not just blindly save it with that pseudo-title when you click
 user to change it before saving.
 =======
 
-[ ] somehow connect http://qwebirc.org with Sage?
+[ ] somehow connect http://qwebirc.org with FEMhub?
 
 [ ] statistics of notebooks, e.g., how many per user, names of all
 users, how many users?
@@ -451,7 +451,7 @@ the vertical real-estate is premium.  Ideally, when you "Toggle" the
 header, there would be only one line at the top of the notebook before
 the cells start.
 
-At the very least, maybe putting the version number right under "Sage
+At the very least, maybe putting the version number right under "FEMhub
 Notebook" would justify the extra vertical space.  I think it would be
 better if the icon were only one line high, and the toggle collapsed
 everything to one line."

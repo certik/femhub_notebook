@@ -7,7 +7,7 @@
       <span class="username">{{ username }}</span>
 
       {% if username == 'guest' %}
-        <span class="vbar"></span><a title="Please log in to the Sage notebook" class="usercontrol" href="/">Log in</a>
+        <span class="vbar"></span><a title="Please log in to the FEMhub notebook" class="usercontrol" href="/">Log in</a>
       {% else %}
         <span class="vbar"></span><a title="Back to your personal worksheet list" class="usercontrol" href="/home/{{ username }}">Home</a>
         {% if pub %}
@@ -19,7 +19,7 @@
 
         <span class="vbar"></span><a title="Documentation" class="usercontrol" onClick="help()">Help</a>
         <span class="vbar"></span><a title="Change account settings including password" class="usercontrol" href="/settings">Settings</a>
-        <span class="vbar"></span><a title="Log out of the Sage notebook" class="usercontrol" href="/logout">Sign out</a>
+        <span class="vbar"></span><a title="Log out of the FEMhub notebook" class="usercontrol" href="/logout">Sign out</a>
       {% endif %}
     </td>
   </tr>

@@ -169,7 +169,7 @@ else:
 try:
     from sage.misc.misc import SAGE_URL
 except ImportError:
-    SAGE_URL = 'http://sagemath.org'
+    SAGE_URL = 'http://femhub.org'
 
 try:
     from sage.misc.misc import SAGE_DOC
@@ -225,7 +225,7 @@ except ImportError:
 
 
 try:
-    from sage.misc.viewer import browser
+    from sagenb.misc.viewer import browser # viewer_old is from old sage notebook
 except ImportError:
     @stub
     def browser():

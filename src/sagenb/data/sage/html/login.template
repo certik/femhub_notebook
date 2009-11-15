@@ -1,11 +1,11 @@
 <html>
 <head>
-<title>Login | Sage Notebook</title>
+<title>Login | FEMhub Notebook</title>
 <link rel=stylesheet href="/css/main.css">
 </head>
 <body>
         <span class="banner">
-        <a class="banner" href="http://nb.sagemath.org/"><img align="top" src="/images/sagenb.png" alt="Sage"> The Sage Notebook</a>: Welcome!
+        <a class="banner" href="http://nb.sagemath.org/"><img align="top" src="/images/sagenb.png" alt="FEMhub"> The FEMhub Notebook</a>: Welcome!
         </span>
         $welcome
 <br><br>
@@ -14,47 +14,60 @@
 
 
 <span class="addtext">
-<b>Sage</b> is a different approach to mathematics software.<br><br>
 
-<b>The Sage Notebook</b><br>
-With the Sage Notebook
+<b>The FEMhub Notebook</b><br>
+With the FEMhub Notebook
 anyone can create, collaborate on, and publish interactive
-worksheets. In a worksheet, one can write code using Sage, Python,
-and other software included in Sage.
+worksheets. In a worksheet, one can write code using FEMhub, Python,
+and other software included in FEMhub.
 <br><br>
 
-<b>General and Advanced Pure and Applied Mathematics</b><br>
-Use Sage for studying 
-calculus, elementary to very advanced
-number theory, cryptography, 
-commutative algebra, group theory, 
-graph theory, numerical and exact linear algebra, and more.
+<b>The FEMhub Project</b><br>
+<a href="http://femhub.org/">FEMhub</a> is an open-source distribution of free
+finite element codes, along with a web notebook and a unified Python interface.
+The distribution is developed by an open source community around the hp-FEM
+group at the University of Nevada, Reno and available under the GPL license
+(Version 2, 1991 or later).
 <br><br>
 
-<b>Use an Open Source Alternative</b><br>
-By using Sage you help to support a viable open source
-alternative to 
-Magma, Maple, Mathematica, and MATLAB.
-Sage includes many 
-high-quality open source math packages.
+The FEMhub web notebook is based on the Sage notebook.   
 <br><br>
 
-<b>Use Most Mathematics Software from Within Sage</b><br>
-Sage makes it easy for you
-to use most mathematics software together. 
-Sage includes GAP, GP/PARI, Maxima, and Singular, and
-dozens of other open packages.
+<hr>
+<b>How to get started with the FEMhub web notebook <a href="http://nb.femhub.org/">http://nb.femhub.org/</a></b><br>
+The best way is to try out simple worksheets that explain
+elementary methods of numerical analysis.
 <br><br>
-
-<b>Use a Mainstream Programming Language</b><br>
-You work with Sage using the highly regarded 
-scripting language Python.
-You can write programs that combine serious mathematics with
-anything else.   
+<b>Step 1:</b> Go to <a href="http://nb.femhub.org/">http://nb.femhub.org/</a> and create an account.
+        This is automatic and fast. Report any problems to
+        femhub@googlegroups.com.
+<br><br>
+<b>Step 2:</b> Log into the web notebook. Click on "published
+        worksheets". Then click on any link starting with
+        "Num Methods", the simplest one being "Num
+        Methods: Taylor Polynomial".
+<br><br>
+<b>Step 3:</b> Click on "Edit a Copy" in the upper left corner and
+        wait for the browser response.  Scroll down below
+        the first input window and click "Evaluate". This will
+        load the program. Then there are two input windows
+        with two different ways to plot a Taylor polynomial
+        that are self-explanatory.
+<br><br>
+<b>Step 4:</b> There are multiple other worksheets whose title begins
+        with "Num Methods:". Try them out and give us your
+        feedback!
+<br><br>
+<b>Step 5:</b> You can try out worksheets starting with "Hermes2D:"
+        that allow you to solve finite element problems via
+        the internet. Feel free to adjust the existing worksheets
+        to fit your own needs. We are working on expanding the
+        possibilities.
+ 
 </span>
 </td>
 <td bgcolor="#efefff" align=center>
-<span class="addtext">Sign into the Sage Notebook<br><br>
+<span class="addtext">Sign into the FEMhub Notebook<br><br>
 <form method="POST" action="/login">
 <table>
 <tr><td align=right>Username:</td><td><input type="text" name="email" value="$default" size="15"></td></tr>
@@ -67,7 +80,7 @@ $password_error
 <br><br><br>
 $register
 <br><br><br>
-<a href='/pub'><b>Browse published Sage worksheets<br>(no login required)</b></a><br /><br/><br/>
+<a href='/pub'><b>Browse published FEMhub worksheets<br>(no login required)</b></a><br /><br/><br/>
 $forgot_pass
 </span>
 </td>

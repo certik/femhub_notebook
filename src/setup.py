@@ -21,7 +21,6 @@ def all_files(dir, lstrip):
     
 
 code = setup(name = 'sagenb',
-<<<<<<< HEAD:src/setup.py
       version     = '0.2.7',   # the spkg-dist script assumes single quotes here
       description = 'The FEMhub Notebook',
       license     = 'GNU Public License (GPL) v2+',
