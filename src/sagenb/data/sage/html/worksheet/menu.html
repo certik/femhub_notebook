@@ -44,14 +44,6 @@ INPUT
 </select>
 
 {% if not doc_worksheet %}
-<select onchange="go_system_select(this, {{ current_system_index }});" class="worksheet">
-    {% for system_index, system_name in systems_enumerated %}
-        <option title="Evaluate all input cells using {{ system_names[system_index] }}"
-            {{ "selected" if current_system_index == system_index else "" }} value="{{ system_names[system_index] }}">
-            {{ system_name }}
-        </option>
-    {% endfor %}
-</select>    
 <input type="checkbox" title="Enable/disable pretty_printing"
        onchange="pretty_print_check(this.checked);"
        class="worksheet" value="pretty_print" {{ "checked" if pretty_print else "" }} />&nbsp;Typeset

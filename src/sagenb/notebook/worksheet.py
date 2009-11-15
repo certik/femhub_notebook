@@ -931,8 +931,8 @@ class Worksheet(object):
         try:
             return self.__system
         except AttributeError:
-            self.__system = 'python'
-            return 'python'
+            self.__system = 'sage'
+            return 'sage'
 
     def system_index(self):
         """
@@ -956,7 +956,7 @@ class Worksheet(object):
         else:
             return names.index(S)
 
-    def set_system(self, system='python'):
+    def set_system(self, system='sage'):
         """
         Set the math software system in which input is evaluated by
         default.
