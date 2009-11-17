@@ -4,24 +4,12 @@ INSTALLATION:
 
 Make sure to pull the latest changes!
 
-sage -hg pull http://sage.math.washington.edu:8100
-sage -hg update
-sage -python setup.py install
+git clone git://github.com/regmi/femhub_notebook.git
 
-QUICK: Install FEMhub, then type "sage -python setup.py install" in the
-current directory.   This is safe and won't mess anything up.  Then run
-the notebook by typing:
+QUICK: Install FEMhub, then type "./femhub -i ~/femhub_notebook.spkg" in the
+current directory.
 
-  sage: import sagenb.notebook.notebook_object as nb;  nb.notebook()
-
-into sage.  This will create a directory called dotsage in the
-directory from which you run the above two commands.  All notebook
-data is stored in there.
-
-
-MORE DETAILS:
-
-   1. Make sure you have Python 2.6 installed with the following packages:
+MORE DETAILS: Make sure you have Python 2.6 installed with the following packages:
 
       * Jinja-1.2-py2.6-macosx-10.3-i386.egg
       * Pygments-1.1.1-py2.6.egg
@@ -33,14 +21,3 @@ MORE DETAILS:
    Note that pexpect is not required.  Note that twisted.web2 is.  The
    only easy way to get the above is probably just to start with a
    FEMhub install.
-
-   2. In the current directory, type:
-  
-     python setup.py install
-
-   to install the sagenb package.  This will install into the
-   site-packages/sagenb directory of your Python install.  It is
-   completely separate from FEMhub, and will run even if you don't have
-   the FEMhub library installed.  
-
-
