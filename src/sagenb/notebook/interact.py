@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 #############################################################################
 #       Copyright (C) 2008 William Stein <wstein@gmail.com>
 #  Distributed under the terms of the GNU General Public License (GPL)
@@ -147,6 +148,7 @@ import math
 import types
 
 # Sage libraries
+from jsmath import math_parse
 from sagenb.misc.misc import srange, sage_eval, Color, is_Matrix
 
 # SAGE_CELL_ID is a module scope variable that is always set equal to
@@ -251,10 +253,10 @@ def html_slider(id, values, callback, steps, default=0, margin=0):
         <html>...</html>
     """
     s = """<table><tr><td>
-        <div id='%s' style='margin:%spx; margin-left: 1.0em; margin-right: 1.0em; width: 15.0em;'></div>
+        <div id="%s" style="margin:%spx; margin-left: 1.0em; margin-right: 1.0em; width: 15.0em;"></div>
         </td>"""%(id,int(margin))
     if values != "null":
-        s += "<td><font color='black' id='%s-lbl'></font></td>"%id
+        s += '<td><font color="black" id="%s-lbl"></font></td>' % id
     s += "</tr></table>"
 
     # We now generate javascript that gets run after the above div
@@ -315,10 +317,10 @@ def html_rangeslider(id, values, callback, steps, default_l=0, default_r=1, marg
         <html>...</html>
     """
     s = """<table><tr><td>
-        <div id='%s' style='margin:%spx; margin-left: 1.0em; margin-right: 1.0em; width: 20.0em;'></div>
+        <div id="%s" style="margin:%spx; margin-left: 1.0em; margin-right: 1.0em; width: 20.0em;"></div>
         </td></tr>"""%(id,int(margin))
     if values != "null":
-        s += "<tr><td><font color='black' id='%s-lbl'></font></td></tr>"%id
+        s += '<tr><td><font color="black" id="%s-lbl"></font></td></tr>' % id
     s += "</table>"
 
     # We now generate javascript that gets run after the above div
@@ -333,7 +335,7 @@ def html_rangeslider(id, values, callback, steps, default_l=0, default_r=1, marg
         {
             pos[0]=$(sel).slider('values', 0);
             pos[1]=$(sel).slider('values', 1);
-            if(values!=null) $(sel+'-lbl').text("("+values[pos[0]]+", "+values[pos[1]]+")");
+            if(values!=null) $(sel+'-lbl').text('('+values[pos[0]]+', '+values[pos[1]]+')');
         };
         setTimeout(function()
         {
@@ -359,20 +361,28 @@ def html_rangeslider(id, values, callback, steps, default_l=0, default_r=1, marg
     return s
 
 
-def html_color_selector(id, change, input_change, default='000000'):
+def html_color_selector(id, change, input_change, default='000000', 
+                        widget='farbtastic', hide_box=False):
     """
     Return HTML representation of a jQuery color selector.
 
     INPUT:
 
-    - ``id`` - an integer; the ID of the HTML div element that this
-      selector should have.
+    - ``id`` - an integer or string; an identifier (e.g., cell ID) for
+      this selector
 
     - ``change`` - a string; JavaScript code to execute when the color
       selector changes.
 
     - ``default`` - a string (default: ``'000000'``); default color as
       a 6-character HTML hexadecimal string.
+
+    - ``widget`` - a string (default: 'farbtastic'); the color
+      selector widget to use; other choices are 'jpicker' and
+      'colorpicker'
+
+    - ``hide_box`` - a boolean (default: False); whether to hide the
+      input box associated with the color selector widget
 
     OUTPUT:
 
@@ -381,31 +391,182 @@ def html_color_selector(id, change, input_change, default='000000'):
     EXAMPLES::
 
         sage: sagenb.notebook.interact.html_color_selector(0, 'alert("changed")', '', default='0afcac')
-        '<table>...'
+        '...<table>...farbtastic...'
+        sage: sagenb.notebook.interact.html_color_selector(99, 'console.log(color);', '', default='fedcba', widget='jpicker', hide_box=True)
+        '...<table>...jpicker...'
     """
-    s = """<table><tr><td><div id='%s-picker'></div></td><td>
-<input type='text' id='%s' name='color' onchange='%s;$.farbtastic("#%s-picker").setColor(this.value);' value='%s'/></td></tr></table>"""%(
-         id,id,input_change,id,default)
-    # We now generate javascript that gets run after the above div
-    # gets inserted. This happens because of the setTimeout function
-    # below which gets passed an anonymous function.
-    # Figuring out the below took understanding jQuery much better,
-    # and took me surprisingly long, especially the part involving
-    # linkTo which sets the callback.
-    s += """<script>setTimeout(function() {
-          $('#%s-picker').farbtastic('#%s');
-          $.farbtastic('#%s-picker').linkTo(function(color) {
-              var t = get_element('%s');
-              if(color!=t.value) {
-                  t.value = color;
-                  t.style.backgroundColor = color; 
-                  %s;
-              }
-              return;
-            })
-       }, 1);</script>"""%(id,id,id,id,change)
+    input_style = ''
+    if hide_box:
+        input_style = 'display: none;'
+
+    if widget == 'farbtastic':
+        # HTML
+        s = """
+            <table>
+              <tr>
+                <td>
+                  <div id="%s-picker"></div>
+                </td>
+                <td>
+                  <input type="text"
+                         id="%s"
+                         name="color"
+                         onchange="%s; $(this).css({backgroundColor: this.value, color: ''}); $.farbtastic('#%s-picker').setColor(this.value);"
+                         value="%s"
+                         style="%s"/>
+                </td>
+              </tr>
+            </table>""" % (id, id, input_change, id, default, input_style)
+
+        # We now generate javascript that gets run after the above div
+        # gets inserted. This happens because of the setTimeout
+        # function below which gets passed an anonymous function.
+        # Figuring out the below took understanding jQuery much
+        # better, and took me surprisingly long, especially the part
+        # involving linkTo which sets the callback.
+        s += """<script>
+             setTimeout(function () {
+                 var input = $('#%s'), picker = $.farbtastic('#%s-picker');
+                 picker.linkTo('#%s').linkTo(function (color) {
+                     if (input.val() !== color) {
+                         input.val(color);
+                         input.css({ 
+                             backgroundColor: color,
+                             color: picker.hsl[2] > 0.5 ? '#000000' : '#ffffff'
+                         });
+                         %s;
+                     }
+                 })
+             }, 1);
+             </script>""" % (id, id, id, change)
+
+    elif widget == 'colorpicker':
+        # HTML
+        select = 'background: url(/javascript/jquery/plugins/colorpicker/images/select.png)'
+        style1 = 'position: relative; width: 36px; height: 36px; %s;' % select
+        style2 = 'position: absolute; top: 3px; left: 3px; width: 30px; height: 30px; %s center; background-color: %s' % (select, default)
+
+        s = """
+            <table>
+              <tr>
+                <td>
+                  <input type="text"
+                         id="%s"
+                         name="color"
+                         onchange="%s; $(this).css({backgroundColor: this.value}); $('#%s-picker').ColorPickerSetColor(this.value.slice(1)); $('#%s-picker div').css({backgroundColor: this.value});"
+                         value="%s"
+                         style="%s" />
+                </td>
+                <td>
+                  <div id="%s-picker" style="%s">
+                    <div style="%s"></div>
+                  </div>
+                </td>
+              </tr>
+            </table>""" % (id, input_change, id, id, default, input_style,
+                           id, style1, style2)
+
+        # JS
+        s +="""<script>
+            setTimeout(function () {
+                var def = '%s'.slice(1), div = $('#%s-picker div'),
+                    input = $('#%s'), picker = $('#%s-picker');
+                input.css({
+                    backgroundColor: '%s',
+                    // Should be good enough:
+                    color: (parseInt(def.slice(0, 2), 16) + parseInt(def.slice(2, 4), 16) + parseInt(def.slice(4, 6), 16)) / 3 > 127 ? '#000000' : '#ffffff'
+                });
+                picker.ColorPicker({
+                    color : '%s',
+                    onShow : function (pkr) {
+                        $(pkr).css({zIndex: '10'}).show();
+                        return false;
+                    },
+                    onChange : function (hsb, hex, rgb) {
+                        color = '#' + hex;
+                        if (input.val() !== color) {
+                            input.val(color);
+                            input.css({
+                                backgroundColor: color,
+                                color: hsb.b > 50 ? '#000000' : '#ffffff'
+                            });
+                            div.css({backgroundColor: color});
+                            %s;
+                        }
+                    },
+                    onSubmit : function (hsb, hex, rgb, el) {
+                        $(el).ColorPickerHide();
+                    }
+                });
+            }, 1);
+            </script>""" % (default, id, id, id, default, default, change)
+
+    elif widget == 'jpicker':
+        # HTML.
+        s = """
+            <table>
+              <tr>
+                <td>
+                  <input type="text"
+                         id="%s"
+                         name="color"
+                         onchange="%s; $(this).css({backgroundColor: this.value}); $('.jPicker_HexText', $('#%s-picker').next()).val(this.value.slice(1)).trigger('keyup');"
+                         value="%s"
+                         style="%s" />
+                </td>
+                <td>
+                  <div id="%s-picker"></div>
+                </td>
+              </tr>
+            </table>
+            """ % (id, input_change, id, default[1:], input_style, id)
+
+        # JS.  Note: jPicker uses, e.g., 'abcdef' instead of '#abcdef'
+        # for bound input fields.  To maintain consistency with the
+        # Farbtastic and ColorPicker implementations above, we do not
+        # simply call $('#%s').jPicker({...}).
+        s +="""<script>
+            setTimeout(function () {
+                var input = $('#%s'), picker = $('#%s-picker');
+                picker.jPicker(
+                    // Settings.
+                    {
+                        window: {
+                            expandable: true,
+                            position: { x: 20, y: 20 },
+                            title: 'Select a color'
+                        },
+                        color: {
+                            active: '%s'
+                        },
+                        images: {
+                            clientPath: '/javascript/jquery/plugins/jpicker/images/'
+                        }
+                    },
+                    // commitCallback
+                    function (color) {},
+                    // liveCallback
+                    function (color_arg) {
+                        color = '#' + color_arg.hex;
+                        if (input.val() !== color) {
+                            input.val(color);
+                            input.css({
+                                backgroundColor: color,
+                                color: color_arg.v > 50 ? '#000000' : '#ffffff'
+                            });
+                            %s;
+                        }
+                    },
+                    // cancelCallback
+                    function (color) {}
+                );
+                // The 'change' event is still bound:
+                input.unbind('keyup');
+            }, 1);
+            </script>""" % (id, id, default, change)
+
     return s
-    
+
 
 class InteractElement(object):   
     def label(self):
@@ -553,7 +714,7 @@ class InteractControl(InteractElement):
             sage: InteractControl('x', default_value=5, label='the x value').label()
             'the x value'        
         """
-        return self.__label
+        return math_parse(self.__label)
 
     def default_value(self):
         """
@@ -660,25 +821,26 @@ class InteractControl(InteractElement):
         EXAMPLES::
 
             sage: sagenb.notebook.interact.InteractControl('x', 1).interact()
-            'interact(..., "_interact_.update(..., \\"x\\", ..., _interact_.standard_b64decode(\\""+encode64(NULL)+"\\"), globals());_interact_.recompute(0)")'
+            "interact(..., '_interact_.update(..., \\'x\\', ..., _interact_.standard_b64decode(\\''+encode64(NULL)+'\\'), globals()); _interact_.recompute(\\'0\\');')"
         """
-        #We have to do a try/except block here since the
-        #control may not have a canvas associated with it.
+        # We have to do a try/except block here since the control may
+        # not have a canvas associated with it.
         try:
             auto_update = self.canvas().is_auto_update()
         except ValueError:
             auto_update = True
 
-        # The following is a crazy line to read because of all the backslashes and try/except.
-        # All it does is run the interact function once after setting exactly one
-        # dynamic variable.    If setting the dynamic variable fails, due to a KeyError
-        python_string = '_interact_.update(%s, \\"%s\\", %s, _interact_.standard_b64decode(\\""+encode64(%s)+"\\"), globals())'%(
+        # The following is a crazy line to read because of all the
+        # backslashes and try/except.  All it does is run the interact
+        # function once after setting exactly one dynamic variable.
+        # If setting the dynamic variable fails, due to a KeyError
+        python_string = """_interact_.update(\\'%s\\', \\'%s\\', %s, _interact_.standard_b64decode(\\''+encode64(%s)+'\\'), globals())""" % (
             self.cell_id(), self.var(), self.adapt_number(), self.value_js(*args))
 
         if auto_update:
-            python_string += ';_interact_.recompute(%s)'%self.cell_id()
+            python_string += """; _interact_.recompute(\\'%s\\');""" % self.cell_id()
         
-        s = 'interact(%s, "%s")'%(self.cell_id(), python_string)
+        s = """interact(%r, '%s')""" % (self.cell_id(), python_string)
         return s
    
     def var(self):
@@ -702,7 +864,7 @@ class InteractControl(InteractElement):
 
         OUTPUT:
 
-        - an integer - ID of cell that this control interacts
+        - an integer or a string
 
         EXAMPLES:
 
@@ -714,9 +876,29 @@ class InteractControl(InteractElement):
         return self.__cell_id
 
 class InputBox(InteractControl):
-    def __init__(self, var, default_value, label=None, type=None, width = 80):
+    def __init__(self, var, default_value, label=None, type=None, width=80,
+                 **kwargs):
         """
         An input box :func:`interact` control.
+
+        INPUT:
+
+        - ``var`` - a string; name of variable that this control
+          interacts
+
+        - ``default_value`` - the default value of the variable
+          corresponding to this control
+
+        - ``label`` - a string (default: None); label for this
+          control
+
+        - ``type`` - a type (default: None); the type of this control,
+          e.g., the type 'bool'
+
+        - ``width`` - an integer (default: 80); the character width of
+          this control
+
+        - ``kwargs`` - a dictionary; additional keyword options
 
         EXAMPLES::
 
@@ -728,6 +910,7 @@ class InputBox(InteractControl):
         InteractControl.__init__(self, var, default_value, label)
         self.__type = type
         self.__width = width
+        self._kwargs = kwargs
         
     def __repr__(self):
         """
@@ -764,14 +947,21 @@ class InputBox(InteractControl):
         EXAMPLES::
 
             sage: sagenb.notebook.interact.InputBox('theta', Color('red'), type=Color)._adaptor('#aaaaaa',globals())
-            RGB color (0.6640625, 0.6640625, 0.6640625)
+            RGB color (0.66..., 0.66..., 0.66...)
         """
         if self.__type is None:
             return sage_eval(value, globs)
         elif self.__type is str:
             return value
         elif self.__type is Color:
-            return Color(value)
+            try:
+                return Color(value)
+            except ValueError:
+                try:
+                    return Color('#' + value)
+                except ValueError:
+                    print "Invalid color '%s', using default Color()" % value
+                    return Color()
         else:
             return self.__type(sage_eval(value,globs))
 
@@ -805,16 +995,16 @@ class InputBox(InteractControl):
         EXAMPLES::
 
             sage: sagenb.notebook.interact.InputBox('theta', 1).render()
-            '<input type=\'text\' value="1" size=80 onchange=\'interact(0, "_interact_.update(0, \\"theta\\", ..., _interact_.standard_b64decode(\\""+encode64(this.value)+"\\"), globals());_interact_.recompute(0)")\'></input>'
+            '<input type="text" value="1" size=80 onchange="interact(0, \'_interact_.update(\\\'0\\\', \\\'theta\\\', ..., _interact_.standard_b64decode(\\\'\'+encode64(this.value)+\'\\\'), globals()); _interact_.recompute(\\\'0\\\');\')"></input>'
         """
         if self.__type is bool:
-            return """<input type='checkbox' %s width=200px onchange='%s'></input>"""%(
+            return """<input type="checkbox" %s width=200px onchange="%s"></input>"""%(
                 'checked' if self.default_value() else '',  self.interact())
         elif self.__type is str:
-            return """<input type='text' value="%s" size=%s onchange='%s'></input>"""%(
+            return """<input type="text" value="%s" size=%s onchange="%s"></input>"""%(
                 self.html_escaped_default_value(), self.__width, self.interact())
         else:
-            return """<input type='text' value="%s" size=%s onchange='%s'></input>"""%(
+            return """<input type="text" value="%s" size=%s onchange="%s"></input>"""%(
                 self.html_escaped_default_value(), self.__width,  self.interact())
 
 class ColorInput(InputBox):
@@ -857,11 +1047,14 @@ class ColorInput(InputBox):
         EXAMPLES::
 
             sage: sagenb.notebook.interact.ColorInput('c', Color('red')).render()
-            '<table>...'
-        """
-        return html_color_selector('color-selector-%s-%s'%(self.var(), self.cell_id()),
-                     change=self.interact(0), input_change=self.interact(1),
-                     default=self.default_value().html_color())
+            '...<table>...'
+            """
+        return html_color_selector('color-selector-%s-%s'%(self.var(),
+                                                           self.cell_id()),
+                                   change=self.interact(0),
+                                   input_change=self.interact(1),
+                                   default=self.default_value().html_color(),
+                                   **self._kwargs)
 
 
 
@@ -971,13 +1164,13 @@ class InputGrid(InteractControl):
         EXAMPLES::
 
             sage: sagenb.notebook.interact.InputGrid('M', 2,2).value_js()
-            ' "[["+jQuery(this).parents("table").eq(0).find("tr").map(function(){return jQuery(this).find("input").map(function() {return jQuery(this).val();}).get().join(",");}).get().join("],[")+"]]" '
+            " '[['+jQuery(this).parents('table').eq(0).find('tr').map(function(){return jQuery(this).find('input').map(function() {return jQuery(this).val();}).get().join(',');}).get().join('],[')+']]' "
         """
         # Basically, given an input element in a table, it constructs
         # a python string representation of a list of lists from the
         # rows in the table.
         
-        return """ "[["+jQuery(this).parents("table").eq(0).find("tr").map(function(){return jQuery(this).find("input").map(function() {return jQuery(this).val();}).get().join(",");}).get().join("],[")+"]]" """
+        return """ '[['+jQuery(this).parents('table').eq(0).find('tr').map(function(){return jQuery(this).find('input').map(function() {return jQuery(this).val();}).get().join(',');}).get().join('],[')+']]' """
 
     def render(self):
         """
@@ -990,14 +1183,13 @@ class InputGrid(InteractControl):
         EXAMPLES::
 
             sage: sagenb.notebook.interact.InputGrid('M', 1,2).render()
-            '<table><tr><td><input type=\'text\' value=\'None\' ...
-
+            '<table><tr><td><input type="text" value="None" ...'
         """
         table = "<table>"
         for i in range(self.__rows):
             table += "<tr>"
             for j in range(self.__columns):
-                table += "<td><input type='text' value='%r' size='%s' onchange='%s'></input></td>"%(self.__default_value_grid[i][j], self.__width, self.interact())
+                table += """<td><input type="text" value="%r" size="%s" onchange="%s"></input></td>""" % (self.__default_value_grid[i][j], self.__width, self.interact())
             table += "</tr>"
         table += "</table>"
 
@@ -1191,10 +1383,10 @@ class Selector(InteractControl):
         if use_buttons:
                 #On selected buttons, border is set to inset, on unselected boxes - outset. This usually is default rendering.
                 if len(vals) > 1:
-                        event = '$("BUTTON", this.parentNode).css("border-style", "outset"); $(this).css("border-style", "inset"); %s'%event
-                s = '<table style="border:1px solid #dfdfdf;background-color:#efefef">'
+                        event = """$('BUTTON', this.parentNode).css('border-style', 'outset'); $(this).css('border-style', 'inset'); %s""" % event
+                s = """<table style="border:1px solid #dfdfdf; background-color:#efefef;">"""
         else:
-            s = "<select onchange='%s;'>"%event
+            s = """<select onchange="%s;">""" % event
         i = 0
         for r in range(self.__nrows):
             if use_buttons:
@@ -1214,9 +1406,9 @@ class Selector(InteractControl):
                 else:
                     lbl = lbls[i]
                 if use_buttons:
-                    s += "<button style='%s%s' value='%s' onclick='%s'>%s</button>\n"%('border-style:inset;' if i==default and len(vals)>1 else 'border-style:outset;', style, i, event, lbl)
+                    s += """<button style="%s%s" value="%s" onclick="%s">%s</button>\n""" % ('border-style:inset;' if i==default and len(vals)>1 else 'border-style:outset;', style, i, event, lbl)
                 else:
-                    s += "<option value='%s' %s>%s</option>\n"%(i, 'selected' if i==default else '', lbl)
+                    s += '<option value="%s" %s>%s</option>\n' % (i, 'selected' if i==default else '', lbl)
                 i += 1
             if use_buttons:
                 s += '</td></tr>'
@@ -1644,8 +1836,8 @@ class InteractCanvas:
 
         - ``controls`` - a list of :class:`InteractControl` instances.
 
-        - ``id`` - an integer; the ID of the cell that contains this
-          InteractCanvas.
+        - ``id`` - an integer or a string; the ID of the cell that
+          contains this InteractCanvas.
 
         - ``options`` - any additional keyword arguments (for example,
           auto_update=False)
@@ -1709,7 +1901,7 @@ class InteractCanvas:
 
         OUTPUT:
 
-        - an integer
+        - an integer or a string
 
         EXAMPLES::
 
@@ -1742,11 +1934,12 @@ class InteractCanvas:
     
     def cell_id(self):
         """
-        Return the cell id that contains this interactive canvas.
+        Returns the ID of the cell that contains this interactive
+        canvas.
 
         OUTPUT:
 
-        - an integer
+        - an integer or a string
 
         EXAMPLES::
 
@@ -1773,11 +1966,11 @@ class InteractCanvas:
 
             sage: B = sagenb.notebook.interact.InputBox('x',2)
             sage: sagenb.notebook.interact.InteractCanvas([B], 3).render_output()
-            "<div ...</div>"
+            '<div id="cell-interact...</div>'
         """
-        return """<div id='cell-interact-%s'><?__SAGE__START>
-        <table border=0 bgcolor='#white' width=100%% height=100%%>
-        <tr><td bgcolor=white align=left valign=top><pre><?__SAGE__TEXT></pre></td></tr>
+        return """<div id="cell-interact-%s"><?__SAGE__START>
+        <table border=0 bgcolor="white" width=100%% height=100%%>
+        <tr><td bgcolor="white" align=left valign=top><pre><?__SAGE__TEXT></pre></td></tr>
         <tr><td  align=left valign=top><?__SAGE__HTML></td></tr>
         </table><?__SAGE__END></div>"""%self.cell_id()
 
@@ -1822,10 +2015,10 @@ class InteractCanvas:
 
             sage: B = sagenb.notebook.interact.InputBox('x',2)
             sage: sagenb.notebook.interact.InteractCanvas([B], 3).wrap_in_outside_frame('<!--inside-->')
-            "<!--notruncate--><div padding=6 id='div-interact-3'> ...</div>\n                 "
+            '<!--notruncate--><div padding=6 id="div-interact-3"> ...</div>...'
         """
-        return """<!--notruncate--><div padding=6 id='div-interact-%s'> <table width=800px height=20px bgcolor='#c5c5c5'
-                 cellpadding=15><tr><td bgcolor='#f9f9f9' valign=top align=left>%s</td>
+        return """<!--notruncate--><div padding=6 id="div-interact-%s"> <table width=800px height=20px bgcolor="#c5c5c5"
+                 cellpadding=15><tr><td bgcolor="#f9f9f9" valign=top align=left>%s</td>
                  </tr></table></div>
                  """%(self.cell_id(), inside)
 
@@ -1850,7 +2043,7 @@ class InteractCanvas:
 
             sage: B = sagenb.notebook.interact.InputBox('x',2)
             sage: sagenb.notebook.interact.InteractCanvas([B], 3).render()
-            '<!--notruncate--><div padding=6 id=\'div-interact-3\'> ...</div>\n                 '
+            '<!--notruncate--><div padding=6 id="div-interact-3"> ...</div>...'
         """
         s = "%s%s"%(self.render_controls(), self.render_output())
         s = self.wrap_in_outside_frame(s)
@@ -1882,31 +2075,29 @@ class JavascriptCodeButton(InteractElement):
 
             sage: b = sagenb.notebook.interact.JavascriptCodeButton('Push me', 'alert("2")')
             sage: b.render()
-            '<input type="button" value="Push me" onclick=\'alert("2")\'>\n'
-
+            '<input type="button" value="Push me" onclick="alert("2")">\n'
         """
-        return '<input type="button" value="%s" onclick=\'%s\'>\n'%(self.__label, self.__code)
+        return """<input type="button" value="%s" onclick="%s">\n"""%(self.__label, self.__code)
 
 class UpdateButton(JavascriptCodeButton):
     def __init__(self, cell_id):
         r"""
-        This :func:`interact` element creates a button which when clicked
-        causes the :func:`interact` function in the cell ``cell_id`` to be
-        recomputed with the current values of the variables.
+        Creates an :func:`interact` button element.  A click on the
+        button triggers recomputation of the cell with the current
+        values of the variables.
 
         INPUT:
 
-        - ``cell_id`` - an integer; the ambient cell's ID
+        - ``cell_id`` - an integer or string; the ambient cell's ID
 
         EXAMPLES::
 
             sage: b = sagenb.notebook.interact.UpdateButton(0)
             sage: b.render()
-            '<input type="button" value="Update" onclick=\'interact(0, "_interact_.recompute(0)")\'>\n'
-
+            '<input type="button" value="Update" onclick="interact(0, \'_interact_.recompute(\\\'0\\\')\')">\n'
         """
-        s = 'interact(%s, "_interact_.recompute(%s)")'%(cell_id, cell_id)
-        JavascriptCodeButton.__init__(self, "Update", s)                                     
+        s = """interact(%r, '_interact_.recompute(\\'%s\\')')""" % (cell_id, cell_id)
+        JavascriptCodeButton.__init__(self, "Update", s)
         
 def interact(f):
     r"""
@@ -1997,9 +2188,9 @@ def interact(f):
 
     Defaults for the variables of the input function determine
     interactive controls.  The standard controls are ``input_box``,
-    ``slider``, ``range_slider``, ``checkbox``, ``selector``, and
-    ``input_grid``.  There is also a color selector and text control
-    (see defaults below).
+    ``slider``, ``range_slider``, ``checkbox``, ``selector``,
+    ``input_grid``, and ``color_selector``.  There is also a text
+    control (see the defaults below).
 
     
     * ``u = input_box(default=None, label=None, type=None)`` -
@@ -2030,12 +2221,15 @@ def interact(f):
       to_value=lambda x:x, width=4)`` - an editable grid of
       objects (a matrix or array)
 
+    * ``u = color_selector(default=(0,0,1), label=None,
+      widget='farbtastic', hide_box=False)`` - a color selector with a
+      possibly hidden input box; the ``widget`` can also be ``'jpicker'``
+      or ``'colorpicker'``
 
     * ``u = text_control(value='')`` - a block of text
 
-
-    You can create a color selector by setting the default value for a
-    variable to ``Color(...)``.
+    You can also create a color selector by setting the default value for
+    an ``input_box`` to ``Color(...)``.  
 
     There are also some convenient defaults that allow you to make
     controls automatically without having to explicitly specify them.
@@ -2060,8 +2254,8 @@ def interact(f):
 
     * ``u = bool`` - a checkbox
 
-    * ``u = Color('blue')`` - a 2-D RGB color selector; returns
-      ``Color`` object
+    * ``u = Color('blue')`` - a color selector; returns ``Color``
+      object
 
     * ``u = (default, v)`` - ``v`` as above, with given
       ``default`` value
@@ -2086,6 +2280,13 @@ def interact(f):
             ...       show(plot(sin,color=v))
             <html>...
 
+        An alternative::
+
+            sage: @interact
+            ... def _(c = color_selector((1, 0, 0))):
+            ...       show(plot(sin, color = c))
+            <html>...
+
     MORE EXAMPLES:
 
     We give an input box that allows one to enter completely arbitrary
@@ -2108,8 +2309,9 @@ def interact(f):
         ...       xyz = a
         <html>...
 
-    If you enter the above you obtain an :func:`interact` canvas.  Entering
-    values in the box changes the global variable ``xyz``::
+    If you enter the above you obtain an :func:`interact` canvas.
+    Entering values in the box changes the global variable ``xyz``.
+    Here's a example with several controls::
 
         sage: @interact
         ... def _(title=["A Plot Demo", "Something silly", "something tricky"], a=input_box(sin(x*sin(x*sin(x))), 'function'),
@@ -2117,6 +2319,15 @@ def interact(f):
         ...     html('<h1 align=center>%s</h1>'%title)
         ...     print plot_points
         ...     show(plot(a, -zoom*pi,zoom*pi, color=clr, thickness=thickness, plot_points=plot_points))
+        <html>...
+
+    For a more compact color control, use an empty label, a different
+    widget (``'colorpicker'`` or ``'jpicker'``), and hide the input
+    box::
+
+        sage: @interact
+        ... def _(color=color_selector((1,0,1), label='', widget='colorpicker', hide_box=True)):
+        ...     show(plot(x/(8/7+sin(x)), (x,-50,50), fill=True, fillcolor=color))
         <html>...
 
     We give defaults and name the variables::
@@ -2211,7 +2422,7 @@ def interact(f):
 
         sage: v = []
         sage: html('<h2>Quadratic Root Etch-a-sketch</h2>')
-        <html><h2>Quadratic Root Etch-a-sketch</h2></html>
+        <html>...<h2>Quadratic Root Etch-a-sketch</h2>...</html>
         sage: @interact
         ... def _(a=[-10..10], b=[-10..10], c=[-10..10]):
         ...       f = a*x^2 + b*x + c == 0; show(f)
@@ -2362,7 +2573,7 @@ class control:
         self.__label = label
 
 class input_box(control):
-    def __init__(self, default=None, label=None, type=None, width = 80):
+    def __init__(self, default=None, label=None, type=None, width=80, **kwargs):
         r"""
         An input box interactive control.  Use this in conjunction
         with the :func:`interact` command.
@@ -2379,6 +2590,8 @@ class input_box(control):
 
         - ``width`` - an integer; width of text box in characters
             
+        - ``kwargs`` - a dictionary; additional keyword options
+
         EXAMPLES::
 
             sage: input_box("2+2", 'expression')
@@ -2390,6 +2603,7 @@ class input_box(control):
         self.__type = type
         control.__init__(self, label)
         self.__width = width
+        self.__kwargs = kwargs
 
     def __repr__(self):
         """
@@ -2465,9 +2679,123 @@ class input_box(control):
             An InputBox interactive control with x='2+2' and label 'Exp'        
         """
         if self.__type is Color:
-            return ColorInput(var, default_value=self.__default, label=self.label(), type=self.__type)
+            return ColorInput(var, default_value=self.__default, label=self.label(), type=self.__type, **self.__kwargs)
         else:
-            return InputBox(var, default_value=self.__default, label=self.label(), type=self.__type, width = self.__width)
+            return InputBox(var, default_value=self.__default, label=self.label(), type=self.__type, width=self.__width, **self.__kwargs)
+
+
+class color_selector(input_box):
+    def __init__(self, default=(0,0,1), label=None,
+                 widget='farbtastic', hide_box=False):
+        r"""
+        A color selector (also called a color chooser, picker, or
+        tool) interactive control.  Use this with the :func:`interact`
+        command.
+
+        INPUT:
+
+        - ``default`` - an instance of or valid constructor argument
+          to :class:`Color` (default: (0,0,1)); the selector's default
+          color; a string argument must be a valid color name (e.g.,
+          'red') or HTML hex color (e.g., '#abcdef')
+
+        - ``label`` - a string (default: None); the label rendered to
+          the left of the selector.
+
+        - ``widget`` - a string (default: 'farbtastic'); the color
+          selector widget to use; other choices are 'jpicker' and
+          'colorpicker'
+
+        - ``hide_box`` - a boolean (default: False); whether to hide
+          the input box associated with the color selector widget
+
+        EXAMPLES::
+
+            sage: color_selector()
+            Interact color selector labeled None, with default RGB color (0.0, 0.0, 1.0), widget 'farbtastic', and visible input box
+            sage: color_selector((0.5, 0.5, 1.0), widget='jpicker')
+            Interact color selector labeled None, with default RGB color (0.5, 0.5, 1.0), widget 'jpicker', and visible input box
+            sage: color_selector(default = Color(0, 0.5, 0.25))
+            Interact color selector labeled None, with default RGB color (0.0, 0.5, 0.25), widget 'farbtastic', and visible input box
+            sage: color_selector('purple', widget = 'colorpicker')
+            Interact color selector labeled None, with default RGB color (0.5, 0.0, 1.0), widget 'colorpicker', and visible input box
+            sage: color_selector('crayon', widget = 'colorpicker')
+            Traceback (most recent call last):
+            ...
+            ValueError: unknown color 'crayon'
+            sage: color_selector('#abcdef', label='height', widget='jpicker')
+            Interact color selector labeled 'height', with default RGB color (0.6..., 0.8..., 0.9...), widget 'jpicker', and visible input box
+            sage: color_selector('abcdef', label='height', widget='jpicker')
+            Traceback (most recent call last):
+            ...
+            ValueError: unknown color 'abcdef'
+        """
+        input_box.__init__(self, default=Color(default), label=label,
+                           type=Color, widget=widget, hide_box=hide_box)
+        self.__widget = widget
+        self.__hide_box = hide_box
+
+    def __repr__(self):
+        """
+        Return the print representation of this color selector.
+
+        OUTPUT:
+
+        - a string
+
+        EXAMPLES::
+
+            sage: color_selector(Color('red'), 'line color').__repr__()
+            "Interact color selector labeled 'line color', with default RGB color (1.0, 0.0, 0.0), widget 'farbtastic', and visible input box"
+            sage: color_selector(Color((1,0,1)), 'circle color', widget='jpicker', hide_box=True).__repr__()
+            "Interact color selector labeled 'circle color', with default RGB color (1.0, 0.0, 1.0), widget 'jpicker', and hidden input box"
+        """
+        s = "Interact color selector labeled %r, with default %r, widget %r, and " % (self.label(), self.default(), self.widget())
+        if self.hide_box():
+            return s + "hidden input box"
+        else:
+            return s + "visible input box"
+
+    def widget(self):
+        """
+        Return the name of the HTML widget for this color selector.
+
+        OUTPUT:
+
+        - a string; the widget's name
+
+        EXAMPLES::
+
+            sage: color_selector().widget()
+            'farbtastic'
+            sage: color_selector('#abcdef', hide_box=True, widget='jpicker').widget()
+            'jpicker'
+            sage: color_selector(widget='colorpicker').widget()
+            'colorpicker'
+            sage: color_selector(default=Color(0,0.5,0.25)).widget()
+            'farbtastic'
+        """
+        return self.__widget
+
+    def hide_box(self):
+        """
+        Return whether to hide the input box associated with this color
+        selector.
+
+        OUTPUT:
+
+        - a boolean
+
+        EXAMPLES::
+
+            sage: color_selector().hide_box()
+            False
+            sage: color_selector('green', hide_box=True, widget='jpicker').hide_box()
+            True
+            sage: color_selector((0.75,0.5,0.25)).hide_box()
+            False
+        """
+        return self.__hide_box
 
 
 class input_grid(control):
@@ -3261,7 +3589,9 @@ def list_of_first_n(v,n):
 
     EXAMPLES::
 
-        sage: sagenb.notebook.interact.list_of_first_n(Primes(), 10)
+        sage: from itertools import takewhile
+        sage: p100 = takewhile(lambda x: x < 100, Primes())
+        sage: sagenb.notebook.interact.list_of_first_n(p100, 10)
         [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
         sage: sagenb.notebook.interact.list_of_first_n((1..5), 10)
         [1, 2, 3, 4, 5]
@@ -3288,7 +3618,8 @@ def update(cell_id, var, adapt, value, globs):
     
     INPUT:
 
-    - ``cell_id`` - an integer; the ID of an :func:`interact` cell
+    - ``cell_id`` - an integer or string; the ID of an
+      :func:`interact` cell
 
     - ``var`` - an object; a variable associated to that cell
 
@@ -3307,6 +3638,12 @@ def update(cell_id, var, adapt, value, globs):
         sage: sagenb.notebook.interact.update(0, 'a', 0, '5', globals())
         __SAGE_INTERACT_RESTART__         
     """
+    # We cast the id to an integer, if it's an integer.
+    try:
+        cell_id = int(cell_id)
+    except ValueError:
+        pass
+
     try:
         S = state[cell_id]
         # Look up the function that adapts inputs to have the right type
@@ -3325,7 +3662,8 @@ def recompute(cell_id):
     
     INPUT:
 
-    - ``cell_id`` - an integer
+    - ``cell_id`` - a string or an integer; the ID of an
+      :func:`interact` cell
 
     EXAMPLES:
 
@@ -3337,6 +3675,12 @@ def recompute(cell_id):
         __SAGE_INTERACT_RESTART__         
 
     """
+    # We cast the id to an integer, if it's an integer.
+    try:
+        cell_id = int(cell_id)
+    except ValueError:
+        pass
+
     try:
         S = state[cell_id]
         # Finally call the interactive function, which will use the above variables.

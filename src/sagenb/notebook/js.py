@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 r"""nodoctest
 JavaScript (AJAX) Components of the Notebook
 
@@ -14,22 +15,32 @@ which is inserted to the head of the notebook web page.  All of the
 interesting Javascript code is contained under
 ``data/sage/js/notebook_lib.js``.
 """
-
-import os
-from sagenb.misc.misc import SAGE_URL 
-from compress.JavaScriptCompressor import JavaScriptCompressor
-import keyboards
-
 ###########################################################################
 #       Copyright (C) 2006 William Stein <wstein@gmail.com>
 #                     2006 Tom Boothby <boothby@u.washington.edu>
 #
 #   Released under the *modified* BSD license.
-#     Tom wrote in email to me at wstein@gmail.com on March 2, 2008: "You have my permission
-#     to change the license on anything I've contributed to the notebook, to whatever suits you."
+#     Tom wrote in email to me at wstein@gmail.com on March 2, 2008:
+#     "You have my permission to change the license on anything I've
+#     contributed to the notebook, to whatever suits you."
 #
 ###########################################################################
 
+import os
+import keyboards
+from template import template
+from sagenb.misc.misc import SAGE_URL
+from compress.JavaScriptCompressor import JavaScriptCompressor
+
+# Debug mode?  If sagenb lives under SAGE_ROOT/, we minify and cache
+# the Notebook JS library.
+try:
+    from sage.misc.misc import SAGE_ROOT
+    from pkg_resources import Requirement, working_set
+    sagenb_path = working_set.find(Requirement.parse('sagenb')).location
+    debug_mode = SAGE_ROOT not in os.path.realpath(sagenb_path)
+except AttributeError, ImportError:
+    debug_mode = False
 
 _cache_javascript = None
 def javascript():
@@ -60,10 +71,13 @@ def javascript():
     if _cache_javascript is not None:
         return _cache_javascript
 
-    from template import template
     s = template(os.path.join('js', 'notebook_lib.js'),
                  SAGE_URL=SAGE_URL,
                  KEY_CODES=keyhandler.all_tests())
+
+    global debug_mode
+    if debug_mode:
+        return s
 
     # TODO: use minify here, which is more standard (and usually safer
     # and with gzip compression, smaller); But first inquire about the
@@ -71,10 +85,10 @@ def javascript():
     # Evil" clause in the license.  Does that prevent us from
     # distributing it (i.e., it adds an extra condition to the
     # software)?  See http://www.crockford.com/javascript/jsmin.py.txt
-    s = JavaScriptCompressor().getPacked(s)
+    s = JavaScriptCompressor().getPacked(s.encode('utf-8'))
     _cache_javascript = s
-    return s
 
+    return s
 
 
 class JSKeyHandler:
@@ -89,9 +103,9 @@ class JSKeyHandler:
     def set(self, name, key='', alt=False, ctrl=False, shift=False):
         """
         Add a named keycode to the handler.  When built by
-        \code{all_tests()}, it can be called in javascript by
-        \code{key_<key_name>(event_object)}.  The function returns
-        true if the keycode numbered by the \code{key} parameter was
+        ``all_tests()``, it can be called in javascript by
+        ``key_<key_name>(event_object)``.  The function returns
+        true if the keycode numbered by the ``key`` parameter was
         pressed with the appropriate modifier keys, false otherwise.
         """
         self.key_codes.setdefault(name,[])
@@ -99,7 +113,7 @@ class JSKeyHandler:
 
     def add(self, name, key='', alt=False, ctrl=False, shift=False):
         """
-        Similar to \code{set_key(...)}, but this instead checks if
+        Similar to ``set_key(...)``, but this instead checks if
         there is an existing keycode by the specified name, and
         associates the specified key combination to that name in
         addition.  This way, if different browsers don't catch one

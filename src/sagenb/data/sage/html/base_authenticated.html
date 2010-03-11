@@ -1,19 +1,24 @@
 {% extends "html/base.html" %}
-
-{% block css %}main{% endblock %}
-
-{% block body %}
-
-        <div class="banner">
-        <table width="100%"><tr><td>
-        <a class="banner" href="http://nb.sagemath.org/"><img align="top" src="/images/sagenb.png" alt="Sage"> The Sage Notebook</a>
-</td>
-<td><span class="ping" id="ping">Searching for Sage server...</span></td>
-        </tr></table>
-        </div>
-
-{% block content %}
-
+{% block controls %}
+<div id="main-controls" class="controls">
+    <ul>
+        <li class="username">{{ username }}</li>
+        {% if username == 'guest' %}
+        <li><a title="Please log in to the Sage notebook" href="/">Log in</a></li>
+        {% else %}
+        <li><a id="toggle-link" title="Toggle the top bar" onClick="$('#worksheet-bar').toggle()">Toggle</a></li>
+        <li><a title="Back to your personal worksheet list" href="/home/{{ username }}">Home</a></li>
+        {% if pub %}
+        <li><span>Published</span></li>
+        {% else %}
+        <li><a title="Browse the published worksheets" href="/pub">Published</a></li>
+        <li><a title="View a log of recent computations" href="#" onClick="history_window()">Log</a></li>
+        {% endif %}
+        <li><a title="Change account settings including password" href="/settings">Settings</a></li>
+        <li><a title="Documentation" href="#" onClick="help()">Help</a></li>
+        <li><a title="Report a problem or submit a bug to improve Sage" href="#" onClick="bugreport()">Report a Problem</a></li>
+        <li><a title="Log out of the Sage notebook" href="/logout">Sign out</a></li>
+        {% endif %}
+    </ul>
+</div>
 {% endblock %}
-{% endblock %}
-

@@ -1,6 +1,6 @@
-"""nodoctest
+# -*- coding: utf-8 -*
+r"""nodoctest
 """
-
 #############################################################################
 #       Copyright (C) 2006, 2007 William Stein <wstein@gmail.com>
 #  Distributed under the terms of the GNU General Public License (GPL)
@@ -180,11 +180,13 @@ To find all completions for an identifier you are typing press
 the tab key.  This should work exactly like IPython, and even
 respects the \code{trait_names()} method.
 
-To find help for any object in a line, put ? after it
-and press the tab key.  The cursor must be somewhere in the identifier
-with the question mark after it.   For source code, put ?? after
-the identifier and press tab.  You can also put an identifier by
-itself on a line with ? (or ??) after it and press shift-enter. 
+To find help for any object in a line, put ? after it and press the
+tab key.  The cursor must be somewhere in the identifier with the
+question mark after it.  For source code, put ?? after the identifier
+and press tab.  You can also put an identifier by itself on a line
+with ? (or ??) after it and press shift-enter. Note that only help
+retrieved by shift-enter appears in printed output. It also overwrites
+all current output, while using TAB does not.
 
 To get extensive help on an object, type "help(object)" and press
 return.  This works, since I set the PAGER to "cat", and I strip out
@@ -350,9 +352,9 @@ notebook_help = [
     ('Find Help and Documentation',
      [('Get Started with Sage', '<a href="/doc/live/tutorial/index.html">Work through the tutorial</a> (if you have trouble with it, view the <a href="/doc/static/tutorial/index.html">static version</a>).'),
       ('Help About',
-       'Type ? immediately after the object or function and press tab.'),
+       'Type ? immediately after the object or function and press tab or shift-enter (shift-enter overwrites output and saves to worksheet).'),
       ('Source Code',
-       'Put ?? after the object and press tab.'),
+       'Put ?? after the object and press tab or shift-enter (shift-enter overwrites output and saves to worksheet).'),
       ('Full Text Search of Docs and Source',
        'Search the SAGE documentation by typing <pre>search_doc("my query")</pre> in an input cell and press shift-enter.  Search the source code of SAGE by typing <pre>search_src("my query")</pre> and pressing shift-enter.  Arbitrary regular expressions are allowed as queries.'),
       # ('More Help',
@@ -360,24 +362,24 @@ notebook_help = [
       ]),
     ('Key and Mouse Bindings',
      [('Evaluate Input',
-       'Press <b>shift-enter</b>.  You can start several calculations at once.  If you press <b>alt-enter</b> instead, then a new cell is created after the current one.  If you press <b>ctrl-enter</b> then the cell is split and both pieces are evaluated separately.'),
+       'Press <strong>shift-enter</strong>.  You can start several calculations at once.  If you press <strong>alt-enter</strong> instead, then a new cell is created after the current one.  If you press <strong>ctrl-enter</strong> then the cell is split and both pieces are evaluated separately.'),
       ('Tab Completion',
-       'Press <b>tab</b> while the cursor is on an identifier. On some web browsers (e.g., Opera) you must use control-space instead of tab.'),
+       'Press <strong>tab</strong> while the cursor is on an identifier. On some web browsers (e.g., Opera) you must use control-space instead of tab.'),
       ('Insert New Cell',
        'Put the mouse between an output and input until the horizontal line appears and click.  If you press Alt-Enter in a cell, the cell is evaluated and a new cell is inserted after it.'),
       ('Delete Cell',
-       'Delete all cell contents, then press <b>backspace</b>.'),
+       'Delete all cell contents, then press <strong>backspace</strong>.'),
       ('Split and Join Cells',
-       'Press <b>ctrl-;</b> in a cell to split it into two cells, and <b>ctrl-backspace</b> to join them.  Press <b>ctrl-enter</b> to split a cell and evaluate both pieces.'),
-      ('Insert New HTML Cell',
-       'Shift click between cells to create a new HTML cell.  Double click on existing HTML to edit it.  Use $...$ and $$...$$ to include typeset math in the HTML block.'),
+       'Press <strong>ctrl-;</strong> in a cell to split it into two cells, and <strong>ctrl-backspace</strong> to join them.  Press <strong>ctrl-enter</strong> to split a cell and evaluate both pieces.'),
+      ('Insert New Text Cell',
+       'Move the mouse between cells until a blue bar appears.  <strong>Shift-click</strong> on the blue bar to create a new text cell.  Double click on existing text to edit it.  Use $...$ and $$...$$ to include typeset math in the text block.'),
       ('Hide/Show Output',
        'Click on the left side of output to toggle between hidden, shown with word wrap, and shown without word wrap.'),
       ('Indenting Blocks',
        'Highlight text and press > to indent it all and < to unindent it all (works in Safari and Firefox).  In Firefox you can also press tab and shift-tab.'),
       ('Comment/Uncomment Blocks',
-       'Highlight text and press <b>ctrl-.</b> to comment it and <b>ctrl-,</b> to uncomment it. Alternatively, use <b>ctrl-3</b> and <b>ctrl-4</b>.'),
-      ('Paren matching', 'To fix unmatched or mis-matched parentheses, braces or brackets, press <b>ctrl-0</b>.  Parentheses before the cursor will be matched, minding strings and (Python) comments.'),
+       'Highlight text and press <strong>ctrl-.</strong> to comment it and <strong>ctrl-,</strong> to uncomment it. Alternatively, use <strong>ctrl-3</strong> and <strong>ctrl-4</strong>.'),
+      ('Paren matching', 'To fix unmatched or mis-matched parentheses, braces or brackets, press <strong>ctrl-0</strong>.  Parentheses before the cursor will be matched, minding strings and (Python) comments.'),
       # ('Emacs Keybindings',
       #  'If you are using GNU/Linux, you can change (or create) a <tt>.gtkrc-2.0</tt> file.  Add the line <tt>gtk-key-theme-name = "Emacs"</tt> to it.  See <a target="_blank" href="http://kb.mozillazine.org/Emacs_Keybindings_(Firefox)">this page</a> [mozillazine.org] for more details.'),
     ]),
@@ -419,10 +421,12 @@ notebook_help = [
       ('DIR Variable',
        'The variable DIR contains the directory from which you started the SAGE notebook.  For example, to open a file in that directory, do "open(DIR+\'filename\')".'),
       ('DATA Variable',
-       'The variable DATA contains the directory with data files that you upload into the worksheet.  For example, to open a file in that directory, do "open(DATA+\'filename\')".'),
+       'Use the Data menu to upload images and other files, and create new files that can be shared between worksheets.  The DATA variable contains the path to the data files.  For example, to open a file in that directory, do "open(DATA+\'filename\')".  If foo.sage is a Sage file that you uploaded, type "load foo.sage"; if foo.py is a Python file, you can import it by typing "import foo".'),
       ('Loading and Saving Objects',
        'Use "save obj1 obj2 ..." and "load obj1 obj2 ...".  This allows for easy moving of objects from one worksheet to another, and saving of objects for later use.'),
       ('Loading and Saving Sessions',
        'Use "save_session(\'name\')" to save all variables to an object.  Use "load_session(\'name\')" to <i>merge</i> in all variables from a saved session.'),
+      ('Customizing the Notebook CSS',
+       'If you create a file <tt>$HOME/.sage/notebook.css</tt> then it will get applied when rendering the notebook.   See ')
     ])
     ]

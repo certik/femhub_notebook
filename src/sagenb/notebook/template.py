@@ -15,20 +15,20 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 #############################################################################
 
-import jinja
-from jinja.filters import stringfilter
+import jinja2
 
 import os, re, sys
 
-from sagenb.misc.misc import SAGE_VERSION, DATA
+from sagenb.misc.misc import SAGE_VERSION, DATA, unicode_str
+from sagenb.notebook.cell import number_of_rows
+from sagenb.notebook.jsmath import math_parse
 
 
 TEMPLATE_PATH = os.path.join(DATA, 'sage')
-env = jinja.Environment(loader=jinja.FileSystemLoader(TEMPLATE_PATH))
+env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_PATH))
 
 css_illegal_re = re.compile(r'[^-A-Za-z_0-9]')
 
-@stringfilter
 def css_escape(string):
     r"""
     Returns a string with all characters not legal in a css name
@@ -40,56 +40,74 @@ def css_escape(string):
 
     EXAMPLES::
 
-        sage: from sagenb.notebook.template import contained_in, env, css_escape
-        sage: escaper = css_escape()
-        sage: print(escaper(env, {}, '12abcd'))
-        12abcd
-        sage: print(escaper(env, {}, 'abcd'))
-        abcd
-        sage: print(escaper(env, {}, r'\'"abcd\'"'))
-        ---abcd---
-        sage: print(escaper(env, {}, 'my-invalid/identifier'))
-        my-invalid-identifier
-        sage: print(escaper(env, {}, r'quotes"mustbe!escaped'))
-        quotes-mustbe-escaped
+        sage: from sagenb.notebook.template import css_escape
+        sage: css_escape('abcd')
+        'abcd'
+        sage: css_escape('12abcd')
+        '12abcd'
+        sage: css_escape(r'\'"abcd\'"')
+        '---abcd---'
+        sage: css_escape('my-invalid/identifier')
+        'my-invalid-identifier'
+        sage: css_escape(r'quotes"mustbe!escaped')
+        'quotes-mustbe-escaped'
     """
     return css_illegal_re.sub('-', string)
 
-def contained_in(container):
+def prettify_time_ago(t):
     """
-    Given a container, returns a function which takes an environment,
-    context, and value and returns True if that value is in the
-    container and False otherwise.  This is registered and used as a
-    test in the templates.
+    Converts seconds to a meaningful string.
+
+    INPUT
+
+    - t -- time in seconds
+
+    """
+    if t < 60:
+        s = int(t)
+        if s == 1:
+            return "1 second"
+        return "%d seconds"%s
+    if t < 3600:
+        m = int(t/60)
+        if m == 1:
+            return "1 minute"
+        return "%d minutes"%m
+    if t < 3600*24:
+        h = int(t/3600)
+        if h == 1:
+            return "1 hour"
+        return "%d hours"%h
+    d = int(t/(3600*24))
+    if d == 1:
+        return "1 day"
+    return "%d days"%d
+
+def clean_name(name):
+    """
+    Converts a string to a safe/clean name by converting non-alphanumeric characters to underscores.
 
     INPUT:
 
-    - ``container`` - a container, e.g., a list or dictionary
+    - name -- a string
 
     EXAMPLES::
 
-        sage: from sagenb.notebook.template import contained_in
-        sage: f = contained_in([1,2,3])
-        sage: f(None, None, 2)
-        True
-        sage: f(None, None, 4)
-        False
+        sage: from sagenb.notebook.template import clean_name
+        sage: print clean_name('this!is@bad+string')
+        this_is_bad_string
     """
-    def wrapped(env, context, value):
-        return value in container
-    return wrapped
-
+    return ''.join([x if x.isalnum() else '_' for x in name])
 
 env.filters['css_escape'] = css_escape
-env.tests['contained_in'] = contained_in
+env.filters['number_of_rows'] = number_of_rows
+env.filters['clean_name'] = clean_name
+env.filters['prettify_time_ago'] = prettify_time_ago
+env.filters['math_parse'] = math_parse
+env.filters['max'] = max
+env.filters['repr_str'] = lambda x: repr(unicode_str(x))[1:]
 
-#A dictionary containing the default context
-#The values in this dictionary will be updated
-#by the 
-default_context = {'sitename': 'Sage Notebook',
-                   'sage_version': SAGE_VERSION}
-
-def template(filename, **user_context): 
+def template(filename, **user_context):
     """
     Returns HTML, CSS, etc., for a template file rendered in the given
     context.
@@ -103,28 +121,34 @@ def template(filename, **user_context):
       the file's template variables
 
     OUTPUT:
-      
+
     - a string - the rendered HTML, CSS, etc.
 
     EXAMPLES::
 
         sage: from sagenb.notebook.template import template
         sage: s = template(os.path.join('html', 'yes_no.html')); type(s)
-        <type 'str'>
+        <type 'unicode'>
         sage: 'Yes' in s
         True
-
-        sage: from sagenb.notebook.template import template
         sage: u = unicode('Are Gröbner bases awesome?','utf-8')
         sage: s = template(os.path.join('html', 'yes_no.html'), message=u)
-        sage: 'Gr\xc3\xb6bner' in s
+        sage: 'Gr\xc3\xb6bner' in s.encode('utf-8')
         True
     """
+    from sagenb.notebook.notebook import JSMATH, JEDITABLE_TINYMCE
+    from twist import notebook
+    #A dictionary containing the default context
+    default_context = {'sitename': 'Sage Notebook',
+                       'sage_version': SAGE_VERSION,
+                       'JSMATH': JSMATH,
+                       'JEDITABLE_TINYMCE': JEDITABLE_TINYMCE,
+                       'conf': notebook.conf() if notebook else None}
     try:
         tmpl = env.get_template(filename)
-    except jinja.exceptions.TemplateNotFound:
+    except jinja2.exceptions.TemplateNotFound:
         return "Notebook Bug -- missing template %s"%filename
     context = dict(default_context)
     context.update(user_context)
-    r = tmpl.render(**context) 
-    return r.encode('utf-8')
+    r = tmpl.render(**context)
+    return r

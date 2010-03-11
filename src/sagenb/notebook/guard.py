@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 """nodoctest
 Keep out the bad guys.
 """
@@ -21,6 +22,7 @@ from twisted.cred import credentials
 from zope.interface import Interface, implements
 from twisted.web2 import iweb
 from twisted.web2 import server
+
 
 #standard library
 import random
@@ -114,16 +116,10 @@ class SessionsManager(object):
         if not self.sessions and self.tick.running:
             self.tick.stop()
 
-class MindManager(object):
-    """Might want to use this"""
-    def __init__(self, uid): 
-        self.uid = uid #uid is the session id (the cookie)
-
 class MySessionWrapper(object):
     implements(iweb.IResource)
     
     cookieManager = None
-    mindFactory = MindManager
     sessionManager = SessionsManager()
 
     # The interface to cred for when logging into the portal
@@ -189,7 +185,6 @@ class MySessionWrapper(object):
         def _success(avatar, request, segments):
             iface, rsrc, logout = avatar
             return rsrc, segments
-        #mind = self.mindFactory(request, creds)
         mind = [session.get_uid(), request.args, segments]
         d = self.portal.login(creds, mind, self.credInterface)
         d.addCallback(_success, request, segments)
@@ -222,8 +217,9 @@ class MySessionWrapper(object):
         #log.msg("=== requestPasswordAuthentication ===")
         creds = self.getCredentials(request)
         session, newCookie = self.sessionManager.createSession()
-        mind = [newCookie, request.args, segments] 
+        mind = [newCookie, request.args, segments]
         d = self.portal.login(creds, mind, self.credInterface)
+        # TODO: Note that self._loginSuccess gets called even if the login fails.  
         d.addCallback(self._loginSuccess, session, creds, segments)
         return d 
 
@@ -266,7 +262,7 @@ class MySessionWrapper(object):
             return avatars.TokenCred(request.args.get('startup_token', [''])[0])
         if request.headers.getHeader('cookie'):
             for C in request.headers.getHeader('cookie'):
-                if C.name == 'cookie_test':
+                if C.name == 'cookie_test_%s' % twist.notebook.port:
                     username = request.args.get('email', [''])[0]
                     password = request.args.get('password', [''])[0]
                 else:
@@ -286,11 +282,6 @@ class MySessionWrapper(object):
         session.set_authCreds(creds)
         return rsrc, ()
     
-    def _loginFailure(self, *x): #TODO
-        pass
-        #log.msg("=== _loginFailure ===")
-        #log.msg(str(x))
-                 
     def incorrectLoginError(self, error, ctx, segments, loginFailure):
         pass
 
@@ -314,7 +305,7 @@ def get_our_cookie(request):
     if cookies is None:
         return None
     for C in cookies:
-        if C.name == 'nb_session':
+        if C.name == 'nb_session_%s' % twist.notebook.port:
             return C.value
     return None  # not found
     

@@ -3,7 +3,7 @@
 ##########################################################
 
 import os, sys, time
-from distutils.core import setup
+from setuptools import setup
 
 def all_files(dir, lstrip):
     """
@@ -21,13 +21,14 @@ def all_files(dir, lstrip):
     
 
 code = setup(name = 'sagenb',
-<<<<<<< HEAD:src/setup.py
-      version     = '0.2.7',   # the spkg-dist script assumes single quotes here
-      description = 'The FEMhub Notebook',
+      version     = '0.7.5',  # the spkg-dist script assumes single quotes here
+      description = 'The Sage Notebook',
       license     = 'GNU Public License (GPL) v2+',
       author      = 'William Stein et al.',
       author_email= 'http://groups.google.com/group/sage-support',
       url         = 'http://www.sagemath.org',
+      install_requires = ['twisted>=8.2', 'zope.testbrowser>=3.7.0a1'],
+      test_suite = 'sagenb.testing.run_tests.all_tests',
       packages    = ['sagenb',
                      'sagenb.interfaces',
                      'sagenb.misc',                                 
@@ -44,5 +45,5 @@ code = setup(name = 'sagenb',
                      ],
       package_data = {'sagenb':
                           all_files('sagenb/data', 'sagenb/')
-                      }
+                      },
       )

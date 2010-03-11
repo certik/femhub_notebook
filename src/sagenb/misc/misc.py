@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Miscellaneous Notebook Functions
 """
@@ -9,6 +10,7 @@ Miscellaneous Notebook Functions
 #                  http://www.gnu.org/licenses/
 #############################################################################
 
+from pkg_resources import resource_filename
 
 def stub(f):
     def g(*args, **kwds):
@@ -156,8 +158,7 @@ def pad_zeros(s, size=3):
     """    
     return "0"*(size-len(str(s))) + str(s)
 
-
-DATA = os.path.join(sys.prefix, 'lib', 'python', 'site-packages', 'sagenb', 'data')
+DATA = os.path.join(os.path.split(resource_filename(__name__, ''))[0], 'data')
 
 if os.environ.has_key('DOT_SAGENB'):
     DOT_SAGENB = os.environ['DOT_SAGENB']
@@ -176,30 +177,32 @@ try:
 except ImportError:
     SAGE_DOC = "stub"
     
+# TODO: Get macros from server and user settings.
 try:
     import sage.all
-    from sage.misc.latex_macros import sage_jsmath_macros
+    from sage.misc.latex_macros import sage_jsmath_macros_easy
 except ImportError:
 #    sage_jsmath_macros = []
-    sage_jsmath_macros = [
-        "jsMath.Macro('ZZ','\\\\Bold{Z}');",
-        "jsMath.Macro('RR','\\\\Bold{R}');",
-        "jsMath.Macro('CC','\\\\Bold{C}');",
-        "jsMath.Macro('QQ','\\\\Bold{Q}');",
-        "jsMath.Macro('QQbar','\\\\overline{\\\\QQ}');",
-        "jsMath.Macro('GF','\\\\Bold{F}_{#1}',1);",
-        "jsMath.Macro('Zp','\\\\ZZ_{#1}',1);",
-        "jsMath.Macro('Qp','\\\\QQ_{#1}',1);",
-        "jsMath.Macro('Zmod','\\\\ZZ/#1\\\\ZZ',1);",
-        "jsMath.Macro('CDF','\\\\texttt{Complex Double Field}');",
-        "jsMath.Macro('CIF','\\\\Bold{C}');",
-        "jsMath.Macro('CLF','\\\\Bold{C}');",
-        "jsMath.Macro('RDF','\\\\Bold{R}');",
-        "jsMath.Macro('RIF','\\\\Bold{I} \\\\Bold{R}');",
-        "jsMath.Macro('RLF','\\\\Bold{R}');",
-        "jsMath.Macro('CFF','\\\\Bold{CFF}');",
-        "jsMath.Macro('Bold','\\\\mathbf{#1}',1);"
+    sage_jsmath_macros_easy = [
+        "ZZ : '{\\\\Bold{Z}}'",
+        "RR : '{\\\\Bold{R}}'",
+        "CC : '{\\\\Bold{C}}'",
+        "QQ : '{\\\\Bold{Q}}'",
+        "QQbar : '{\\\\overline{\\\\QQ}}'",
+        "GF : ['{\\\\Bold{F}_{#1}}', 1]",
+        "Zp : ['{\\\\ZZ_{#1}}', 1]",
+        "Qp : ['{\\\\QQ_{#1}}', 1]",
+        "Zmod : ['{\\\\ZZ/#1\\\\ZZ}', 1]",
+        "CIF : '{\\\\Bold{C}}'",
+        "CLF : '{\\\\Bold{C}}'",
+        "RDF : '{\\\\Bold{R}}'",
+        "RIF : '{\\\\Bold{I} \\\\Bold{R}}'",
+        "RLF : '{\\\\Bold{R}}'",
+        "CFF : '{\\\\Bold{CFF}}'",
+        "Bold : ['{\\\\mathbf{#1}}', 1]"
         ]
+finally:
+    jsmath_macros = ',\n'.join(sage_jsmath_macros_easy)
 
 try:
     from sage.misc.session import init as session_init
@@ -208,7 +211,6 @@ except ImportError:
     def session_init(*args, **kwds):
         pass
     
-
 try:
     from sage.misc.sage_eval import sage_eval
 except ImportError:
@@ -218,11 +220,10 @@ except ImportError:
         return eval(value, globs)
 
 try:
-    from sage.misc.all import is_package_installed
+    from sage.misc.package import is_package_installed
 except ImportError:
     def is_package_installed(name, *args, **kwds):
         return False
-
 
 try:
     from sage.misc.viewer import browser
@@ -241,7 +242,6 @@ except ImportError:
     def save(obj, filename):
         s = cPickle.dumps(obj, protocol=2)
         open(filename,'wb').write(s)
-
 
 try:
     from sage.misc.misc import alarm, cancel_alarm, verbose
@@ -309,13 +309,19 @@ except ImportError:
         return code
 
 try:
+    from pkg_resources import Requirement, working_set
+    SAGENB_VERSION = working_set.find(Requirement.parse('sagenb')).version
+except AttributeError:
+    SAGENB_VERSION = ""
+
+try:
     import sage.version
     SAGE_VERSION=sage.version.version
 except ImportError:
     SAGE_VERSION=""
 
 try:
-    from sage.plot.all import Color
+    from sage.plot.colors import Color
 except ImportError:
     class Color:
         def __init__(self, *args, **kwds):
@@ -379,7 +385,6 @@ except ImportError:
         # TODO
         raise NotImplementedError, "Curently %cython mode requires Sage." 
 
-
 #############################################################
 # File permissions
 # May need some changes on Windows.
@@ -396,3 +401,95 @@ def set_permissive_permissions(filename):
     os.chmod(filename, stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH | \
              stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | \
              stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP)
+
+def encoded_str(obj, encoding='utf-8'):
+    ur"""
+    Takes an object and returns an encoded str human-readable representation.
+
+    EXAMPLES::
+
+        sage: from sagenb.misc.misc import encoded_str
+        sage: encoded_str(u'\u011b\u0161\u010d\u0159\u017e\xfd\xe1\xed\xe9\u010f\u010e') == 'ěščřžýáíéďĎ'
+        True
+        sage: encoded_str(u'abc')
+        'abc'
+        sage: encoded_str(123)
+        '123'
+    """
+    if isinstance(obj, unicode):
+        return obj.encode(encoding, 'ignore')
+    return str(obj)
+
+def unicode_str(obj, encoding='utf-8'):
+    ur"""
+    Takes an object and returns a unicode human-readable representation.
+
+    EXAMPLES::
+
+        sage: from sagenb.misc.misc import unicode_str
+        sage: unicode_str('ěščřžýáíéďĎ') == u'\u011b\u0161\u010d\u0159\u017e\xfd\xe1\xed\xe9\u010f\u010e'
+        True
+        sage: unicode_str('abc')
+        u'abc'
+        sage: unicode_str(123)
+        u'123'
+    """
+    if isinstance(obj, str):
+        return obj.decode(encoding, 'ignore')
+    elif isinstance(obj, unicode):
+        return obj
+    return unicode(obj)
+        
+
+
+def ignore_nonexistent_files(curdir, dirlist):
+    """
+    Returns a list of non-existent files, given a directory and its
+    contents.  The returned list includes broken symbolic links.  Use
+    this, e.g., with :func:`shutil.copytree`, as shown below.
+
+    INPUT:
+
+    - ``curdir`` - a string; the name of the current directory
+
+    - ``dirlist`` - a list of strings; names of ``curdir``'s contents
+
+    OUTPUT:
+
+    - a list of strings; names of ``curdir``'s non-existent files
+
+    EXAMPLES::
+
+        sage: import os, shutil
+        sage: from sagenb.misc.misc import ignore_nonexistent_files
+        sage: opj = os.path.join; ope = os.path.exists; t = tmp_dir()
+        sage: s = opj(t, 'src'); t = opj(t, 'trg'); hi = opj(s, 'hi.txt');
+        sage: os.makedirs(s)
+        sage: f = open(hi, 'w'); f.write('hi'); f.close()
+        sage: os.symlink(hi, opj(s, 'good.txt'))
+        sage: os.symlink(opj(s, 'bad'), opj(s, 'bad.txt'))
+        sage: slist = sorted(os.listdir(s)); slist
+        ['bad.txt', 'good.txt', 'hi.txt']
+        sage: map(lambda x: ope(opj(s, x)), slist)
+        [False, True, True]
+        sage: map(lambda x: os.path.islink(opj(s, x)), slist)
+        [True, True, False]
+        sage: shutil.copytree(s, t)
+        Traceback (most recent call last):
+        ...
+        Error: [('.../src/bad.txt', '.../trg/bad.txt', "[Errno 2] No such file or directory: '.../src/bad.txt'")]
+        sage: shutil.rmtree(t); ope(t)
+        False
+        sage: shutil.copytree(s, t, ignore = ignore_nonexistent_files)
+        sage: tlist = sorted(os.listdir(t)); tlist
+        ['good.txt', 'hi.txt']
+        sage: map(lambda x: ope(opj(t, x)), tlist)
+        [True, True]
+        sage: map(lambda x: os.path.islink(opj(t, x)), tlist)  # Note!
+        [False, False]
+    """
+    ignore = []
+    for x in dirlist:
+        if not os.path.exists(os.path.join(curdir, x)):
+            ignore.append(x)
+    return ignore

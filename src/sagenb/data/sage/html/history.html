@@ -2,18 +2,19 @@
 
 {% block title %}Sage: History for {{username}} {% endblock %}
 
-{% block css %}main{% endblock %}
+{% block javascript %}
+<script type="text/javascript" src="/javascript/sage/ws_list.js"></script>
+{% endblock %}
+
+{% block page_id %}history-page{% endblock %}
 
 {% block body %}
-
-{% include "html/list_top.html" %}
-
-    <pre>
-      {{ text | escape }}
-    </pre>
-    <hr class="usercontrol">
+    <pre>{{ text | escape }}</pre>
     <a title="Click here to turn the above into a Sage worksheet" href="/live_history">Create a new Sage worksheet version of the last 100 commands in the above log.</a>
     <a name="bottom"></a>
-    <script type="text/javascript"> window.location="#bottom"</script>
-
+    <script type="text/javascript">
+      $(window).load(function () {
+          window.location = "#bottom";
+      });
+    </script>
 {% endblock %}

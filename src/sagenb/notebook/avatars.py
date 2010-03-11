@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 """
 """
 ##################################################################### 
@@ -44,7 +45,7 @@ def user_type(avatarId):
         Traceback (most recent call last):
         ...
         AttributeError: 'NoneType' object has no attribute 'user_is_admin'
-        sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir())
+        sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
         sage: nb.create_default_users('password')
         Creating default users.
         sage: sagenb.notebook.twist.notebook = nb
@@ -89,6 +90,10 @@ class PasswordChecker(object):
     implements(checkers.ICredentialsChecker)
     credentialInterfaces = (credentials.IUsernamePassword,)
 
+    # last_user stores the name of the last user to successfully login
+    # -- this is used only to not store redundant entries in the log
+    last_user = None   
+
     def add_user(self, username, password, email, account_type='user'):
         self.check_username(username)
         U = twist.notebook.add_user(username, password, email, account_type)
@@ -112,13 +117,30 @@ class PasswordChecker(object):
         try:
             U = twist.notebook.user(username)
         except KeyError:
+            # Failed login due to invalid username; log this fact and
+            # return FailedLogin object.
+            log.msg("Login attempt by unknown user '%s'."%username)
+            PasswordChecker.last_user = None            
             return defer.succeed(FailedLogin(username, failure_type = 'user'))
 
         if U.password_is(password):
+            # Correct password
             if twist.notebook.user(username).is_suspended():
+                # However, the user is suspended, so log this and return
+                # FailedLogin object.
+                log.msg("Login attempt by suspended user '%s'."%username)
+                PasswordChecker.last_user = None
                 return defer.succeed(FailedLogin(username, failure_type = 'suspended'))
+            # Valid non-suspended user.  If they didn't just login already, log this.
+            if PasswordChecker.last_user != username:
+                log.msg("User '%s' logged in."%username)
+                # don't report same login multiple times in a row
+                PasswordChecker.last_user = username
             return defer.succeed(username)
         else:
+            # Valid user failed to login by typing incorrect password.
+            log.msg("Login attempt by '%s' failed due to invalid password."%username)
+            PasswordChecker.last_user = None
             return defer.succeed(FailedLogin(username,failure_type='password'))
             
 

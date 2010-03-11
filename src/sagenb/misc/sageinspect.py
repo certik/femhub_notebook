@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 r"""
 Inspect Python, Sage, and Cython objects.
 
@@ -34,10 +35,10 @@ Python modules::
     '.../sageinspect.py'
 
     sage: print sage_getdoc(sagenb.misc.sageinspect).lstrip()[:40]
-    Inspect Python, FEMhub, and Cython objects
+    Inspect Python, Sage, and Cython objects
 
     sage: sage_getsource(sagenb.misc.sageinspect).lstrip()[5:-1]
-    'Inspect Python, FEMhub, and Cython objects...'
+    '...Inspect Python, Sage, and Cython objects...'
 
 Test introspection of classes defined in Python and Cython files:
 
@@ -54,11 +55,12 @@ Cython classes::
 
 Python classes::
 
+    sage: import sage.misc.attach
     sage: sage_getfile(sage.misc.attach.Attach)
     '.../attach.py'
 
     sage: sage_getdoc(sage.misc.attach.Attach).lstrip()
-    "Attach a file to a running instance of Sage..."
+    'Attach a file to a running instance of Sage...'
 
     sage: sage_getsource(sage.misc.attach.Attach)
     'class Attach:...'
@@ -71,7 +73,7 @@ Python classes with no docstring, but an __init__ docstring::
     ...         pass
     ...
     sage: sage_getdoc(Foo)
-    'docstring'
+    'docstring\n'
 
 Test introspection of functions defined in Python and Cython files:
 
@@ -114,6 +116,7 @@ Unfortunately, there is no argspec extractable from builtins::
 
 import inspect
 import os
+from .misc import encoded_str
 EMBEDDED_MODE = False
 
 def isclassinstance(obj):
@@ -454,7 +457,7 @@ def sage_getdoc(obj, obj_name=''):
 
         sage: from sagenb.misc.sageinspect import sage_getdoc
         sage: sage_getdoc(identity_matrix)[5:39]
-        'Return the `n x n` identity matrix'
+        'turn the n x n identity matrix ove'
 
     AUTHORS:
     
@@ -482,8 +485,9 @@ def sage_getdoc(obj, obj_name=''):
 
     if r is None:
         return ''
+    r = encoded_str(r)
 
-    s = format(str(r), embedded=EMBEDDED_MODE)
+    s = format(r, embedded=EMBEDDED_MODE)
 
     # If there is a Cython embedded position, it needs to be stripped
     pos = _extract_embedded_position(s)
