@@ -1,0 +1,43 @@
+{% extends "html/notebook/base_aux.html" %}
+{#
+INPUT:
+- worksheet - an instance of Worksheet
+- username - a string containing a username
+- filename_ - the name of the file
+- file_is_image - a boolean stating whether the file is an image
+- file_is_text - a boolean stating whether the file is a text file
+- text_file_content - a string containing the content of a text file
+#}
+
+{% set path = "/home/%s/data/%s"|format(worksheet.filename(), filename_) %}
+
+{% block sharebar_title %}
+Data file: {{ filename_ }}
+{% endblock %}
+
+{% block after_sharebar %}
+<p>You may download <a href="{{ path }}">{{ filename_ }}</a> or create a linked copy to the worksheet <select onchange="go_option(this);" class="worksheet">
+<option selected>select worksheet</option>
+{% for worksheet in notebook.active_worksheets_for(username) %}
+    <option value='link_datafile("{{ worksheet.filename() }}","{{ filename_ }}")'>{{ worksheet.name() }}</option>
+{% endfor %}
+</select> or <a href="/home/{{ worksheet.filename() }}/datafile?name={{ filename_ }}&action=delete">delete {{ filename_ }}.</a></p>
+
+<p>Access {{ filename_ }} in this worksheet by typing <tt>DATA+'{{ filename_ }}'</tt>.  Here DATA is a special variable that gives the exact path to all data files uploaded to this worksheet.</p>
+
+<hr class="usercontrol" />
+
+{% if file_is_image %}
+<div align=center><img src="{{ path }}"></div>
+{% elif file_is_text %}
+<form method="post" action="savedatafile" enctype="multipart/form-data">
+    <input type="submit" value="Save Changes" name="button_save" /> <input type="submit" value="Cancel" name="button_cancel" style="display:block" />
+    <textarea class="edit" name="textfield" rows=17 cols=70 id="textfield">{{ text_file_content | escape }}</textarea>
+    <input type="hidden" name="filename" value="{{ filename_ }}" id="filename" />
+</form>
+{% endif %}
+{% endblock %}
+
+
+
+

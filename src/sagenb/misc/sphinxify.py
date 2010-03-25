@@ -1,115 +1,154 @@
-#!/usr/bin/python
+# -*- coding: utf-8 -*
+#!/usr/bin/env python
 r"""
 Process docstrings with Sphinx
 
 Processes docstrings with Sphinx. Can also be used as a commandline script:
 
-$ python sphinxify.py <text>
+``python sphinxify.py <text>``
 
 AUTHORS:
 
 - Tim Joseph Dumol (2009-09-29): initial version
-
+"""
 #**************************************************
 # Copyright (C) 2009 Tim Dumol <tim@timdumol.com>
 #
 # Distributed under the terms of the BSD License
 #**************************************************
-"""
-import os, hashlib, re, shutil
+import os
+import re
+import shutil
 from tempfile import mkdtemp
 
-from sphinx.application import Sphinx
+# We import Sphinx on demand, to reduce Sage startup time.
+Sphinx = None
 
 try:
     from sage.misc.misc import SAGE_DOC
 except ImportError:
-    SAGE_DOC = None
-    
+    SAGE_DOC = ''  # used to be None
+
 
 def is_sphinx_markup(docstring):
     """
-    Return True if string is a string that contains Sphinx-style ReST markup.
+    Returns whether a string that contains Sphinx-style ReST markup.
+
+    INPUT:
+
+    - ``docstring`` - string to test for markup
+
+    OUTPUT:
+
+    - boolean
     """
     # this could be made much more clever
     return ("`" in docstring or "::" in docstring)
 
-def sphinxify(docstring):
-    """
-    Runs Sphinx on a docstring, and outputs the processed documentation.
+
+def sphinxify(docstring, format='html'):
+    r"""
+    Runs Sphinx on a ``docstring``, and outputs the processed
+    documentation.
 
     INPUT:
 
-    - docstring -- string -- a ReST formatted docstring.
+    - ``docstring`` -- string -- a ReST-formatted docstring
+
+    - ``format`` -- string (optional, default 'html') -- either 'html' or
+      'text'
 
     OUTPUT:
 
-    - string -- Sphinx-processed documentation.
+    - string -- Sphinx-processed documentation, in either HTML or
+      plain text format, depending on the value of ``format``
 
     EXAMPLES::
 
         sage: from sagenb.misc.sphinxify import sphinxify
-        sage: sphinxify('Foobar')
-        '\n<div class="docstring">\n    \n  \n  <p>Foobar</p>\n\n\n</div>'
+        sage: sphinxify('A test')
+        '<div class="docstring">\n    \n  <p>A test</p>\n\n\n</div>'
         sage: sphinxify('**Testing**\n`monospace`')
-        '\n<div class="docstring"...<strong>Testing</strong>\n<img..." alt="monospace" /></p>\n\n\n</div>'
+        '<div class="docstring"...<strong>Testing</strong>\n<span class="math"...</p>\n\n\n</div>'
+        sage: sphinxify('`x=y`')
+        '<div class="docstring">\n    \n  <p><span class="math">x=y</span></p>\n\n\n</div>'
+        sage: sphinxify('`x=y`', format='text')
+        'x=y\n'
+        sage: sphinxify(':math:`x=y`', format='text')
+        'x=y\n'
     """
-    tmpdir = mkdtemp()
-    docstring_hash = hashlib.md5(docstring).hexdigest()
-    base_name = os.path.join(tmpdir, docstring_hash)
-    html_name = base_name + '.html'
+    global Sphinx
+    if not Sphinx:
+        from sphinx.application import Sphinx
 
-    # This is needed for jsMath to work
+    srcdir = mkdtemp()
+    base_name = os.path.join(srcdir, 'docstring')
+    rst_name = base_name + '.rst'
+
+    if format == 'html':
+        suffix = '.html'
+    else:
+        suffix = '.txt'
+    output_name = base_name + suffix
+
+    # This is needed for jsMath to work.
     docstring = docstring.replace('\\\\', '\\')
 
-    filed = open(base_name + '.rst', 'w')
+    filed = open(rst_name, 'w')
     filed.write(docstring)
     filed.close()
-    
-    # Sphinx setup.  The constructor is Sphinx(srcdir,
-    # confdir, outdir, doctreedir, buildername,
-    # confoverrides, status, warning, freshenv)
-    srcdir = tmpdir
-    if SAGE_DOC and os.path.exists(os.path.join(SAGE_DOC, 'en', 'introspect')):
-        confdir = os.path.join(SAGE_DOC, 'en', 'introspect')
-    else:
-        # This may be inefficient.
-        # TODO: Find a faster way to do this
+
+    # Sphinx constructor: Sphinx(srcdir, confdir, outdir, doctreedir,
+    # buildername, confoverrides, status, warning, freshenv).
+    temp_confdir = False
+    confdir = os.path.join(SAGE_DOC, 'en', 'introspect')
+    if not SAGE_DOC and not os.path.exists(confdir):
+        # This may be inefficient.  TODO: Find a faster way to do this.
+        temp_confdir = True
         confdir = mkdtemp()
         generate_configuration(confdir)
-        
-    doctreedir = os.path.join(srcdir, docstring_hash)
-    confoverrides = {'html_context': {}, 'master_doc' : docstring_hash}
 
-    sphinx_app = Sphinx(srcdir, confdir,  srcdir, doctreedir, 'html',
+    doctreedir = os.path.join(srcdir, 'doctrees')
+    confoverrides = {'html_context': {}, 'master_doc': 'docstring'}
+
+    sphinx_app = Sphinx(srcdir, confdir, srcdir, doctreedir, format,
                         confoverrides, None, None, True)
+    sphinx_app.build(None, [rst_name])
 
-    sphinx_app.build(None, [base_name + '.rst'])
-    if os.path.exists(os.path.join(srcdir, docstring_hash) + '.html'):
-        new_html = open(html_name, 'r').read()
-        new_html = new_html.replace('<pre>', '<pre class="literal-block">')
-                
+    if os.path.exists(output_name):
+        output = open(output_name, 'r').read()
+        output = output.replace('<pre>', '<pre class="literal-block">')
+
         # Translate URLs for media from something like
         #    "../../media/...path.../blah.png"
         # or
         #    "/media/...path.../blah.png"
         # to
         #    "/doc/static/reference/media/...path.../blah.png"
-        new_html = re.sub("""src=['"](/?\.\.)*/?media/([^"']*)['"]""",
+        output = re.sub("""src=['"](/?\.\.)*/?media/([^"']*)['"]""",
                           'src="/doc/static/reference/media/\\2"',
-                                  new_html)
+                          output)
     else:
-         print "BUG -- error constructing html"
-         new_html = '<pre class="introspection">%s</pre>' % docstring
+        print "BUG -- Sphinx error"
+        if format == 'html':
+            output = '<pre class="introspection">%s</pre>' % docstring
+        else:
+            output = docstring
 
-    shutil.rmtree(confdir, ignore_errors=True)
-    shutil.rmtree(tmpdir, ignore_errors=True)
+    if temp_confdir:
+        shutil.rmtree(confdir, ignore_errors=True)
+    shutil.rmtree(srcdir, ignore_errors=True)
 
-    return new_html
+    return output
+
 
 def generate_configuration(directory):
-    """
-    Generates Sphinx configuration at ``directory``.
+    r"""
+    Generates a Sphinx configuration in ``directory``.
+
+    INPUT:
+
+    - ``directory`` - string, base directory to use
 
     EXAMPLES::
 
@@ -118,7 +157,7 @@ def generate_configuration(directory):
         sage: tmpdir = tempfile.mkdtemp()
         sage: generate_configuration(tmpdir)
         sage: open(os.path.join(tmpdir, 'conf.py')).read()
-        '\nextensions =...templates_path...NestedClass\n    '
+        '\n...extensions =...templates_path...source = False\n...'
     """
     conf = r'''
 ###########################################################
@@ -297,7 +336,7 @@ try:
     pngmath_latex_preamble  # check whether this is already defined
 except NameError:
     pngmath_latex_preamble = ""
-    
+
 for macro in sage_latex_macros:
     # used when building latex and pdf versions
     latex_preamble += macro + '\n'
@@ -340,7 +379,7 @@ def process_docstring_cython(app, what, name, obj, options, docstringlines):
 
 def process_docstring_module_title(app, what, name, obj, options, docstringlines):
     """
-    Removes the first line from the beginning of the module's docstring.  This 
+    Removes the first line from the beginning of the module's docstring.  This
     corresponds to the title of the module's documentation page.
     """
     if what != "module":
@@ -369,7 +408,7 @@ def skip_NestedClass(app, what, name, obj, skip, options):
     """
     skip_nested = str(obj).find("sage.misc.misc") != -1 and name.find("MainClass.NestedClass") != -1
     return skip or skip_nested
-        
+
 def setup(app):
     app.connect('autodoc-process-docstring', process_docstring_cython)
     app.connect('autodoc-process-docstring', process_directives)
@@ -391,9 +430,7 @@ html_split_index = False
 html_copy_source = False
     '''
 
-    ###############################################################################
-    # Taken from `$SAGE_ROOT$/devel/sage/doc/en/introspect/templates/layout.html` #
-    ###############################################################################
+    # From SAGE_DOC/en/introspect/templates/layout.html:
     layout = r"""
 <div class="docstring">
     {% block body %}{% endblock %}
@@ -403,7 +440,8 @@ html_copy_source = False
     os.makedirs(os.path.join(directory, 'static'))
     open(os.path.join(directory, 'conf.py'), 'w').write(conf)
     open(os.path.join(directory, '__init__.py'), 'w').write('')
-    open(os.path.join(directory, 'templates', 'layout.html'), 'w').write(layout)
+    open(os.path.join(directory, 'templates', 'layout.html'),
+         'w').write(layout)
     open(os.path.join(directory, 'static', 'empty'), 'w').write('')
 
 if __name__ == '__main__':

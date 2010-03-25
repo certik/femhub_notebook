@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 """
 A Filesystem-based Sage Notebook Datastore
 
@@ -34,11 +35,12 @@ Sage notebook server::
              
 """
 
-import copy, cPickle, shutil, tarfile
+import copy, cPickle, shutil, tarfile, tempfile
 
 import os
 
 from abstract_storage import Datastore
+from sagenb.misc.misc import set_restrictive_permissions, encoded_str
 
 def is_safe(a):
     """
@@ -48,8 +50,8 @@ def is_safe(a):
     files outside where we want, e.g., by including .. or / in the
     path of some file.
     """
-    # NOTE: Windows port -- I'm worried about whether a.name will have / or \ on windows.
-    # The code below assume \.
+    # NOTE: Windows port -- I'm worried about whether a.name will have
+    # / or \ on windows.  The code below assume \.
     return '..' not in a and not a.startswith('/')
 
 
@@ -62,9 +64,9 @@ class FilesystemDatastore(Datastore):
 
         EXAMPLES::
 
-            sage: from sagenb.storage.abstract_storage import Datastore
-            sage: Datastore('/tmp/ds')
-            Abstract Datastore
+            sage: from sagenb.storage import FilesystemDatastore
+            sage: FilesystemDatastore(tmp_dir())
+            Filesystem Sage Notebook Datastore at ...
         """
         path = os.path.abspath(path)
         self._path = path
@@ -76,16 +78,19 @@ class FilesystemDatastore(Datastore):
     def __repr__(self):
         return "Filesystem Sage Notebook Datastore at %s"%self._path
 
-    ##################################################################################
+    #########################################################################
     # Paths
-    ##################################################################################
+    #########################################################################
     def _makepath(self, path):
         p = self._abspath(path)
         if not os.path.exists(p): os.makedirs(p)
         return path
 
     def _user_path(self, username):
-        return self._makepath(os.path.join(self._home_path, username))
+        # There are weird cases, e.g., old notebook server migration
+        # where username is None, and if we don't string it here,
+        # saving can be broken (at a bad moment!).
+        return self._makepath(os.path.join(self._home_path, str(username)))
 
     def _worksheet_pathname(self, username, id_number):
         return os.path.join(self._user_path(username), str(id_number))
@@ -106,7 +111,8 @@ class FilesystemDatastore(Datastore):
 
     def _abspath(self, file):
         """
-        Return absolute path to filename got by joining self._path with the string file.
+        Return absolute path to filename got by joining self._path
+        with the string file.
 
         OUTPUT:
 
@@ -114,31 +120,32 @@ class FilesystemDatastore(Datastore):
 
         EXAMPLES::
 
-            sage: from sagenb.storage.abstract_storage import Datastore
-            sage: Datastore(tmp_dir())._abspath('foo.pickle')
+            sage: from sagenb.storage import FilesystemDatastore
+            sage: FilesystemDatastore(tmp_dir())._abspath('foo.pickle')
             '...foo.pickle'
         """
         return os.path.join(self._path, file)
     
-    ##################################################################################
+    #########################################################################
     # Loading and saving basic Python objects to disk.
     # The input filename is always relative to self._path.
-    ##################################################################################
+    #########################################################################
     def _load(self, filename):
         return cPickle.load(open(self._abspath(filename)))
-        #return json.load(open(self._abspath(filename)))
-        #return yaml.load(open(self._abspath(filename)))
 
-    def _save(self, obj, filename):
+    def _save(self, obj, filename, ):
         s = cPickle.dumps(obj)
         open(self._abspath(filename), 'w').write(s)
-        #s = yaml.dump(obj)
-        #s = json.dumps(obj, indent=4)
-        #json.dump(obj, open(self._abspath(filename),'w'), indent=4)
 
-    ##################################################################################
-    # Conversions to and from basic Python database (so that json storage will work).
-    ##################################################################################
+    def _permissions(self, filename):
+        f = self._abspath(filename)
+        if os.path.exists(f):
+            set_restrictive_permissions(f, allow_execute=False)
+
+    #########################################################################
+    # Conversions to and from basic Python database (so that json
+    # storage will work).
+    #########################################################################
     def _basic_to_users(self, obj):
         from sagenb.notebook.user import User_from_basic
         return dict([(name, User_from_basic(basic)) for name, basic in obj])
@@ -168,9 +175,9 @@ class FilesystemDatastore(Datastore):
         """
         return worksheet.basic()
 
-    ##################################################################################
+    #########################################################################
     # Now we implement the API we're supposed to implement
-    ##################################################################################
+    #########################################################################
     
     def load_server_conf(self):
         return self._basic_to_server_conf(self._load('conf.pickle'))
@@ -183,6 +190,7 @@ class FilesystemDatastore(Datastore):
         """
         basic = self._server_conf_to_basic(server_conf)
         self._save(basic, 'conf.pickle')
+        self._permissions('conf.pickle')
 
     def load_users(self):
         """
@@ -194,13 +202,13 @@ class FilesystemDatastore(Datastore):
         
             sage: from sagenb.notebook.user import User
             sage: users = {'admin':User('admin','abc','a@b.c','admin'), 'wstein':User('wstein','xyz','b@c.d','user')}
-            sage: from sagenb.storage import JSONDatastore
-            sage: ds = JSONDatastore(tmp_dir())
-            sage: ds.save_user_data(users)
-            sage: 'users.json' in os.listdir(ds._path)
+            sage: from sagenb.storage import FilesystemDatastore
+            sage: ds = FilesystemDatastore(tmp_dir())
+            sage: ds.save_users(users)
+            sage: 'users.pickle' in os.listdir(ds._path)
             True
-            sage: ds.load_user_data()
-            {u'admin': admin, u'wstein': wstein}
+            sage: ds.load_users()
+            {'admin': admin, 'wstein': wstein}
         """
         return self._basic_to_users(self._load('users.pickle'))
     
@@ -214,16 +222,17 @@ class FilesystemDatastore(Datastore):
         
             sage: from sagenb.notebook.user import User
             sage: users = {'admin':User('admin','abc','a@b.c','admin'), 'xyz':User('xyz','myalksjf','b@c.d','user')}
-            sage: from sagenb.storage import JSONDatastore; ds = JSONDatastore(tmp_dir())
-            sage: ds.save_user_data(users)
-            sage: 'users.json' in os.listdir(ds._path)
+            sage: from sagenb.storage import FilesystemDatastore
+            sage: ds = FilesystemDatastore(tmp_dir())
+            sage: ds.save_users(users)
+            sage: 'users.pickle' in os.listdir(ds._path)
             True
-            sage: ds.load_user_data()
-            {u'admin': admin, u'xyz': xyz}
-        
+            sage: ds.load_users()
+            {'admin': admin, 'xyz': xyz}
         """
         self._save(self._users_to_basic(users), 'users.pickle')
-
+        self._permissions('users.pickle')
+        
     def load_user_history(self, username):
         """
         Return the history log for the given user.
@@ -251,7 +260,9 @@ class FilesystemDatastore(Datastore):
 
             - ``history`` -- list of strings
         """
-        self._save(history, self._history_filename(username))
+        filename = self._history_filename(username)
+        self._save(history, filename)
+        self._permissions(filename)
         
     def save_worksheet(self, worksheet, conf_only=False):
         """
@@ -265,9 +276,10 @@ class FilesystemDatastore(Datastore):
         EXAMPLES::
         
             sage: from sagenb.notebook.worksheet import Worksheet
-            sage: W = Worksheet('test', 2, '', system='gap', owner='sageuser')
+            sage: tmp = tmp_dir()
+            sage: W = Worksheet('test', 2, tmp, system='gap', owner='sageuser')
             sage: from sagenb.storage import FilesystemDatastore
-            sage: DS = FilesystemDatastore(tmp_dir())
+            sage: DS = FilesystemDatastore(tmp)
             sage: DS.save_worksheet(W)
         """
         username = worksheet.owner(); id_number = worksheet.id_number()
@@ -280,7 +292,7 @@ class FilesystemDatastore(Datastore):
             # only save if loaded
             # todo -- add check if changed
             filename = self._worksheet_html_filename(username, id_number)
-            open(self._abspath(filename),'w').write(worksheet.body())
+            open(self._abspath(filename),'w').write(worksheet.body().encode('utf-8', 'ignore'))
 
     def load_worksheet(self, username, id_number):
         """
@@ -328,7 +340,7 @@ class FilesystemDatastore(Datastore):
         if title:
             # change the title
             basic['name'] = title
-
+        basic['name'] = encoded_str(basic['name'])
         # Remove metainformation that perhaps shouldn't be distributed
         for k in ['owner', 'ratings', 'worksheet_that_was_published', 'viewers', 'tags', 'published_id_number',
                   'collaborators', 'auto_publish']:
@@ -339,13 +351,25 @@ class FilesystemDatastore(Datastore):
         tmp = self._abspath(self._worksheet_conf_filename(username, id_number) + '2')
         T.add(tmp, os.path.join('sage_worksheet','worksheet_conf.pickle'))
         os.unlink(tmp)
-        
-        T.add(self._abspath(self._worksheet_html_filename(username, id_number)),
-              os.path.join('sage_worksheet','worksheet.html'))
 
-        path = self._abspath(self._worksheet_pathname(username, id_number))
+        worksheet_html = self._abspath(self._worksheet_html_filename(username, id_number))
+        T.add(worksheet_html, os.path.join('sage_worksheet','worksheet.html'))
+
+        # The following is purely for backwards compatibility with old
+        # notebook servers prior to sage-4.1.2.
+        fd, worksheet_txt =  tempfile.mkstemp()
+        old_heading = "%s\nsystem:%s\n"%(basic['name'], basic['system'])
+        open(worksheet_txt,'w').write(old_heading + open(worksheet_html).read())
+        T.add(worksheet_txt,
+              os.path.join('sage_worksheet','worksheet.txt'))
+        os.unlink(worksheet_txt)
+        # important, so we don't leave an open file handle!
+        os.fdopen(fd,'w').close()
+        # end backwards compat block.
+
 
         # Add the contents of the DATA directory
+        path = self._abspath(self._worksheet_pathname(username, id_number))
         data = os.path.join(path, 'data')
         if os.path.exists(data):
             for X in os.listdir(data):
@@ -362,6 +386,7 @@ class FilesystemDatastore(Datastore):
         # mistakes anyways.
         T.close()
 
+
     def _import_old_worksheet(self, username, id_number, filename):
         """
         Import a worksheet from an old version of Sage. 
@@ -373,8 +398,9 @@ class FilesystemDatastore(Datastore):
 
         worksheet_txt = members[0].name
         W = self.load_worksheet(username, id_number)
-        W.edit_save_old_format(T.extractfile(worksheet_txt).read())
-        dir = worksheet_txt.split('/')[0]  # '/' is right, since old worksheets always unix
+        W.edit_save_old_format(T.extractfile(worksheet_txt).read().decode('utf-8', 'ignore'))
+        # '/' is right, since old worksheets always unix
+        dir = worksheet_txt.split('/')[0]
             
         path = self._abspath(self._worksheet_pathname(username, id_number))
 
@@ -446,19 +472,17 @@ class FilesystemDatastore(Datastore):
         given name.  If the given user does not exists, an empty list
         is returned.
 
-        EXAMPLES::
-
-        The load_user_data function must be defined in the derived class::
+        EXAMPLES: The load_user_data function must be defined in the
+        derived class::
         
-            sage: from sagenb.storage.abstract_storage import Datastore
-            sage: Datastore('/tmp/ds').worksheets('foobar')
-            []
-
-            sage: from sagenb.notebook.worksheet import Worksheet
-            sage: W = Worksheet('test', 2, '', system='gap', owner='sageuser')
-            sage: from sagenb.storage import JSONDatastore
             sage: from sagenb.storage import FilesystemDatastore
-            sage: DS = FilesystemDatastore(tmp_dir())
+            sage: tmp = tmp_dir()
+            sage: FilesystemDatastore(tmp).worksheets('foobar')
+            []
+            sage: from sagenb.notebook.worksheet import Worksheet
+            sage: W = Worksheet('test', 2, tmp, system='gap', owner='sageuser')
+            sage: from sagenb.storage import FilesystemDatastore
+            sage: DS = FilesystemDatastore(tmp)
             sage: DS.save_worksheet(W)
             sage: DS.worksheets('sageuser')
             [sageuser/2: [Cell 0; in=, out=]]
@@ -484,14 +508,14 @@ class FilesystemDatastore(Datastore):
 
 
 
-###################################################################################
+##############################################################################
 # 
 # Why not use JSON, YAML, or XML??
 #
-# I experimented with using these, but they are 10-100 times slower, and there is
-# no real benefit.   More precisely, the time for dumping/loading a worksheet basic
-# datastructure in each of the following is given below.  XML is also very bad
-# compared to cPickle. 
+# I experimented with using these, but they are 10-100 times slower,
+# and there is no real benefit.  More precisely, the time for
+# dumping/loading a worksheet basic datastructure in each of the
+# following is given below.  XML is also very bad compared to cPickle.
 #
 #     cPickle, 
 #     pickle
@@ -531,4 +555,4 @@ class FilesystemDatastore(Datastore):
 # NOTE!  Actually simplejson does just as well at cPickle for this benchmark.
 #        Thanks to Mitesh Patel for pointing this out. 
 #
-###################################################################################
+#############################################################################

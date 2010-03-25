@@ -1,0 +1,18 @@
+{% extends "html/notebook/base_aux.html" %}
+
+{% block page_id %}after-publish-page{% endblock %}
+
+{% set checked = 'checked="true"' if worksheet.is_auto_publish() else '' %}
+
+{% block sharebar_title %}
+<p>Worksheet is publicly viewable at <a href="{{ url }}" style="color:#FFF" target="_blank">{{ url }}</a></p>
+<p>Published on {{ time }}</p>
+<div>
+    <a href=".?re"><button>Re-publish worksheet</button></a>
+    <a onClick="parent.location+='?stop'"><button>Stop publishing</button></p></a>
+</div>
+<input type="checkbox" name="auto" {{ checked }} onchange="parent.location='?auto'"/> <label for="auto">Automatically re-publish when changes are made</label>
+{% endblock %}
+{% set select = "publish" %}
+{% set backwards = true %}
+

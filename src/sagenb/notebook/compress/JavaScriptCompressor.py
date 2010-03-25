@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 # JavaScriptCompressor class,
 #	removes comments or pack JavaScript source[s] code.
 # ______________________________________________________________
@@ -108,7 +109,8 @@ class JavaScriptCompressor:
 			elif type == "regexp" or type == "doublequote" or type == "singlequote":
 				clean.append(str[map[a]["start"]:map[a]["end"]])
 			if type != "regexp":
-				clean.append("\n")
+#				clean.append("\n")
+				pass
 		return re.sub("/(\n)+/", "\n", re.sub("/^\s*|\s*$/", "", string.join(clean, "")))
 	def __commonInitMethods(self, jsSource, packed):
 		header = ""

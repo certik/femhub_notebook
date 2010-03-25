@@ -1,0 +1,14 @@
+{% extends "html/base_authenticated.html" %}
+
+{% block title %}Error{% endblock %}
+
+{% block main %}
+<div>
+    {{ msg }}
+</div>
+{% if cont %}
+<div>
+    <a class="boldusercontrol" href="{{ cont }}">Continue</a>
+</div>
+{% endif %}
+{% endblock %}

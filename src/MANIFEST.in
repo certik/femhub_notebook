@@ -1,3 +1,6 @@
-recursive-include sagenb *.txt *.png *.gif *.ico  *.py *.html *.js *.template *.tmpl *.css *.jar *.xml
-include *.txt MANIFEST.in  .hgignore .hgtags sdist spkg-dist SPKG.txt
+recursive-include sagenb *
+recursive-include sass *
+prune sass/src/.sass-cache
+include *.txt Makefile MANIFEST.in .hgignore .hgtags sdist spkg-dist SPKG.txt go
 recursive-include .hg *
+global-exclude *.pyc *.pyo *.orig *.rej *~ \#* *\#

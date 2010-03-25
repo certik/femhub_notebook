@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*
 import os, StringIO, sys, traceback, tempfile, random, shutil
 
 from status import OutputStatus
-from format import displayhook_hack
+from sagenb.misc.format import format_for_pexpect
 from worksheet_process import WorksheetProcess
 from sagenb.misc.misc import (walltime,
                               set_restrictive_permissions, set_permissive_permissions)
@@ -238,14 +239,12 @@ class WorksheetProcess_ExpectImplementation(WorksheetProcess):
         self._is_computing = True
 
         self._all_tempdirs.append(self._tempdir)
-        # The magic comment at the very start of the file allows utf8 characters.
-        open(self._filename,'w').write(
-            '# -*- coding: utf_8 -*-\nimport sys;sys.ps1="%s";print "START%s"\n'%(
-            self._prompt, self._number) + displayhook_hack(string))
+        open(self._filename,'w').write(format_for_pexpect(string, self._prompt,
+                                                          self._number))
         try:
             self._expect.sendline('\nimport os;os.chdir("%s");\nexecfile("%s")'%(
                               remote, sage_input))
-        except OSError, msg:
+        except OSError as msg:
             self._is_computing = False
             self._so_far = str(msg)
 
@@ -291,7 +290,9 @@ class WorksheetProcess_ExpectImplementation(WorksheetProcess):
                 s = v[0][len('START%s'%self._number):]
             else:
                 s = ''
-        s = s.strip().rstrip(self._prompt)
+
+        if s.endswith(self._prompt):
+            s = s[:-len(self._prompt)]
 
         files = []
         if os.path.exists(self._tempdir):

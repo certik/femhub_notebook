@@ -1,0 +1,38 @@
+{% extends "html/notebook/base_aux.html" %}
+
+{% set select = "revisions" %}
+{% block sharebar_title %}
+Revision from {{ time_ago }} ago&nbsp;&nbsp;&nbsp;&nbsp;<a href='revisions'>Revision List</a>
+{% endblock %}
+
+{% block page_id %}specific-revision-page{% endblock %}
+
+{% macro actions() %}
+{% if prev_rev %}
+    <a class="listcontrol" href="revisions?rev={{ prev_rev }}">Older</a>
+{% else %}
+    Oldest
+{% endif %}
+
+{% if next_rev %}
+    <a class="listcontrol" href="revisions?rev={{ next_rev }}">Newer</a>
+{% else %}
+    Newest
+{% endif %}
+
+<a class="listcontrol" href="revisions?rev={{ rev }}&action=revert">Revert to this one</a> <span class="lastedit">(note that images are not recorded)</span>&nbsp;&nbsp;
+<a class="listcontrol" href="revisions?rev={{ rev }}&action=publish">Publish this one</a>
+{% endmacro %}
+
+{% block after_sharebar %}
+{{ actions() }}
+<div id="revision-data">
+    {{ worksheet.html(do_print=true, publish=true) }}
+</div>
+{{ actions() }}
+<script type="text/javascript">
+  $(document).ready(function () {
+    jsMath.Process();
+  });
+</script>
+{% endblock %}
