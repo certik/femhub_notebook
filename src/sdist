@@ -6,7 +6,7 @@ sage -hg ci
 sage -python setup.py sdist
 
 echo "**********************************************************"
-echo "* If this is an official SageNB release, don't forget to *"
-echo "* push the changes to the public Mercurial repository.   *"
+echo "* If this is an official FEMhub release, don't forget to *"
+echo "* push the changes to the public GIT repository.   *"
 echo "**********************************************************"
 #./push

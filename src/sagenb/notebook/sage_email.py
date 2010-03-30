@@ -2,7 +2,7 @@
 """
 Send an Email
 
-Sage supports very easily sending an email from FEMhub to notify
+FEMhub supports very easily sending an email from FEMhub to notify
 yourself when some event occurs.  This does not require configuring an
 email server or anything else, since FEMhub already includes by default
 a sophisticated email server (which is part of Twisted).

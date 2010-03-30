@@ -9,7 +9,7 @@
 r"""
 Interact Functions in the Notebook
 
-This module implements an :func:`interact` function decorator for the Sage
+This module implements an :func:`interact` function decorator for the FEMhub
 notebook.
 
 AUTHORS:
@@ -124,7 +124,7 @@ VERSION 2:
 
 VERSION 3:
    [ ] protocol for objects to have their own interact function; make
-       it so for any object obj in sage, one can do
+       it so for any object obj in FEMhub, one can do
              {{{
              interact(obj)
              }}}

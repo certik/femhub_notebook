@@ -341,7 +341,7 @@ def sage_getargspec(obj):
     AUTHORS:
     
     - William Stein: a modified version of inspect.getargspec from the
-      Python Standard Library, which was taken from IPython for use in Sage.
+      Python Standard Library, which was taken from IPython for use in FEMhub.
     - Extensions by Nick Alexander
     """
     if not callable(obj):

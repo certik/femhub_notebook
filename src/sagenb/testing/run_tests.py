@@ -185,7 +185,7 @@ def run_suite(suite=all_tests, verbosity=2):
 
 
 def run_and_report(suite=all_tests, verbosity=2, report_filename='report.html',
-                   title='Sage Notebook Tests',
+                   title='FEMhub Notebook Tests',
                    description='Selenium test results',
                    open_viewer=True, **kwargs):
     """

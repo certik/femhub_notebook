@@ -29,7 +29,7 @@ import random
 import time
 import md5
 
-# Sage's twist stuff
+# FEMhub's twist stuff
 import twist
 
 

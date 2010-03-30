@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 """
-Sage Notebook Storage Abstraction Layer
+FEMhub Notebook Storage Abstraction Layer
 """
 
 import os

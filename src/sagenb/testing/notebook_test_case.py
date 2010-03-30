@@ -230,7 +230,7 @@ class NotebookTestCase(unittest.TestCase):
         sel = self.selenium
         sel.click("//button[@name='button_save' and @onclick='save_worksheet_and_close();']")
         sel.wait_for_page_to_load("30000")
-        self.wait_for_title('Active Worksheets -- Sage')
+        self.wait_for_title('Active Worksheets -- FEMhub')
 
     def wait_for_title(self, title):
         """
@@ -261,14 +261,14 @@ class NotebookTestCase(unittest.TestCase):
         sel = self.selenium
         sel.click("id=register-link")
         sel.wait_for_page_to_load(30000)
-        self.wait_for_title("Sign up -- Sage")
+        self.wait_for_title("Sign up -- FEMhub")
 
         sel.type("username", username)
         sel.type("password", password)
         sel.type("retype_password", password)
         sel.click("id=create-account-button")
         sel.wait_for_page_to_load(30000)
-        self.wait_for_title('Sign in -- Sage')
+        self.wait_for_title('Sign in -- FEMhub')
         self.assertTrue(sel.is_text_present('regexp:Congratulations'))
 
     def login_as(self, username, password='asdfasdf'):

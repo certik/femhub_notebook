@@ -92,7 +92,7 @@ class SphinxHTMLProcessor(SGMLParser):
         
     def hand_off_temp_pieces(self, piece_type):
         """
-        To separate the documentation's content from the Sage
+        To separate the documentation's content from the FEMhub
         examples, everything is split into one of two cell types.
         This method puts the current ``self.temp_pieces`` into
         ``self.all_pieces``.

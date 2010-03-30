@@ -326,7 +326,7 @@ latex_preamble = '\usepackage{amsmath}\n\usepackage{amsfonts}\n'
 #latex_use_modindex = True
 
 #####################################################
-# add LaTeX macros for Sage
+# add LaTeX macros for FEMhub
 try:
     from sage.misc.latex_macros import sage_latex_macros
 except ImportError:

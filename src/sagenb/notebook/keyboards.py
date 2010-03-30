@@ -32,7 +32,7 @@ Konqueror
 We are deaf to the complaints of users of the following systems:
 AOL
 IE mac
-LYNX / other command line browsers (Sage has a command line interface!)
+LYNX / other command line browsers (FEMhub has a command line interface!)
 the browser your cousin wrote for your sister's birthday
 
 If you think that your browser deserves support, go to the following page:

@@ -148,7 +148,7 @@ jsMath.Easy = {
     //        bold: ['{\\bf #1}', 1]
     //      }
     //
-    // Sage-specific jsMath macros.
+    // FEMhub-specific jsMath macros.
     macros: {
         {{ jsmath_macros }}
     },

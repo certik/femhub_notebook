@@ -172,7 +172,7 @@ print(13)
         sel.click("link=(Empty Trash)")
         self.failUnless(re.search(r"^Emptying the trash will permanently delete all items in the trash\. Continue[\s\S]$", sel.get_confirmation()))
         sel.wait_for_page_to_load("30000")
-        self.wait_for_title('Deleted Worksheets -- Sage')
+        self.wait_for_title('Deleted Worksheets -- FEMhub')
 
         # Leave and make sure that the file was actually deleted.
         sel.click("link=Active")

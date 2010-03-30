@@ -1635,7 +1635,7 @@ function save_worksheet_and_close() {
 
 function worksheet_discard() {
     /*
-    Discard the current worksheet and quit the currently running Sage
+    Discard the current worksheet and quit the currently running FEMhub
     process, then close the current window and replace it by the home
     screen.
     */
@@ -1659,7 +1659,7 @@ function rename_worksheet() {
         }
         title.html(set_name);
         worksheet_name = new_worksheet_name;
-        original_title = worksheet_name + ' (Sage)';
+        original_title = worksheet_name + ' (FEMhub)';
         document.title = original_title;
         async_request(worksheet_command('rename'), null, {
             name: new_worksheet_name
@@ -4527,7 +4527,7 @@ function restart_sage() {
 
     This function immediately changes the DOM so it looks like no
     cells are running and none have been evaluated, then it sends a
-    message back to the server requesting that the worksheet Sage
+    message back to the server requesting that the worksheet FEMhub
     process actually be stopped.
     */
     halt_active_cells();

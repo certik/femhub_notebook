@@ -9,7 +9,7 @@ r"""nodoctest
 #############################################################################
 
 r"""
-Sage Notebook Interface
+FEMhub Notebook Interface
 
 AUTHORS:
     -- William Stein (2006-05-06): initial version
@@ -284,7 +284,7 @@ When something new appears it fills that in.  This continues until all
 calculations are done. During this time, you can edit cells, create
 new cells, submit more computations, etc.  Note that output is
 updated as the computation proceeds, so you can verbosely watch
-a computation progress.  For example, try the following from the Sage
+a computation progress.  For example, try the following from the FEMhub
 Notebook:
 
 \begin{verbatim}
@@ -296,7 +296,7 @@ for i in range(10):
  
 You get to watch as the integers from 1 to 10 are "computed".
 Actually, getting this output to be reported as the computation
-proceeds is, I think, \emph{crucial} to making a really usable Sage
+proceeds is, I think, \emph{crucial} to making a really usable FEMhub
 GUI--users (i.e., me) want to run huge computations and watch the
 output progress.
  
@@ -327,7 +327,7 @@ the "save" command), and get back to where you were quickly.
 ## \subsubsection{Typesetting with Latex}
 ## If you have latex, gv, and the imagemagick programs (e.g., convert)
 ## installed on your system, you can do nice latex typesetting from
-## within SAGE.
+## within FEMhub.
 ## \begin{enumerate}
 ## \item As usual the command \code{latex(obj)} outputs latex code
 ## to typeset obj.
@@ -350,7 +350,7 @@ the "save" command), and get back to where you were quickly.
 
 notebook_help = [
     ('Find Help and Documentation',
-     [('Get Started with Sage', '<a href="/doc/live/tutorial/index.html">Work through the tutorial</a> (if you have trouble with it, view the <a href="/doc/static/tutorial/index.html">static version</a>).'),
+     [('Get Started with FEMhub', '<a href="/doc/live/tutorial/index.html">Work through the tutorial</a> (if you have trouble with it, view the <a href="/doc/static/tutorial/index.html">static version</a>).'),
       ('Help About',
        'Type ? immediately after the object or function and press tab or shift-enter (shift-enter overwrites output and saves to worksheet).'),
       ('Source Code',

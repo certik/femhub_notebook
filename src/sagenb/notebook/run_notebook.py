@@ -16,7 +16,7 @@ try:
     import sage.misc.misc
     protocol = 'tls'
 except ImportError:
-    # We are not in the presence of Sage, so we probably have SSL,
+    # We are not in the presence of FEMhub, so we probably have SSL,
     # which is better anyways.
     protocol = 'ssl'
 
@@ -416,7 +416,7 @@ def get_admin_passwd():
     print "Please choose a new password for the FEMhub Notebook 'admin' user."
     print "Do _not_ choose a stupid password, since anybody who could guess your password"
     print "and connect to your machine could access or delete your files."
-    print "NOTE: Only the md5 hash of the password you type is stored by Sage."
+    print "NOTE: Only the md5 hash of the password you type is stored by FEMhub."
     print "You can change your password by typing notebook(reset=True)."
     print "\n"*2
     while True:
