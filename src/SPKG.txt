@@ -14,11 +14,12 @@ GPLv2+
  * William Stein
  * Tim Dumol
  * Mitesh Patel
+ * hpFEM group at UNR
 
 == Upstream Contact ==
 
- * William Stein
- * Homepage: http://nb.sagemath.org/
+ * hpFEM group at University of Nevada Reno 
+ * Homepage: http://femhub.org/
 
 == Dependencies ==
 
