@@ -147,7 +147,7 @@ import inspect
 import math
 import types
 
-# Sage libraries
+# FEMhub libraries
 from jsmath import math_parse
 from sagenb.misc.misc import srange, sage_eval, Color, is_Matrix
 
@@ -162,7 +162,7 @@ state = {}
 
 def reset_state():
     """
-    Reset the :func:`interact` state of this sage process.
+    Reset the :func:`interact` state of this FEMhub process.
 
     EXAMPLES::
 
@@ -2101,7 +2101,7 @@ class UpdateButton(JavascriptCodeButton):
         
 def interact(f):
     r"""
-    Use interact as a decorator to create interactive Sage notebook
+    Use interact as a decorator to create interactive FEMhub notebook
     cells with sliders, text boxes, radio buttons, check boxes, and
     color selectors.  Simply put ``@interact`` on the line before a
     function definition in a cell by itself, and choose appropriate

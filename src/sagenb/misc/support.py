@@ -50,7 +50,7 @@ global_names_at_init = None
 
 def init(object_directory=None, globs={}):
     r"""
-    Initialize Sage for use with the web notebook interface.
+    Initialize FEMhub for use with the web notebook interface.
     """
     global sage_globals, globals_at_init, global_names_at_init
     global EMBEDDED_MODE
@@ -290,7 +290,7 @@ def html_markup(s):
 def source_code(s, globs, system='sage'):
     r"""
     Format an object's source code to process and display in the
-    Sage notebook.
+    FEMhub notebook.
     
     INPUT:
 
@@ -558,7 +558,7 @@ except ImportError:
 
 _automatic_names = False
 # We wrap everything in a try/catch, in case this is being imported
-# without the sage library present, e.g., in FEMhub.
+# without the FEMhub library present, e.g., in FEMhub.
 try:
     from sage.symbolic.all import Expression, SR
     class AutomaticVariable(Expression):
@@ -635,7 +635,7 @@ try:
         methods on or off.  Returns the current ``state`` if no
         argument is given.
 
-        This ONLY works in the Sage notebook.  It is not supported on
+        This ONLY works in the FEMhub notebook.  It is not supported on
         the command line.
 
         INPUT:

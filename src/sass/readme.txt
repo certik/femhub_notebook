@@ -1,7 +1,7 @@
 Notes on editing the notebook's stylesheets
 ============================================
 
-The Sage Notebook uses `Sass <http://sass-lang.com>`_ and `Compass
+The FEMhub Notebook uses `Sass <http://sass-lang.com>`_ and `Compass
 <http://wiki.github.com/chriseppstein/compass>`_ for its
 stylesheets. Sass is a styling language that compiles down to CSS, and
 has support for mixins, nesting, variables, and basic

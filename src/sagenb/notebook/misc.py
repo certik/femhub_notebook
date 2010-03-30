@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 """
-Miscellaneus functions used by the Sage Notebook
+Miscellaneus functions used by the FEMhub Notebook
 
 
 """

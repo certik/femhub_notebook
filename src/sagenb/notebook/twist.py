@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 r"""
-The Sage Notebook Twisted Web Server
+The FEMhub Notebook Twisted Web Server
 
 TESTS:
 
@@ -178,7 +178,7 @@ def HTMLResponse(*args, **kwds):
 
 
 ############################
-# Create a Sage worksheet from a latex2html'd file
+# Create a FEMhub worksheet from a latex2html'd file
 ############################
 doc_worksheet_number = 0
 def doc_worksheet():
@@ -203,7 +203,7 @@ class WorksheetFile(resource.Resource):
         self.username = username
 
     def render(self, ctx=None):
-        # Create a live Sage worksheet out of self.path and render it.
+        # Create a live FEMhub worksheet out of self.path and render it.
         if not os.path.exists(self.docpath):
             return HTMLResponse(stream = message('Document does not exist.'))
 
@@ -441,7 +441,7 @@ class UploadWorksheet(resource.PostableResource):
             filename = ctx.files['file'][0][0]
             if filename == '':
                 return HTMLResponse(stream=message("Please specify a worksheet to load.%s" % backlinks))
-            # Make tmp file in Sage temp directory
+            # Make tmp file in FEMhub temp directory
             filename = os.path.join(dir, filename)
             f = file(filename,'wb')
             # Then download to that file.
@@ -1947,7 +1947,7 @@ class Java(resource.Resource):
 class Logout(resource.Resource):
     def render(self, ctx):
         # TODO -- actually log out.
-        s = message("<br>Thank you for using Sage.<br><br><a href='/'>Please login and use Sage again soon.</a><br>")
+        s = message("<br>Thank you for using Sage.<br><br><a href='/'>Please login and use FEMhub again soon.</a><br>")
         return HTMLResponse(stream=s)
 
 ############################
@@ -2495,7 +2495,7 @@ class FailedToplevel(Toplevel):
         elif self.problem == 'suspended':
             return HTMLResponse(stream = message("Your account is currently suspended."))
         else:
-            return HTMLResponse(stream = message("Please enable cookies or delete all Sage cookies and localhost cookies in your browser and try again."))
+            return HTMLResponse(stream = message("Please enable cookies or delete all FEMhub cookies and localhost cookies in your browser and try again."))
 
 
 class UserToplevel(Toplevel):

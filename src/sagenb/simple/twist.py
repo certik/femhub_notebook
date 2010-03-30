@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*
 r"""nodoctest
-Simple Sage Server API
+Simple FEMhub Server API
 
-This module provides a very simple API for interacting with a Sage session
+This module provides a very simple API for interacting with a FEMhub session
 over HTTP. It runs as part of the notebook server. 
 
 .. note::
@@ -209,7 +209,7 @@ class LoginResource(resource.Resource):
             return http.Response(stream = "Invalid login.")
             
         worksheet = notebook_twist.notebook.create_new_worksheet("_simple_session_", username, add_to_list=False)
-        worksheet.sage() # create the sage session
+        worksheet.sage() # create the FEMhub session
         worksheet.initialize_sage()
         # is this a secure enough random number?
         session_id = "%x" % random.randint(1, 1 << 128)

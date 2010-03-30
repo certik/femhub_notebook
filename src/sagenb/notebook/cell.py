@@ -1509,7 +1509,7 @@ class Cell(Cell_generic):
         - ``html`` - a string; updated output HTML
 
         - ``sage`` - a :class:`sage` instance (default: None); the
-          sage instance to use for this cell(?)
+          FEMhub instance to use for this cell(?)
 
         EXAMPLES::
 

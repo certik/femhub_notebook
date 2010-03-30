@@ -23,7 +23,7 @@ def introspect(S, query, format='html'):
     
     
     -  ``S`` - a Sage0 object, i.e., an interface to a
-       running instance of Python with the Sage libraries loaded
+       running instance of Python with the FEMhub libraries loaded
     
     -  ``query`` - a string: - if has no '?' then return
        completion list - if begins or ends in one '?' return docstring -

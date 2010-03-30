@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*
 """
-A Filesystem-based Sage Notebook Datastore
+A Filesystem-based FEMhub Notebook Datastore
 
 Here is the filesystem layout for this datastore.  Note that the all
 of the pickles are pickles of basic Python objects, so can be
-unpickled in any version of Python with or without Sage or the Sage
+unpickled in any version of Python with or without FEMhub or the Sage
 notebook installed.  They are also not compressed, so are reasonably
 easy to read ASCII.
 
@@ -66,7 +66,7 @@ class FilesystemDatastore(Datastore):
 
             sage: from sagenb.storage import FilesystemDatastore
             sage: FilesystemDatastore(tmp_dir())
-            Filesystem Sage Notebook Datastore at ...
+            Filesystem FEMhub Notebook Datastore at ...
         """
         path = os.path.abspath(path)
         self._path = path
@@ -76,7 +76,7 @@ class FilesystemDatastore(Datastore):
         self._users_filename = 'users.pickle'
 
     def __repr__(self):
-        return "Filesystem Sage Notebook Datastore at %s"%self._path
+        return "Filesystem FEMhub Notebook Datastore at %s"%self._path
 
     #########################################################################
     # Paths
@@ -268,7 +268,7 @@ class FilesystemDatastore(Datastore):
         """
         INPUT:
 
-            - ``worksheet`` -- a Sage worksheet
+            - ``worksheet`` -- a FEMhub worksheet
 
             - ``conf_only`` -- default: False; if True, only save
               the config file, not the actual body of the worksheet      
@@ -382,7 +382,7 @@ class FilesystemDatastore(Datastore):
                 T.add(os.path.join(cells, X), os.path.join('sage_worksheet','cells',X))
 
         # NOTE: We do not export the snapshot/undo data.  People
-        # frequently *complain* about Sage exporting a record of their
+        # frequently *complain* about FEMhub exporting a record of their
         # mistakes anyways.
         T.close()
 

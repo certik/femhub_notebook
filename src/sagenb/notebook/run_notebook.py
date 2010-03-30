@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 """nodoctest
-Server the Sage Notebook.
+Server the FEMhub Notebook.
 """
 
 #############################################################################
@@ -11,7 +11,7 @@ Server the Sage Notebook.
 #############################################################################
 
 try:
-    # If Sage is installed, then we have gnutls, etc., and GPL'd code,
+    # If FEMhub is installed, then we have gnutls, etc., and GPL'd code,
     # so we prefer GNUtls.
     import sage.misc.misc
     protocol = 'tls'
@@ -202,7 +202,7 @@ def notebook_twisted(self,
             print "*"*70
             print "\n"
             if secure:
-                print "Login to the Sage notebook as admin with the password you specified above."
+                print "Login to the FEMhub notebook as admin with the password you specified above."
         #nb.del_user('root')  
             
     nb.set_server_pool(server_pool)
@@ -367,7 +367,7 @@ reactor.addSystemEventTrigger('before', 'shutdown', save_notebook)
                 pid = int(open(pidfile).read())
                 if str(e).startswith('Another twistd server is running,'):
                     sys.exit("""\
-Another Sage Notebook server is running, PID %d.
+Another FEMhub Notebook server is running, PID %d.
 
 Please either stop the old server or run the new server in a different directory.
 """ % pid)
@@ -413,7 +413,7 @@ Please either stop the old server or run the new server in a different directory
 
 def get_admin_passwd():
     print "\n"*2
-    print "Please choose a new password for the Sage Notebook 'admin' user."
+    print "Please choose a new password for the FEMhub Notebook 'admin' user."
     print "Do _not_ choose a stupid password, since anybody who could guess your password"
     print "and connect to your machine could access or delete your files."
     print "NOTE: Only the md5 hash of the password you type is stored by Sage."

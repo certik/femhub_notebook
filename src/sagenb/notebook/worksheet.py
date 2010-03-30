@@ -7,7 +7,7 @@ server. It is a linearly-ordered collections of numbered cells,
 where a cell is a single input/output block.
 
 The worksheet module is responsible for running calculations in a
-worksheet, spawning Sage processes that do all of the actual work
+worksheet, spawning FEMhub processes that do all of the actual work
 and are controlled via pexpect, and reporting on results of
 calculations. The state of the cells in a worksheet is stored on
 the file system (not in the notebook pickle sobj).
@@ -36,7 +36,7 @@ import string
 import time
 import traceback
 
-# General sage library code
+# General FEMhub library code
 from sagenb.misc.misc import (cython, load, save, 
                               alarm, cancel_alarm, verbose, DOT_SAGENB,
                               walltime, ignore_nonexistent_files,
@@ -53,7 +53,7 @@ from sagenb.interfaces import (WorksheetProcess_ExpectImplementation,
 import sagenb.misc.support  as support
 from sagenb.misc.format import relocate_future_imports
 
-# Imports specifically relevant to the sage notebook
+# Imports specifically relevant to the FEMhub notebook
 from cell import Cell, TextCell
 from template import template, clean_name, prettify_time_ago
 
@@ -61,7 +61,7 @@ from template import template, clean_name, prettify_time_ago
 whitespace = re.compile('\s')  # Match any whitespace character
 non_whitespace = re.compile('\S')
 
-# The file to which the Sage code that will be evaluated is written.
+# The file to which the FEMhub code that will be evaluated is written.
 CODE_PY = "___code___.py"
 
 # Constants that control the behavior of the worksheet.
@@ -927,8 +927,8 @@ class Worksheet(object):
         list of systems.  If the current system isn't in the list,
         then change to the default system.  This can happen if, e.g.,
         the list changes, e.g., when changing from a notebook with
-        Sage installed to running a server from the same directory
-        without Sage installed.   We might as well support this.
+        FEMhub installed to running a server from the same directory
+        without FEMhub installed.   We might as well support this.
 
         OUTPUT: integer
         """
@@ -1082,7 +1082,7 @@ class Worksheet(object):
         try:
             return self.notebook().get_worksheet_with_filename('%s/%s'%self.__worksheet_came_from)
         except Exception:  # things can go wrong (especially with old migrated
-                           # Sage notebook servers!), but we don't want such
+                           # FEMhub notebook servers!), but we don't want such
                            # problems to crash the notebook server.
             return self
 
@@ -1799,7 +1799,7 @@ class Worksheet(object):
             sage: W.viewers()
             ['wstein']
 
-        We delete the sage user from the worksheet W. This makes wstein the
+        We delete the FEMhub user from the worksheet W. This makes wstein the
         new owner.
 
         ::
@@ -2388,7 +2388,7 @@ class Worksheet(object):
 
     # TODO: all code below needs to be re-organized, but without
     # breaking old worksheet migration.  Do this after I wrote a
-    # "basic" method for the *old* sage notebook codebase.  At that
+    # "basic" method for the *old* FEMhub notebook codebase.  At that
     # point I'll be able to greatly simplify worksheet migration and
     # totally refactor anything I want in the new sagenb code.
     def last_edited(self):
@@ -2705,7 +2705,7 @@ class Worksheet(object):
     def computing(self):
         """
         Return whether or not a cell is currently being run in the
-        worksheet Sage process.
+        worksheet FEMhub process.
         """
         try:
             return self.__comp_is_running
@@ -2720,7 +2720,7 @@ class Worksheet(object):
         try:
             S = self.__sage
         except AttributeError:
-            # no sage running anyways!
+            # no FEMhub running anyways!
             return
 
         try:
@@ -2729,7 +2729,7 @@ class Worksheet(object):
             print "WARNING: %s"%msg
         except Exception, msg:
             print msg
-            print "WARNING: Error deleting Sage object!"
+            print "WARNING: Error deleting FEMhub object!"
 
         try:
             os.kill(pid, 9)
@@ -2738,7 +2738,7 @@ class Worksheet(object):
 
         del self.__sage
 
-        # We do this to avoid getting a stale Sage that uses old code.
+        # We do this to avoid getting a stale FEMhub that uses old code.
         self.save()
         self.clear_queue()
         del self.__cells
@@ -2778,12 +2778,12 @@ DIR = %r
 import sys; sys.path.append(DATA)
 _support_.init(None, globals())
 
-# The following is Sage-specific -- this immediately bombs out if sage isn't installed.
+# The following is Sage-specific -- this immediately bombs out if FEMhub isn't installed.
 from sage.all_notebook import *
 sage.plot.plot.EMBEDDED_MODE=True
 sage.misc.latex.EMBEDDED_MODE=True
-# TODO: For now we take back sagenb interact; do this until the sage notebook
-# gets removed from the sage library.
+# TODO: For now we take back sagenb interact; do this until the FEMhub notebook
+# gets removed from the FEMhub library.
 from sagenb.notebook.all import *
     """ % (os.path.join(os.path.abspath(self.data_directory()),''), twist.DIR)
             S.execute(cmd)
@@ -2803,12 +2803,12 @@ from sagenb.notebook.all import *
 
     def sage(self):
         """
-        Return a started up copy of Sage initialized for computations.
+        Return a started up copy of FEMhub initialized for computations.
 
         If this is a published worksheet, just return None, since published
         worksheets must not have any compute functionality.
 
-        OUTPUT: a Sage interface
+        OUTPUT: a FEMhub interface
         """
         if self.is_published():
             return None
@@ -3077,7 +3077,7 @@ from sagenb.notebook.all import *
         OUTPUT:
 
         -  ``bool`` - return True if no problems interrupting
-           calculation return False if the Sage interpreter had to be
+           calculation return False if the FEMhub interpreter had to be
            restarted.
 
         EXAMPLES: We create a worksheet and start a large factorization
@@ -3132,7 +3132,7 @@ from sagenb.notebook.all import *
 
     def restart_sage(self):
         """
-        Restart Sage kernel.
+        Restart FEMhub kernel.
         """
         self.quit()
         self.sage()
@@ -3409,7 +3409,7 @@ from sagenb.notebook.all import *
 
     def preparse_nonswitched_input(self, input):
         """
-        Preparse the input to a Sage Notebook cell.
+        Preparse the input to a FEMhub Notebook cell.
 
         INPUT:
 
@@ -3442,7 +3442,7 @@ from sagenb.notebook.all import *
         if C.introspect():
             return out
 
-        out = out.replace("NameError: name 'os' is not defined", "NameError: name 'os' is not defined\nTHERE WAS AN ERROR LOADING THE SAGE LIBRARIES.  Try starting Sage from the command line to see what the error is.")
+        out = out.replace("NameError: name 'os' is not defined", "NameError: name 'os' is not defined\nTHERE WAS AN ERROR LOADING THE FEMhub LIBRARIES.  Try starting FEMhub from the command line to see what the error is.")
 
         # Todo: what does this do?  document this
         try:
@@ -3471,7 +3471,7 @@ from sagenb.notebook.all import *
     def preparse(self, s):
         """
         Return preparsed version of input code ``s``, ready to be sent
-        to the Sage process for evaluation.  The output is a "safe
+        to the FEMhub process for evaluation.  The output is a "safe
         string" (no funny characters).
 
         INPUT:
@@ -3694,7 +3694,7 @@ from sagenb.notebook.all import *
             sage: W = nb.create_new_worksheet('Test', 'sage')
 
         We first test running a native command in 'sage' mode and then a
-        GAP cell within Sage mode.
+        GAP cell within FEMhub mode.
 
         ::
 

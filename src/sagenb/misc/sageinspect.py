@@ -286,7 +286,7 @@ def sage_getfile(obj):
     r"""
     Get the full file name associated to ``obj`` as a string.
 
-    INPUT: ``obj``, a Sage object, module, etc.
+    INPUT: ``obj``, a FEMhub object, module, etc.
 
     EXAMPLES::
 

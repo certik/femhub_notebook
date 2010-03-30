@@ -43,7 +43,7 @@
 \#
 \.cvsignore$
 (^|/)Thumbs\.db$
-# sage files to ignore:
+# FEMhub files to ignore:
 (^|/).doctest*
 ^dist($|/)
 ^notes($|/)

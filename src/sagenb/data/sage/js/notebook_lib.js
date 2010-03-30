@@ -1478,7 +1478,7 @@ function archive_button() {
 
 function stop_worksheets_button() {
     /*
-    Saves and then quits sage process for each checked worksheet.
+    Saves and then quits FEMhub process for each checked worksheet.
     */
     worksheet_list_button("/send_to_stop");
 }
@@ -1626,7 +1626,7 @@ function close_callback(status, response_text) {
 function save_worksheet_and_close() {
     /*
     Send message back to the server saving the current worksheet and
-    quitting the Sage process, then close the current window returning
+    quitting the FEMhub process, then close the current window returning
     to the home screen.
     */
     async_request(worksheet_command('save_and_quit'), close_callback);
@@ -1681,7 +1681,7 @@ function rename_worksheet() {
 function go_system_select(form, original_system) {
     /*
     Switch the current input system from one system to another (e.g.,
-    form Sage to Pari or Python).  A confirmation box is displayed.
+    form FEMhub to Pari or Python).  A confirmation box is displayed.
 
     INPUT:
         form -- DOM element; the drop down with the list of systems
@@ -4522,7 +4522,7 @@ function set_all_cells_to_be_not_evaluated() {
 
 function restart_sage() {
     /*
-    Restart the running Sage process that supports calculations in
+    Restart the running FEMhub process that supports calculations in
     this worksheet.
 
     This function immediately changes the DOM so it looks like no
@@ -4755,7 +4755,7 @@ function empty_trash() {
 
 ///////////////////////////////////////////////////////////////////
 //
-// KeyCodes (auto-generated from config.py and user's sage config
+// KeyCodes (auto-generated from config.py and user's FEMhub config
 //
 ///////////////////////////////////////////////////////////////////
 

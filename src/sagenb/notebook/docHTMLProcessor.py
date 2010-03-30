@@ -2,14 +2,14 @@
 """
 Live Documentation in the Notebook
 
-Processes Sage documentation into notebook worksheet format with
+Processes FEMhub documentation into notebook worksheet format with
 evaluable examples.
 
-This takes in any HTML document, i.e., Sage documentation, and returns
+This takes in any HTML document, i.e., FEMhub documentation, and returns
 it in the editable format (like the notebook edit window). It also
 returns a string representing the CSS link for the document.  The SGML
 parser is setup to return only the body of the HTML documentation page
-and to re-format Sage examples and type-setting.
+and to re-format FEMhub examples and type-setting.
 
 Note: This extension of sgmllib.SGMLParser was partly inspired by Mark
 Pilgrim's 'Dive Into Python' examples.
@@ -18,7 +18,7 @@ Author:
 
 - Dorian Raymer (2006): first version
 
-- William Stein (2007-06-10): rewrite to work with twisted Sage notebook
+- William Stein (2007-06-10): rewrite to work with twisted FEMhub notebook
 
 - Mike Hansen (2008-09-27): Rewrite to work with Sphinx HTML documentation
 """
@@ -145,7 +145,7 @@ class SphinxHTMLProcessor(SGMLParser):
           'INPUT:' and are re-styled as divs with
           class="usage_model".
 
-        - Actual Sage input and output.  These begin with 'sage:'.
+        - Actual FEMhub input and output.  These begin with 'sage:'.
           The input and output are separated according to the
           Notebook edit format.
 

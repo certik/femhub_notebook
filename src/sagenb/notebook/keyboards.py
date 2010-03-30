@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 """
-Keyboard maps for the Sage Notebook
+Keyboard maps for the FEMhub Notebook
 
 AUTHORS:
     -- Tom Boothby

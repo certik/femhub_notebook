@@ -1,5 +1,5 @@
 # -*- makefile -*-
-# Makefile for the Sage Notebook project (http://nb.sagemath.org/).
+# Makefile for the FEMhub Notebook project (http://nb.sagemath.org/).
 # GNU make help: http://www.gnu.org/software/make/manual
 
 SAGE = sage

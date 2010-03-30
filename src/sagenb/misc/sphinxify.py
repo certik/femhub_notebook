@@ -21,7 +21,7 @@ import re
 import shutil
 from tempfile import mkdtemp
 
-# We import Sphinx on demand, to reduce Sage startup time.
+# We import Sphinx on demand, to reduce FEMhub startup time.
 Sphinx = None
 
 try:
@@ -186,7 +186,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u""
-copyright = u'2005--2009, The Sage Development Team'
+copyright = u'2005--2009, The FEMhub Development Team'
 
 #version = '3.1.2'
 # The full version, including alpha/beta/rc tags.

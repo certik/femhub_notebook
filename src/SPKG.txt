@@ -1,8 +1,8 @@
-= Sage Notebook =
+= FEMhub Notebook =
 
 == Description ==
 
-The Sage Notebook is a web-based graphical user interface for
+The FEMhub Notebook is a web-based graphical user interface for
 mathematical software.
 
 == License ==
@@ -36,14 +36,14 @@ GPLv2+
    * .hgignore and MANIFEST.in are current.
    * The patch queue is clear.
    * The notebook runs.
-   * The doctests pass: sage -t -sagenb
+   * The doctests pass: FEMhub -t -sagenb
    * The Selenium tests pass (optional, for now).
 
    Then,
 
    * Update the version in setup.py and commit this change.
    * Run spkg-dist.
-   * Install and test the new spkg: sage -f dist/sagenb-*.spkg
+   * Install and test the new spkg: FEMhub -f dist/sagenb-*.spkg
 
    Contact a maintainer about pushing updates to the public Mercurial
    repository.

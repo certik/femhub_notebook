@@ -167,7 +167,7 @@ function archive_button() {
 
 function stop_worksheets_button() {
     /*
-      Saves and then quits sage process for each checked worksheet.
+      Saves and then quits FEMhub process for each checked worksheet.
     */
     worksheet_list_button('/send_to_stop');
 }

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 """
-The Sage Notebook
+The FEMhub Notebook
 
 AUTHORS:
 
@@ -31,11 +31,11 @@ import cPickle
 from cgi import escape
 
 
-# Sage libraries
+# FEMhub libraries
 from sagenb.misc.misc import (pad_zeros, cputime, tmp_dir, load, save,
                               ignore_nonexistent_files, unicode_str)
 
-# Sage Notebook
+# FEMhub Notebook
 import css          # style
 import js           # javascript
 import worksheet    # individual worksheets (which make up a notebook)
@@ -48,12 +48,12 @@ from   template import template, prettify_time_ago
 
 
 try:
-    # sage is installed
+    # FEMhub is installed
     import sage
     SYSTEMS = ['sage', 'gap', 'gp', 'jsmath', 'html', 'latex', 'maxima', 'python', 'r', 'sh', 'singular', 'axiom (optional)', 'kash (optional)', 'macaulay2 (optional)', 'magma (optional)', 'maple (optional)', 'mathematica (optional)', 'matlab (optional)', 'mupad (optional)', 'octave (optional)']
 except ImportError:
-    # sage is not installed
-    SYSTEMS = ['sage']    # but gracefully degenerated version of sage mode, e.g., preparsing is trivial
+    # FEMhub is not installed
+    SYSTEMS = ['sage']    # but gracefully degenerated version of FEMhub mode, e.g., preparsing is trivial
 
 
 # We also record the system names without (optional) since they are
@@ -403,7 +403,7 @@ class Notebook(object):
     def default_user(self):
         r"""
         Return a default login name that the user will see when
-        confronted with the Sage notebook login page.  Currently, this
+        confronted with the FEMhub notebook login page.  Currently, this
         returns 'admin' if that is the *only* user.  Otherwise it
         returns an empty string ('').
 
@@ -1731,7 +1731,7 @@ def migrate_old_notebook_v1(dir):
     print ""
     print "*"*80
     print "*"
-    print "* The Sage notebook at"
+    print "* The FEMhub notebook at"
     print "*"
     print "*      '%s'"%os.path.abspath(dir)
     print "*"

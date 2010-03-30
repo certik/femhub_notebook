@@ -39,7 +39,7 @@ Server -> Editor:
 Editor -> Server:
 
     When the user clicks "Save", the notebook gets the latest graph
-    data, formats it for the Sage library's graph methods (e.g., the
+    data, formats it for the FEMhub library's graph methods (e.g., the
     Graph constructor and Graph.set_pos), optionally replaces the
     cell's input (see the replace_input option in (a)), and evaluates
     the cell.

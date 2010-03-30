@@ -6,22 +6,22 @@
 
 {% block main %}
 {% if welcome %}
-<h2>Congratulations {{ welcome }}! You can now sign into the Sage Notebook.</h2>
+<h2>Congratulations {{ welcome }}! You can now sign into the FEMhub Notebook.</h2>
 {% endif %}
 
 <div id="desc">
     <h2>Welcome!</h2>
     <p><strong>Sage</strong> is a different approach to mathematics software.</p>
 
-    <h2>The Sage Notebook</h2>
-    <p>With the Sage Notebook
+    <h2>The FEMhub Notebook</h2>
+    <p>With the FEMhub Notebook
     anyone can create, collaborate on, and publish interactive
     worksheets. In a worksheet, one can write code using Sage, Python,
     and other software included in Sage.
     </p>
 
     <h2>General and Advanced Pure and Applied Mathematics</h2>
-    <p>Use Sage for studying 
+    <p>Use FEMhub for studying 
     calculus, elementary to very advanced
     number theory, cryptography, 
     commutative algebra, group theory, 
@@ -29,22 +29,22 @@
     </p>
 
     <h2>Use an Open Source Alternative</h2>
-    <p>By using Sage you help to support a viable open source
+    <p>By using FEMhub you help to support a viable open source
     alternative to 
     Magma, Maple, Mathematica, and MATLAB.
-    Sage includes many 
+    FEMhub includes many 
     high-quality open source math packages.
     </p>
 
     <h2>Use Most Mathematics Software from Within Sage</h2>
     <p>Sage makes it easy for you
     to use most mathematics software together. 
-    Sage includes GAP, GP/PARI, Maxima, and Singular, and
+    FEMhub includes GAP, GP/PARI, Maxima, and Singular, and
     dozens of other open packages.
     </p>
 
     <h2>Use a Mainstream Programming Language</h2>
-    <p>You work with Sage using the highly regarded 
+    <p>You work with FEMhub using the highly regarded 
     scripting language Python.
     You can write programs that combine serious mathematics with
     anything else.   
@@ -52,7 +52,7 @@
 </div>
 
 <div id="sign-in-box">
-    <h2>Sign into the Sage Notebook v{{ sage_version }}</h2>
+    <h2>Sign into the FEMhub Notebook v{{ sage_version }}</h2>
     <form method="POST" action="/login">
         <div>
             <label for="email">Username</label>
@@ -77,11 +77,11 @@
     </form>
     {% if accounts %}
     <div>
-        <a href="/register" id="register-link"><strong>Sign up for a new Sage Notebook account</strong></a>
+        <a href="/register" id="register-link"><strong>Sign up for a new FEMhub Notebook account</strong></a>
     </div>
     {% endif %}
     <div>
-        <a href="/pub"><strong>Browse published Sage worksheets<br>(no login required)</strong></a>
+        <a href="/pub"><strong>Browse published FEMhub worksheets<br>(no login required)</strong></a>
     </div>
     {% if recovery %}
     <div>

@@ -7,7 +7,7 @@ import os
 
 class Datastore(object):
     """
-    The Sage Notebook storage abstraction layer abstract base class.
+    The FEMhub Notebook storage abstraction layer abstract base class.
     Each storage abstraction layer derives from this.
     """
     def __repr__(self):
@@ -75,7 +75,7 @@ class Datastore(object):
         """
         INPUT:
 
-            - ``worksheet`` -- a Sage worksheet
+            - ``worksheet`` -- a FEMhub worksheet
 
             - ``conf_only`` -- default: False; if True, only save
               the config file, not the actual body of the worksheet      
