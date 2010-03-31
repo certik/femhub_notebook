@@ -312,7 +312,7 @@ try:
     from pkg_resources import Requirement, working_set
     SAGENB_VERSION = working_set.find(Requirement.parse('sagenb')).version
 except AttributeError:
-    SAGENB_VERSION = ""
+    SAGENB_VERSION = "4.3-1"
 
 try:
     import sage.version
