@@ -2,13 +2,15 @@
 
 {% block title %}Sign in{% endblock %}
 
-{% block body %}
+{% block page_id %}login-page{% endblock %}
+
+{% block main %}
 <table>
 <tr><td background="/images/layer.png">
 <a href="http://femhub.org"><img align="center" src="/images/femhub-logo-e-final.png" width ="220" height="75" alt="FEMhub"></a>
 <br><b><font size=6 color="white"><b>Online Numerical Methods Laboratory</b>
 </font></td>
-<td background="/images/layer.png" align="center"></td>
+<td background="/images/pde.png" align="center"></td>
 </tr>
 <tr><td bgcolor="#f8f4f4" width=50%>
 {% if welcome %}
@@ -98,7 +100,7 @@ elementary methods of numerical analysis.
 </table>
 <br><br><br>
 {% if accounts %}
-<a href='/register'><b>Sign up for a new FEMhub online lab account</b></a>
+<a href='/register' id="register-link"><b>Sign up for a new FEMhub online lab account</b></a>
 {% endif %}
 <br><br><br>
 <a href='/pub'><b>Browse published FEMhub worksheets<br>(no login required)</b></a><br /><br/><br/>
