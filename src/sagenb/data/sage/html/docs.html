@@ -1,82 +1,45 @@
-{% extends "html/base.html" %}
+{% extends "html/base_authenticated.html" %}
 
-{% block title %}Documentation{% endblock %}
-
-{% block css %}main{% endblock %}
+{% block title %}Sage Documentation{% endblock %}
 
 {% block javascript %}
-  <style>
+<script type="text/javascript" src="/javascript/sage/ws_list.js"></script>
+{% endblock%}
 
-  div.help_window {
-      font-family: sans-serif;
-      background-color:white;
-      border: 3px solid #3d86d0;
-      top: 10ex;
-      bottom:10%;
-      left:25%;
-      right:15%;
-      padding:2ex;
-      width:90%;
-  }
+{% block page_id %}docs-main-page{% endblock %}
 
+{% block main %}
 
-  table.help_window {
-      background-color:white;
-      width:95%;
-  }
+<div class="control-bar">
+    <ul class="controls">
+        <li><a title="To quickly try out the FEMhub online lab start here" href="/doc/live/tutorial/index.html">Tutorial</a></li>
+        <li><a title="To access the FEMhub community with any questions or ideas, use the FEMhub mailing list " href="http://groups.google.com/group/femhub">femhub@googlegroups.com</a></li>
+        <li><a title="FEMhub Official Website" href="http://www.femhub.org/">FEMhub Official Website</a></li>
+        <li><a title="FEMhub Web Notebook?" href="http://nb.femhub.org/">FEMhub Web Notebook</a></li>
+    </ul>
+    <ul class="controls">
+        <li><a title="Static version..." href="/doc/static/">Fast Static Versions of the Documentation</a></li>
+    </ul>
+</div>
 
-  td.help_window_sub {
-      background-color: #f5e0aa;
-      width:100%;
-      padding:0.5ex;
-      font-weight:bold;
-  }
-
-  td.help_window_cmd {
-      background-color: #f5e0aa;
-      width:30%;
-      padding:0.5ex;
-  }
-
-  td.help_window_how {
-      padding:0.5ex;
-      width:70%;
-  }
-  </style>
-{% endblock %}
-
-{% block body %}
-
-  {% include "html/top_bar.html" %}
-
-        <center>
-        <center>
-        <br>
-        <a class="control" title="FEMhub Official Website" href="http://www.femhub.org/">FEMhub Official Website</a>
-        &nbsp;&nbsp;
-        <a class="control" title="FEMhub Web Notebook" href="http://nb.femhub.org/">FEMhub Web Notebook</a>
-        <hr class="usercontrol">
-        <br>
-        <div class="help_window">
-        <h2>How to use the FEMhub Online Numerical Methods Laboratory</h2>
-        
-        <br><br>
-
-        A <i>worksheet</i> is an ordered list of FEMhub calculations with output. <br>
-        A <i>session</i> is a worksheet and a set of variables in some state.<br>
-        The <i>FEMhub Online Lab</i> is a collection of worksheets, saved objects, and user information.<br>
-        <br><br>
-                 
-        <table class="help_window">
+<div class="help_window">
+  <center>
+    <h2>How to use the FEMhub Online Numerical Methods Laboratory</h2>
+    
+    <p>A <em>worksheet</em> is an ordered list of Sage calculations with output.</p>
+    <p>A <em>session</em> is a worksheet and a set of variables in some state.</p>
+    <p>The <em>FEMhub online lab</em> is a collection of worksheets, saved objects, and user information.</p>
+    
+    <table class="help_window">
         
         {% for x, y in notebook_help %}
-          <tr><td class="help_window_sub", colspan="2">{{ x }}</td></tr>
+        <tr><td class="help_window_sub", colspan="2">{{ x }}</td></tr>
         {% for z, w in y %}
-          <tr><td class="help_window_cmd">{{ z }}</td><td class="help_window_how">{{ w }}</td></tr>
+        <tr><td class="help_window_cmd">{{ z }}</td><td class="help_window_how">{{ w }}</td></tr>
         {% endfor %}
         {% endfor %}
-	</table></div>
-        <br>        <br>
-        The FEMhub Online Numerical Methods Laboratory was developed by the hp-FEM group at the Department of Mathematics, University of Nevada, Reno, and it is based on Sage Notebook which was primarily written by William Stein with substantial contributions from Tom Boothby, Timothy Clemans, Alex Clemesha, Mike Hansen, Bobby Moretti, Yi Qiang, and Dorian Raymer.
-        </center>
+    </table>
+  </center>
+</div>
+<p class="acknowledgments">The FEMhub Web Notebook was developed by the hp-FEM group at the Department of Mathematics, University of Nevada, Reno, and it is based on Sage Notebook which was primarily written by William Stein with substantial contributions from Tom Boothby, Timothy Clemans, Alex Clemesha, Mike Hansen, Bobby Moretti, Yi Qiang, and Dorian Raymer.</p>
 {% endblock %}
