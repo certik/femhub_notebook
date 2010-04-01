@@ -20,8 +20,8 @@ import run_notebook
 
 class NotebookObject:
     r"""
-    Start the FEMhub Notebook server. More documentation is available in
-    the FEMhub installation guide, in the "Running the FEMhub Notebook
+    Start the FEMhub Online Lab server. More documentation is available in
+    the FEMhub installation guide, in the "Running the FEMhub Online Lab
     Securely" chapter, and at
     http://wiki.sagemath.org/StartingTheNotebook.
 
@@ -46,7 +46,7 @@ class NotebookObject:
 
         - ``secure`` -- boolean (default: ``False``) if True use https
           so all communication, e.g., logins and passwords, between
-          web browsers and the FEMhub notebook is encrypted via GNU TLS.
+          web browsers and the FEMhub online lab is encrypted via GNU TLS.
           *Highly recommended!*
 
         - ``require_login`` -- boolean (default: ``True``) if True
@@ -115,11 +115,11 @@ class NotebookObject:
     
     EXAMPLES:
 
-    1. I just want to run the FEMhub notebook.  Type::
+    1. I just want to run the FEMhub online lab.  Type::
 
            notebook()
 
-    2. I want to run the FEMhub notebook server on a remote machine and
+    2. I want to run the FEMhub online lab server on a remote machine and
        be the only person allowed to log in.  Type::
 
            notebook(address='', secure=True)
@@ -135,11 +135,11 @@ class NotebookObject:
 
        Use this ONLY if you are *absolutely certain* that you are the
        only user logged into the laptop and do not have to worry about
-       somebody else using the FEMhub notebook on localhost and deleting
+       somebody else using the FEMhub online lab on localhost and deleting
        your files.
 
-    4. I want to create a FEMhub notebook server that is open to anybody
-       in the world to create new accounts. To run the FEMhub notebook
+    4. I want to create a FEMhub online lab server that is open to anybody
+       in the world to create new accounts. To run the FEMhub online lab
        publicly (1) at a minimum run it from a chroot jail or inside a
        virtual machine (see
        http://wiki.sagemath.org/StartingTheNotebook and the FEMhub

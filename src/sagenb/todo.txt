@@ -257,7 +257,7 @@ Stein wrote! ouch)
       http://sage.math.washington.edu/home/wstein/patches/whitespace.png
     got from E = EllipticCurve([0,-39409298,0,5554231502,0]); 
     E.Lambda(<tab>
-[x] "Sign into the FEMhub Notebook v" <-- missing version number
+[x] "Sign into the FEMhub Online Lab v" <-- missing version number
 [x] version not listed in upper left corner of worksheet either
 
 [x] sphinx: get math macros working on sphinx mode, e.g., if you do "ZZ?" you
@@ -326,7 +326,7 @@ inspection. It is possible that files are created outside of path,
 e.g. members that have absolute filenames starting with "/" or
 filenames with two dots "..".
 
-Incidentally, this implies somebody could hack the FEMhub notebook
+Incidentally, this implies somebody could hack the FEMhub online lab
 server by uploading a foo.sws that overwrites key information, e.g.,
 nb.sobj or worksheet source code (!)
 
@@ -472,11 +472,11 @@ aren't made anymore.  Or use this somehow.
 
 [x] When saving a worksheet, the default filename has "..." in it. 
 
-[x] add message to the top of each *old* FEMhub notebook .py file
+[x] add message to the top of each *old* FEMhub online lab .py file
  stating that one should work on FEMhub instead.  This is a patch to
  the core FEMhub library.
 
-[x] fix all doctests in FEMhub notebook code and make a patch against core
+[x] fix all doctests in FEMhub online lab code and make a patch against core
 FEMhub library that imports enough of FEMhub by default so I can 
 run all these doctests.  
 

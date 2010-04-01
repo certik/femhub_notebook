@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 """
-FEMhub Notebook Introspection
+FEMhub Online Lab Introspection
 
 TODO: - add support for grabbing source code from Pyrex functions
 (even if not perfect is better than nothing). - PNG or MathML

@@ -2101,7 +2101,7 @@ class UpdateButton(JavascriptCodeButton):
         
 def interact(f):
     r"""
-    Use interact as a decorator to create interactive FEMhub notebook
+    Use interact as a decorator to create interactive FEMhub online lab
     cells with sliders, text boxes, radio buttons, check boxes, and
     color selectors.  Simply put ``@interact`` on the line before a
     function definition in a cell by itself, and choose appropriate

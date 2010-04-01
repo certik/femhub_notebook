@@ -139,7 +139,7 @@ def template(filename, **user_context):
     from sagenb.notebook.notebook import JSMATH, JEDITABLE_TINYMCE
     from twist import notebook
     #A dictionary containing the default context
-    default_context = {'sitename': 'FEMhub Notebook',
+    default_context = {'sitename': 'FEMhub Online Lab',
                        'sage_version': SAGE_VERSION,
                        'JSMATH': JSMATH,
                        'JEDITABLE_TINYMCE': JEDITABLE_TINYMCE,

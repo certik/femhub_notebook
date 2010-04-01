@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 """
-Keyboard maps for the FEMhub Notebook
+Keyboard maps for the FEMhub Online Lab
 
 AUTHORS:
     -- Tom Boothby

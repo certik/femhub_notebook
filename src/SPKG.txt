@@ -1,8 +1,8 @@
-= FEMhub Notebook =
+= FEMhub Online Lab =
 
 == Description ==
 
-The FEMhub Notebook is a web-based graphical user interface for
+The FEMhub Online Lab is a web-based graphical user interface for
 mathematical software.
 
 == License ==

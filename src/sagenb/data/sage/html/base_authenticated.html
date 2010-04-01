@@ -4,7 +4,7 @@
     <ul>
         <li class="username">{{ username }}</li>
         {% if username == 'guest' %}
-        <li><a title="Please log in to the FEMhub notebook" href="/">Log in</a></li>
+        <li><a title="Please log in to the FEMhub Online Numerical Methods Laboratory" href="/">Log in</a></li>
         {% else %}
         <li><a id="toggle-link" title="Toggle the top bar" onClick="$('#worksheet-bar').toggle()">Toggle</a></li>
         <li><a title="Back to your personal worksheet list" href="/home/{{ username }}">Home</a></li>
@@ -16,8 +16,9 @@
         {% endif %}
         <li><a title="Change account settings including password" href="/settings">Settings</a></li>
         <li><a title="Documentation" href="#" onClick="help()">Help</a></li>
-        <li><a title="Report a problem or submit a bug to improve FEMhub" href="#" onClick="bugreport()">Report a Problem</a></li>
-        <li><a title="Log out of the FEMhub notebook" href="/logout">Sign out</a></li>
+        <li><a title="Report a problem or submit a bug to improve FEMhub Online
+            Lab" href="#" onClick="bugreport()">Report a Problem</a></li>
+        <li><a title="Log out of the FEMhub Online Lab" href="/logout">Sign out</a></li>
         {% endif %}
     </ul>
 </div>

@@ -3,54 +3,63 @@
 {% block title %}Sign in{% endblock %}
 
 {% block body %}
-        <span class="banner">
-        <a class="banner" href="http://nb.femhub.org/"><img align="top" src="/images/femhub.png" alt="FEMhub"> The FEMhub Notebook</a>: Welcome!
-        </span>
-        
-<br><br>
 <table>
+<tr><td background="/images/layer.png">
+<a href="http://femhub.org"><img align="center" src="/images/femhub-logo-e-final.png" width ="220" height="75" alt="FEMhub"></a>
+<br><b><font size=6 color="white"><b>Online Numerical Methods Laboratory</b>
+</font></td>
+<td background="/images/pde.png" align="center"></td>
+</tr>
 <tr><td bgcolor="#f8f4f4" width=50%>
 {% if welcome %}
-<h2>Congratulations {{ welcome }}! You can now sign into the FEMhub Notebook.</h2><br>
+<h2>Congratulations {{ welcome }}! You can now sign into the FEMhub Online Numerical Methods Laboratory.</h2><br>
 {% endif %}
 
 <span class="addtext">
-
-<b>The FEMhub Notebook</b><br>
-With the FEMhub Notebook
-anyone can create, collaborate on, and publish interactive
-worksheets. In a worksheet, one can write code using FEMhub, Python,
-and other software included in FEMhub.
+<br>
+<b>The FEMhub Online Numerical Methods Laboratory</b><br>
+The goal of the FEMhub online lab is to make scientific computing accessible to anyone. 
+No need to be a rocket scientist. No need to own a strong computer or buy expensive 
+software either. Everything takes place inside the web browser window. Yes, the same 
+browser that you use for emails or to watch YouTube movies. And yes, you can use 
+your favorite iPhone or iPod. The online lab is backed up with substantial computing 
+power of the <a href="http://unr.edu/">University of Nevada, Reno,</a> that the University gives you free of charge.
+<br><br>
+In the online lab you can edit and modify many different numerical methods, use them 
+for your own projects, and share with others if you like. To facilitate your endeavors, 
+FEMhub provides an easy access to many useful software libraries. To access the FEMhub 
+community with any questions or ideas, use the <a href="http://groups.google.com/group/femhub/">FEMhub mailing list</a>
+(femhub@googlegroups.com). 
+We'd like to hear from you!
 <br><br>
 
-<b>The FEMhub Project</b><br>
-<a href="http://femhub.org/">FEMhub</a> is an open-source distribution of free
-finite element codes, along with a web notebook and a unified Python interface.
-The distribution is developed by an open source community around the hp-FEM
-group at the University of Nevada, Reno and available under the GPL license
-(Version 2, 1991 or later).
+Currently, the FEMhub online lab uses some functionality of the <a href="http://sagemath.org/">Sage</a> web notebook. 
 <br><br>
-
-The FEMhub web notebook is based on the Sage notebook.   
-<br><br>
-
 <hr>
-<b>How to get started with the FEMhub web notebook <a href="http://nb.femhub.org/">http://nb.femhub.org/</a></b><br>
+<table>
+<tr>
+<b>How to get started with the FEMhub online lab <a href="http://nb.femhub.org/">http://nb.femhub.org/</a></b><br>
 The best way is to try out simple worksheets that explain
 elementary methods of numerical analysis.
 <br><br>
-<b>Step 1: </b><a href="http://nb.femhub.org/register">Sign up for a new FEMhub Notebook account</a>
+</tr>
+<tr>
+
+<a href="http://hpfem.org/main/images/iphone_large.png"><img align="left" src="http://hpfem.org/main/images/iphone.png" alt="Using FEMhub in an iPhone" style="padding:5px;"></a>
+
+<b>Step 1: </b><a href="http://nb.femhub.org/register">Sign up for a new FEMhub online lab account</a>
         This is automatic and fast. Report any problems to
         femhub@googlegroups.com.
 <br><br>
-<b>Step 2:</b> Log into the web notebook. Click on "published
+<b>Step 2:</b> Log into the online lab. Click on "published
         worksheets". Then click on any link starting with
         "Num Methods", the simplest one being "Num
         Methods: Taylor Polynomial".
 <br><br>
 <b>Step 3:</b> Click on "Edit a Copy" in the upper left corner and
         wait for the browser response.  Scroll down below
-        the first input window and click "Evaluate". This will
+        the first input window and click "Evaluate"(the "Evaluate"
+        link appears once you click into the input window). This will
         load the program. Then there are two input windows
         with two different ways to plot a Taylor polynomial
         that are self-explanatory.
@@ -64,11 +73,16 @@ elementary methods of numerical analysis.
         the internet. Feel free to adjust the existing worksheets
         to fit your own needs. We are working on expanding the
         possibilities.
-  
+<br><br>
+</tr>
+</table>
 </span>
 </td>
-<td bgcolor="#efefff" align=center>
-<span class="addtext">Sign into the FEMhub Notebook v{{ sage_version }}<br><br>
+
+<td bgcolor="#efefff" align="center">
+<br>
+<span class="addtext">Sign into the FEMhub Online Numerical Methods Laboratory v{{ sage_version }}<br><br>
+<br>
 <form method="POST" action="/login">
 <table>
 <tr><td align=right>Username:</td><td><input type="text" name="email" value="{{ default_user }}" size="15"></td></tr>
@@ -84,13 +98,72 @@ elementary methods of numerical analysis.
 </table>
 <br><br><br>
 {% if accounts %}
-<a href='/register'><b>Sign up for a new FEMhub Notebook account</b></a>
+<a href='/register'><b>Sign up for a new FEMhub online lab account</b></a>
 {% endif %}
 <br><br><br>
 <a href='/pub'><b>Browse published FEMhub worksheets<br>(no login required)</b></a><br /><br/><br/>
 {% if recovery %}
 <a href='/forgotpass'><b>Forgot password</b></a>
 {% endif %}
+<b>FEM Engines</b>
+<br><br>
+<p>
+</p>
+<a href="http://www.ctcms.nist.gov/fipy/">
+
+    <img src="http://femhub.org/img/fipy-logo.png" width=60 height=60>
+</a>
+<a href="http://hpfem.org">
+    <img src="http://femhub.org/img/hermes2d_logo.png" width=190 height=60>
+</a>
+<a href="http://code.google.com/p/sfepy/">
+    <img src="http://femhub.org/img/sfepy_logo_title_small.png" width=150 height=50>
+</a>
+<a href="http://math.nist.gov/phaml/"><img src="/images/phaml_logo.jpg"</a>
+<p>
+
+</p>
+The number of FEM engines will grow in the future, depending on how fast we are able to 
+wrap them in Python and adjust their interface to match the FEMhub format. Any help 
+is appreciated. 
+<hr>
+<p>
+</p>
+
+<b>Visualization Tools</b>
+<br><br>
+<p>
+</p>
+<a href="http://mayavi.sourceforge.net/">
+    <img src="http://femhub.org/img/mayavi.gif" border=0>
+</a>
+<a href="http://matplotlib.sourceforge.net/">
+
+    <img src="http://femhub.org/img/matplotlib_logo.png" width=300px border=0>
+</a>
+<hr>
+<p>
+</p>
+
+<b>Supporting Libraries</b>
+<br><br>
+<p>
+</p>
+<a href="http://ipython.scipy.org/moin/">
+    <img src="http://femhub.org/img/IPy-transparent-120-flush.png" border=0 height=50px>
+
+</a>
+<a href="http://numpy.scipy.org/">
+    <img src="http://femhub.org/img/numpylogo.png" border=0 height=60px>
+</a>
+<a href="http://www.scipy.org/">
+    <img src="http://femhub.org/img/scipylogo.png" border=0 height=60px>
+</a>
+<a href="http://code.google.com/p/sympy/">
+    <img src="http://femhub.org/img/sympy-160px.png" border=0 height=60>
+</a>
+
+<br>
 </span>
 </td>
 </tr>

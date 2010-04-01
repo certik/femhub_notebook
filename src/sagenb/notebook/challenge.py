@@ -3,7 +3,7 @@ r"""
 Notebook Registration Challenges
 
 This module includes support for challenge-response tests posed to
-users registering for new FEMhub notebook accounts.  These \ **C**\
+users registering for new FEMhub online lab accounts.  These \ **C**\
 ompletely \ **A**\ utomated \ **P**\ ublic \ **T**\ uring tests to
 tell \ **C**\ omputers and \ **H**\ umans \ **A**\ part, or CAPTCHAs,
 may be simple math questions, requests for special registration codes,

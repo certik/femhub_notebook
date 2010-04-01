@@ -1,4 +1,4 @@
-This is the first release of the standalone FEMhub Notebook.
+This is the first release of the standalone FEMhub Online Lab.
 
 INSTALLATION:
 

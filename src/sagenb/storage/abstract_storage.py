@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*
 """
-FEMhub Notebook Storage Abstraction Layer
+FEMhub Online Lab Storage Abstraction Layer
 """
 
 import os
 
 class Datastore(object):
     """
-    The FEMhub Notebook storage abstraction layer abstract base class.
+    The FEMhub Online Lab storage abstraction layer abstract base class.
     Each storage abstraction layer derives from this.
     """
     def __repr__(self):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 """
-A Filesystem-based FEMhub Notebook Datastore
+A Filesystem-based FEMhub Online Lab Datastore
 
 Here is the filesystem layout for this datastore.  Note that the all
 of the pickles are pickles of basic Python objects, so can be
@@ -66,7 +66,7 @@ class FilesystemDatastore(Datastore):
 
             sage: from sagenb.storage import FilesystemDatastore
             sage: FilesystemDatastore(tmp_dir())
-            Filesystem FEMhub Notebook Datastore at ...
+            Filesystem FEMhub Online Lab Datastore at ...
         """
         path = os.path.abspath(path)
         self._path = path
@@ -76,7 +76,7 @@ class FilesystemDatastore(Datastore):
         self._users_filename = 'users.pickle'
 
     def __repr__(self):
-        return "Filesystem FEMhub Notebook Datastore at %s"%self._path
+        return "Filesystem FEMhub Online Lab Datastore at %s"%self._path
 
     #########################################################################
     # Paths

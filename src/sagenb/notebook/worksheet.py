@@ -53,7 +53,7 @@ from sagenb.interfaces import (WorksheetProcess_ExpectImplementation,
 import sagenb.misc.support  as support
 from sagenb.misc.format import relocate_future_imports
 
-# Imports specifically relevant to the FEMhub notebook
+# Imports specifically relevant to the FEMhub online lab
 from cell import Cell, TextCell
 from template import template, clean_name, prettify_time_ago
 
@@ -1082,7 +1082,7 @@ class Worksheet(object):
         try:
             return self.notebook().get_worksheet_with_filename('%s/%s'%self.__worksheet_came_from)
         except Exception:  # things can go wrong (especially with old migrated
-                           # FEMhub notebook servers!), but we don't want such
+                           # FEMhub online lab servers!), but we don't want such
                            # problems to crash the notebook server.
             return self
 
@@ -2388,7 +2388,7 @@ class Worksheet(object):
 
     # TODO: all code below needs to be re-organized, but without
     # breaking old worksheet migration.  Do this after I wrote a
-    # "basic" method for the *old* FEMhub notebook codebase.  At that
+    # "basic" method for the *old* FEMhub online lab codebase.  At that
     # point I'll be able to greatly simplify worksheet migration and
     # totally refactor anything I want in the new sagenb code.
     def last_edited(self):
@@ -2782,7 +2782,7 @@ _support_.init(None, globals())
 from sage.all_notebook import *
 sage.plot.plot.EMBEDDED_MODE=True
 sage.misc.latex.EMBEDDED_MODE=True
-# TODO: For now we take back sagenb interact; do this until the FEMhub notebook
+# TODO: For now we take back sagenb interact; do this until the FEMhub online lab
 # gets removed from the FEMhub library.
 from sagenb.notebook.all import *
     """ % (os.path.join(os.path.abspath(self.data_directory()),''), twist.DIR)
@@ -3409,7 +3409,7 @@ from sagenb.notebook.all import *
 
     def preparse_nonswitched_input(self, input):
         """
-        Preparse the input to a FEMhub Notebook cell.
+        Preparse the input to a FEMhub Online Lab cell.
 
         INPUT:
 

@@ -9,7 +9,7 @@ r"""nodoctest
 #############################################################################
 
 r"""
-FEMhub Notebook Interface
+FEMhub Online Lab Interface
 
 AUTHORS:
     -- William Stein (2006-05-06): initial version
@@ -26,11 +26,11 @@ edit and evaluate, which contain scalable typeset mathematics and
 beautiful antialised images.  To try it out immediately, do this:
 
     sage: notebook(open_viewer=True)          # not tested
-    the FEMhub notebook starts...
+    the FEMhub online lab starts...
 
 \subsection{Supported Browsers}
 
-The FEMhub notebook should fully work with Firefox (and Mozilla).  It
+The FEMhub online lab should fully work with Firefox (and Mozilla).  It
 may work to some extent with Safari and Opera.  Internet Explorer is
 not supported.
 
@@ -61,7 +61,7 @@ function, e.g.,
 \end{verbatim}
 Click on the left side of the figure (twice) to make it disappear.
  
-One important feature of the FEMhub notebook is that you can
+One important feature of the FEMhub online lab is that you can
 "queue up" a bunch of calculations in a row, *while* still editing the
 notebook!  As an example, consider computing factorials, which takes a
 while (but not forever).  First, enter the following in a blank box and
@@ -223,7 +223,7 @@ examples by starting the block with ">>>" or including an example.
  
 \subsubsection{Saving and Loading Notebooks and Worksheets}
  
-The FEMhub notebook is very persistent.  Every time you submit
+The FEMhub online lab is very persistent.  Every time you submit
 a cell for computation, the state of the notebook is saved (a
 few kb's file).  If you quit the notebook and reload, it will
 have everything you typed from the previous session, along
@@ -238,7 +238,7 @@ variables using the \code{load_session} command.
  
 \subsubsection{Architecture}
  
-The FEMhub Notebook is an ``AJAX application'' that can run either
+The FEMhub Online Lab is an ``AJAX application'' that can run either
 entirely locally on your desktop machine, or partly on
 a server and via a web browser that could be located somewhere
 else.
@@ -247,7 +247,7 @@ address when starting the notebook), you should also set
 the username and password, so not just anybody can access
 the notebook.
 
-Anywhere, here are the components of the FEMhub Notebook:
+Anywhere, here are the components of the FEMhub Online Lab:
 
 \begin{enumerate}
 \item Web Server: A Python process that uses the
@@ -269,11 +269,11 @@ Anywhere, here are the components of the FEMhub Notebook:
  \item WEB Browser: The web browser runs a 1000-line javascript (plus
      800 lines of css) program that Alex, Tom and I wrote from
      scratch, which implements much of the browser-side part of the
-     FEMhub notebook functionality.
+     FEMhub online lab functionality.
      
 \end{enumerate}
  
-When you use the FEMhub Notebook, you are mainly interacting with a
+When you use the FEMhub Online Lab, you are mainly interacting with a
 javascript program.  When you do something serious, e.g., request
 computation of some input, create a new cell, etc., a request is made
 from your web browser to the web server telling it what is going on.
@@ -358,7 +358,7 @@ notebook_help = [
       ('Full Text Search of Docs and Source',
        'Search the FEMhub documentation by typing <pre>search_doc("my query")</pre> in an input cell and press shift-enter.  Search the source code of FEMhub by typing <pre>search_src("my query")</pre> and pressing shift-enter.  Arbitrary regular expressions are allowed as queries.'),
       # ('More Help',
-      #  'Type "help(sagenb.notebook.notebook)" for a detailed discussion of the architecture of the FEMhub notebook and a tutorial (or see the FEMhub reference manual).'),
+      #  'Type "help(sagenb.notebook.notebook)" for a detailed discussion of the architecture of the FEMhub online lab and a tutorial (or see the FEMhub reference manual).'),
       ]),
     ('Key and Mouse Bindings',
      [('Evaluate Input',
@@ -419,7 +419,7 @@ notebook_help = [
       ('Working Directory',
        'Each block of code is run from its own directory.  If any images are created as a side effect, they will automatically be displayed.'),
       ('DIR Variable',
-       'The variable DIR contains the directory from which you started the FEMhub notebook.  For example, to open a file in that directory, do "open(DIR+\'filename\')".'),
+       'The variable DIR contains the directory from which you started the FEMhub online lab.  For example, to open a file in that directory, do "open(DIR+\'filename\')".'),
       ('DATA Variable',
        'Use the Data menu to upload images and other files, and create new files that can be shared between worksheets.  The DATA variable contains the path to the data files.  For example, to open a file in that directory, do "open(DATA+\'filename\')".  If foo.sage is a FEMhub file that you uploaded, type "load foo.sage"; if foo.py is a Python file, you can import it by typing "import foo".'),
       ('Loading and Saving Objects',

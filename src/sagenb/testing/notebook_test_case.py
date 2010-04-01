@@ -92,7 +92,7 @@ class NotebookTestCase(unittest.TestCase):
 
     def start_notebook(self, initial=False):
         """
-        Starts the FEMhub notebook.  If initial is True, then it expects
+        Starts the FEMhub online lab.  If initial is True, then it expects
         to have to enter the initial password twice.
         """
         self._p = pexpect.spawn(self._sage_startup_command())
@@ -236,7 +236,7 @@ class NotebookTestCase(unittest.TestCase):
         """
         Tells Selenium to wait until the title of the page has changed
         to title since it doesn't recognize many of the page reloads
-        in the FEMhub notebook.
+        in the FEMhub online lab.
         """
         self.selenium.wait_for_condition('selenium.browserbot.getCurrentWindow().document.title.replace(/^\s+|\s+$/g, "") == "%s"'%title, 30000)
 
@@ -254,7 +254,7 @@ class NotebookTestCase(unittest.TestCase):
 
     def register_user(self, username, password='asdfasdf'):
         """
-        Registers a new user for the FEMhub notebook.
+        Registers a new user for the FEMhub online lab.
 
         This assumes that you're at the login page.
         """
@@ -417,7 +417,7 @@ class NotebookTestCase(unittest.TestCase):
 
     def stop_notebook(self):
         """
-        Stops the FEMhub notebook.
+        Stops the FEMhub online lab.
         """
         self._p.sendline(chr(3)+chr(3))
         self._p.kill(signal.SIGKILL)

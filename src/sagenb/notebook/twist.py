@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 r"""
-The FEMhub Notebook Twisted Web Server
+The FEMhub Online Lab Twisted Web Server
 
 TESTS:
 

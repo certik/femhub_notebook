@@ -290,7 +290,7 @@ def html_markup(s):
 def source_code(s, globs, system='sage'):
     r"""
     Format an object's source code to process and display in the
-    FEMhub notebook.
+    FEMhub online lab.
     
     INPUT:
 
@@ -635,7 +635,7 @@ try:
         methods on or off.  Returns the current ``state`` if no
         argument is given.
 
-        This ONLY works in the FEMhub notebook.  It is not supported on
+        This ONLY works in the FEMhub online lab.  It is not supported on
         the command line.
 
         INPUT:

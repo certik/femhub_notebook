@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 """
-The FEMhub Notebook
+The FEMhub Online Lab
 
 AUTHORS:
 
@@ -35,7 +35,7 @@ from cgi import escape
 from sagenb.misc.misc import (pad_zeros, cputime, tmp_dir, load, save,
                               ignore_nonexistent_files, unicode_str)
 
-# FEMhub Notebook
+# FEMhub Online Lab
 import css          # style
 import js           # javascript
 import worksheet    # individual worksheets (which make up a notebook)
@@ -403,7 +403,7 @@ class Notebook(object):
     def default_user(self):
         r"""
         Return a default login name that the user will see when
-        confronted with the FEMhub notebook login page.  Currently, this
+        confronted with the FEMhub online lab login page.  Currently, this
         returns 'admin' if that is the *only* user.  Otherwise it
         returns an empty string ('').
 
@@ -1731,7 +1731,7 @@ def migrate_old_notebook_v1(dir):
     print ""
     print "*"*80
     print "*"
-    print "* The FEMhub notebook at"
+    print "* The FEMhub online lab at"
     print "*"
     print "*      '%s'"%os.path.abspath(dir)
     print "*"
