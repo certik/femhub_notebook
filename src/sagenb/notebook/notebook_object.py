@@ -23,7 +23,7 @@ class NotebookObject:
     Start the FEMhub Online Lab server. More documentation is available in
     the FEMhub installation guide, in the "Running the FEMhub Online Lab
     Securely" chapter, and at
-    http://wiki.sagemath.org/StartingTheNotebook.
+    http://wiki.femhub.org/StartingTheNotebook.
 
     INPUT:
     
@@ -142,7 +142,7 @@ class NotebookObject:
        in the world to create new accounts. To run the FEMhub online lab
        publicly (1) at a minimum run it from a chroot jail or inside a
        virtual machine (see
-       http://wiki.sagemath.org/StartingTheNotebook and the FEMhub
+       http://wiki.femhub.org/StartingTheNotebook and the FEMhub
        install guide) and (2) use a command like::
     
            notebook(address='', server_pool=['sage1@localhost'],
@@ -164,7 +164,7 @@ class NotebookObject:
     INPUT:  (more advanced)
 
     More details about using these options can be found at:
-    http://wiki.sagemath.org/StartingTheNotebook and in the FEMhub
+    http://wiki.femhub.org/StartingTheNotebook and in the FEMhub
     install guide.
 
         - ``server_pool`` -- list of strings (initial default: None),

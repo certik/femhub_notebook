@@ -47,22 +47,22 @@ def print_open_msg(address, port, secure=False, path=""):
         * Open your web browser to https://localhost:8000  *
         *                                                  *
         ****************************************************
-        sage: sage.server.misc.print_open_msg('sagemath.org', 8000, False)
+        sage: sage.server.misc.print_open_msg('femhub.org', 8000, False)
         ******************************************************
         *                                                    *
-        * Open your web browser to http://sagemath.org:8000  *
+        * Open your web browser to http://femhub.org:8000  *
         *                                                    *
         ******************************************************
-        sage: sage.server.misc.print_open_msg('sagemath.org', 90, False)
+        sage: sage.server.misc.print_open_msg('femhub.org', 90, False)
         ****************************************************
         *                                                  *
-        * Open your web browser to http://sagemath.org:90  *
+        * Open your web browser to http://femhub.org:90  *
         *                                                  *
         ****************************************************
-        sage: sage.server.misc.print_open_msg('sagemath.org', 80, False)
+        sage: sage.server.misc.print_open_msg('femhub.org', 80, False)
         **************************************************
         *                                                *
-        *  Open your web browser to http://sagemath.org  *
+        *  Open your web browser to http://femhub.org  *
         *                                                *
         **************************************************
     """

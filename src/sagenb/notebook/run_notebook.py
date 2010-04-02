@@ -68,7 +68,7 @@ def notebook_setup(self=None):
                 'crl_dist_points': None,
                 'ip_address': None,
                 'expiration_days': 10000,
-                'email': 'sage@sagemath.org',
+                'email': 'femhub@nb.femhub.org',
                 'ca': None,
                 'tls_www_client': None,
                 'tls_www_server': True,

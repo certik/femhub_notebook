@@ -1659,7 +1659,7 @@ class EmptyTrash(resource.PostableResource):
         worksheet.::
 
             sage: n = sagenb.notebook.notebook.load_notebook('notebook-test.sagenb')
-            sage: n.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: n.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = n.new_worksheet_with_title_from_text('Sage', owner='sage')
             sage: W.move_to_trash('sage')
             sage: n.worksheet_names()
@@ -2028,7 +2028,7 @@ def is_valid_username(username):
         False
         sage: is_valid_username('math125-TA')
         False
-        sage: is_valid_username('dandrews@sagemath.org')
+        sage: is_valid_username('dandrews@femhub.org')
         True
     """
     import string

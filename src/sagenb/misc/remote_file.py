@@ -13,7 +13,7 @@ def get_remote_file(filename, verbose=True):
         absolute path to that file.
 
     EXAMPLES:
-        sage: g = get_remote_file("http://sagemath.org/ack.html", verbose=False)   # optional -- requires the internet
+        sage: g = get_remote_file("http://femhub.org/ack.html", verbose=False)   # optional -- requires the internet
         sage: len(open(g).read())   # optional and randomly growing.
         10198                  
     """

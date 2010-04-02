@@ -59,7 +59,7 @@ annoying
 
 [ ] The startup of the notebook involves reading all the directories
 and creating worksheets.  This takes anywhere from 5 minutes to an
-*hour* with sagenb.org.  So this *must* be fixed to be massively
+*hour* with nb.femhub.org.  So this *must* be fixed to be massively
 faster.  This is a top optimization priority.
 
 [ ] download just the text version of the worksheet
@@ -278,13 +278,13 @@ Stein wrote! ouch)
 [x] new filestructure
 
 
-[x] sagenb.org itself currently has about 50,000 worksheets.  Loading them all on
+[x] nb.femhub.org itself currently has about 50,000 worksheets.  Loading them all on
 startup -- even there conf info, isn't a good idea.  At 10ms each, which is what it
 would take given using YAML, that would be 100/second or 500 seconds to load!
 And that's just the metadata.  Another option would be to "load" a very lightweight
 version of the worksheets, with no metadata exception owner and id_number.
 Then the first time any additional metadata is needed about a specific worksheet,
-load it from disk. E.g., for our 50000 on sagenb.org, it's very rare any particular
+load it from disk. E.g., for our 50000 on nb.femhub.org, it's very rare any particular
 one is needed. ...   I'm just using pickle, which works fine for 50000 worksheets...
 
 [x] rewrite this in notebook.py:     
@@ -366,7 +366,7 @@ clarify to me how to improve a lot of other things.
  'email' and no default for this key" with the latest
   sagenb, if I click on "Settings" as admin.
   Actually, simply clicking "Sign out" triggers the 'email' KeyError, 
-[x] http://trac.sagemath.org/sage_trac/ticket/7110
+[x] http://trac.femhub.org/sage_trac/ticket/7110
 
 [x] add the new sagenb icon from here somehow:
 http://groups.google.com/group/sage-notebook/pendmsg?hl=en
@@ -416,11 +416,11 @@ t.py", line 2336, in html
         exceptions.UnicodeDecodeError: 'ascii' codec can't decode byte 0xc2 in position 825: ordinal no
 t in range(128)
 
-[x] jsmath image fonts spkg (especially on sagenb.org!):
+[x] jsmath image fonts spkg (especially on nb.femhub.org!):
 
 [x] easy way for admin to change people's password
 
-[x] Review and incorporate http://trac.sagemath.org/sage_trac/ticket/7110
+[x] Review and incorporate http://trac.femhub.org/sage_trac/ticket/7110
 
 [x] make it so the set of worksheets for a given user is 100% determined by the filesystem, not the nb sobj
 

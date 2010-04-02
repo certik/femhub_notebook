@@ -253,7 +253,7 @@ class TextCell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.TextCell(0, '2+3', W)
             sage: C.html()
@@ -502,7 +502,7 @@ class Cell(Cell_generic):
         EXAMPLES: We create a worksheet with a cell that has wrong output::
 
             sage: nb = sagenb.notebook.notebook.load_notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: W.edit_save('{{{\n2+3\n///\n20\n}}}')
             sage: C = W.cell_list()[0]
@@ -701,7 +701,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, 'plot(sin(x),0,5)', '', W)
             sage: C.evaluate()
@@ -765,7 +765,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', W)
             sage: C.worksheet() is W
@@ -785,7 +785,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', W)
             sage: C.worksheet_filename()
@@ -805,7 +805,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.load_notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', W)
             sage: C.notebook() is nb
@@ -826,7 +826,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', W)
             sage: C.directory()
@@ -850,7 +850,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', W)
             sage: C._directory_name()
@@ -917,7 +917,7 @@ class Cell(Cell_generic):
             sage: C.word_wrap_cols()
             70
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', W)
             sage: C.word_wrap_cols()
@@ -1070,7 +1070,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = W.new_cell_after(0, "2^2"); C
             Cell 2; in=2^2, out=
@@ -1097,7 +1097,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = W.new_cell_after(1, "2^2")
             sage: C = W.get_cell_with_id(1)
@@ -1126,7 +1126,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = W.new_cell_after(0, "2^2")
             sage: C.interrupt()
@@ -1151,7 +1151,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = W.new_cell_after(0, "2^2")
             sage: C.interrupt()
@@ -1173,7 +1173,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = W.new_cell_after(0, "2^2")
             sage: C.computing()
@@ -1195,7 +1195,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = W.new_cell_after(0, "@interact\ndef f(a=slider(0,10,1,5):\n    print a^2")
             sage: C.is_interactive_cell()
@@ -1223,7 +1223,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = W.new_cell_after(0, "@interact\ndef f(a=slider(0,10,1,5):\n    print a^2")
             sage: C.is_interacting()
@@ -1254,7 +1254,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = W.new_cell_after(0, "2^2")
             sage: C.evaluate()
@@ -1620,7 +1620,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', W)
             sage: C.process_cell_urls('"cell://foobar"')
@@ -1656,7 +1656,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', W)
             sage: C.output_text()
@@ -1735,7 +1735,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', W)
             sage: C.parse_html('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">\n<html><head></head><body>Test</body></html>', 80)
@@ -1837,7 +1837,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, 'sage?', '', W)
             sage: C.introspect()
@@ -1873,7 +1873,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, 'sage?', '', W)
             sage: C.introspect()
@@ -1906,7 +1906,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, 'sage?', '', W)
             sage: C.introspect()
@@ -1931,7 +1931,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, 'sage?', '', W)
             sage: C.introspect()
@@ -1989,7 +1989,7 @@ class Cell(Cell_generic):
         in order to compute `3^5`::
 
             sage: nb = sagenb.notebook.notebook.load_notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: W.edit_save('{{{\n3^5\n}}}')
             sage: C = W.cell_list()[0]; C
@@ -2124,7 +2124,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.load_notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', W)
             sage: C.html()
@@ -2150,7 +2150,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, '2+3', '5', W)
             sage: C.url_to_self()
@@ -2174,7 +2174,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, 'plot(sin(x),0,5)', '', W)
             sage: C.evaluate()
@@ -2199,7 +2199,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, 'plot(sin(x),0,5)', '', W)
             sage: C.evaluate()
@@ -2240,7 +2240,7 @@ class Cell(Cell_generic):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.create_new_worksheet('Test', 'sage')
             sage: C = sagenb.notebook.cell.Cell(0, 'plot(sin(x),0,5)', '', W)
             sage: C.evaluate()

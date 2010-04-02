@@ -763,7 +763,7 @@ class Notebook(object):
         EXAMPLES::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.new_worksheet_with_title_from_text('Sage', owner='sage')
             sage: W.move_to_trash('sage')
             sage: nb.worksheet_names()
@@ -793,9 +793,9 @@ class Notebook(object):
         then list their names::
 
             sage: nb = sagenb.notebook.notebook.Notebook(tmp_dir()+'.sagenb')
-            sage: nb.add_user('sage','sage','sage@sagemath.org',force=True)
+            sage: nb.add_user('sage','sage','femhub@nb.femhub.org',force=True)
             sage: W = nb.new_worksheet_with_title_from_text('Sage', owner='sage')
-            sage: nb.add_user('wstein','sage','wstein@sagemath.org',force=True)
+            sage: nb.add_user('wstein','sage','wstein@femhub.org',force=True)
             sage: W2 = nb.new_worksheet_with_title_from_text('Elliptic Curves', owner='wstein')
             sage: nb.worksheet_names()
             ['sage/0', 'wstein/1']
