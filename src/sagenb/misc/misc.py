@@ -170,7 +170,7 @@ else:
 try:
     from sage.misc.misc import SAGE_URL
 except ImportError:
-    SAGE_URL = 'http://sagemath.org'
+    SAGE_URL = 'http://femhub.org'
 
 try:
     from sage.misc.misc import SAGE_DOC
@@ -310,15 +310,15 @@ except ImportError:
 
 try:
     from pkg_resources import Requirement, working_set
-    SAGENB_VERSION = working_set.find(Requirement.parse('sagenb')).version
+    SAGENB_VERSION = working_set.find(Requirement.parse('sagenb1')).version
 except AttributeError:
-    SAGENB_VERSION = "4.3-1"
+    SAGENB_VERSION = "4.3-3"
 
 try:
     import sage.version
-    SAGE_VERSION=sage.version.version
+    SAGE_VERSION=sage1.version.version
 except ImportError:
-    SAGE_VERSION=""
+    SAGE_VERSION="4.3-3"
 
 try:
     from sage.plot.colors import Color
